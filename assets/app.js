@@ -217,6 +217,11 @@
         ? '<div class="wx-tomorrow"><em>내일</em> ' + c2[0] + " " + c2[1] + " · " + Math.round(t2.low) + "°~" + Math.round(t2.high) + "° · 강수 " + t2.precip + "%</div>"
         : "");
   }
+  function fetchT(url, ms) {
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), ms || 7000);
+    return fetch(url, { signal: ctl.signal }).finally(() => clearTimeout(t));
+  }
   async function loadLiveWeather() {
     const loc = data.family.location;
     const url =
@@ -224,7 +229,7 @@
       "&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m" +
       "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max" +
       "&timezone=Asia%2FSeoul&forecast_days=8";
-    const r = await fetch(url);
+    const r = await fetchT(url, 7000);
     if (!r.ok) throw new Error("open-meteo " + r.status);
     const j = await r.json();
     const days = j.daily.time.map((t, i) => ({
@@ -409,7 +414,7 @@
       "https://open.neis.go.kr/hub/mealServiceDietInfo?Type=json&pIndex=1&pSize=100" +
       "&ATPT_OFCDC_SC_CODE=" + n.atptOfcdcScCode + "&SD_SCHUL_CODE=" + n.schulCode +
       "&MLSV_FROM_YMD=" + from + "&MLSV_TO_YMD=" + to;
-    const r = await fetch(url);
+    const r = await fetchT(url, 7000);
     if (!r.ok) throw new Error("neis " + r.status);
     const j = await r.json();
     const rows = j && j.mealServiceDietInfo && j.mealServiceDietInfo[1] && j.mealServiceDietInfo[1].row;
