@@ -1,8 +1,8 @@
 {
   "meta": {
     "version": 1,
-    "updatedAt": "2026-11-17T14:16:00+09:00",
-    "updatedBy": "초기 구축 (아침 브리핑 자동 갱신 대상)",
+    "updatedAt": "2026-11-18T06:02:22+09:00",
+    "updatedBy": "아침 브리핑 자동 갱신",
     "schemaNote": "일정·급식·날씨·건강 데이터는 이 파일만 고치면 보드에 반영됩니다. 자세한 구조는 README.md 참고."
   },
   "family": {
@@ -440,60 +440,320 @@
       "calories": "753.4 Kcal",
       "meal": "중식",
       "source": "NEIS"
+    },
+    "2026-11-23": {
+      "menu": [
+        {
+          "name": "율무밥",
+          "allergy": []
+        },
+        {
+          "name": "등뼈김치찌개",
+          "allergy": [
+            5,
+            6,
+            9,
+            10
+          ]
+        },
+        {
+          "name": "매실양념깻잎지",
+          "allergy": []
+        },
+        {
+          "name": "숙주미나리무침",
+          "allergy": [
+            5,
+            6
+          ]
+        },
+        {
+          "name": "어묵볶음",
+          "allergy": [
+            1,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "비엔나멸치볶음",
+          "allergy": [
+            2,
+            5,
+            6,
+            10,
+            13,
+            15,
+            16
+          ]
+        },
+        {
+          "name": "우유",
+          "allergy": [
+            2
+          ]
+        }
+      ],
+      "calories": "737.3 Kcal",
+      "meal": "중식",
+      "source": "NEIS"
+    },
+    "2026-11-24": {
+      "menu": [
+        {
+          "name": "흑미밥",
+          "allergy": []
+        },
+        {
+          "name": "맑은콩나물국",
+          "allergy": [
+            5,
+            6,
+            9
+          ]
+        },
+        {
+          "name": "진미채조림",
+          "allergy": [
+            1,
+            5,
+            6,
+            13,
+            17
+          ]
+        },
+        {
+          "name": "돼지갈비찜(떡)",
+          "allergy": [
+            5,
+            6,
+            10,
+            13
+          ]
+        },
+        {
+          "name": "취나물볶음",
+          "allergy": [
+            5,
+            6
+          ]
+        },
+        {
+          "name": "배추김치",
+          "allergy": [
+            9
+          ]
+        },
+        {
+          "name": "우유",
+          "allergy": [
+            2
+          ]
+        }
+      ],
+      "calories": "656.2 Kcal",
+      "meal": "중식",
+      "source": "NEIS"
+    },
+    "2026-11-25": {
+      "menu": [
+        {
+          "name": "고소한파니르카레",
+          "allergy": [
+            2,
+            5,
+            6,
+            12,
+            13,
+            15,
+            16,
+            18
+          ]
+        },
+        {
+          "name": "왕새우튀김",
+          "allergy": [
+            1,
+            5,
+            6,
+            9
+          ]
+        },
+        {
+          "name": "배추김치",
+          "allergy": [
+            9
+          ]
+        },
+        {
+          "name": "팬케익",
+          "allergy": [
+            1,
+            2,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "우유",
+          "allergy": [
+            2
+          ]
+        },
+        {
+          "name": "그릭요거트",
+          "allergy": [
+            2
+          ]
+        }
+      ],
+      "calories": "867.8 Kcal",
+      "meal": "중식",
+      "source": "NEIS"
+    },
+    "2026-11-26": {
+      "menu": [
+        {
+          "name": "현미찹쌀밥",
+          "allergy": []
+        },
+        {
+          "name": "버섯전골",
+          "allergy": [
+            5,
+            6,
+            13,
+            16
+          ]
+        },
+        {
+          "name": "메추리알감자조림",
+          "allergy": [
+            6,
+            13,
+            1,
+            5
+          ]
+        },
+        {
+          "name": "삼치어향소스구이",
+          "allergy": [
+            5,
+            6,
+            10,
+            12,
+            13,
+            18
+          ]
+        },
+        {
+          "name": "총각김치",
+          "allergy": [
+            9
+          ]
+        },
+        {
+          "name": "우유",
+          "allergy": [
+            2
+          ]
+        },
+        {
+          "name": "스위티오바나나",
+          "allergy": []
+        }
+      ],
+      "calories": "663.2 Kcal",
+      "meal": "중식",
+      "source": "NEIS"
+    },
+    "2026-11-27": {
+      "menu": [
+        {
+          "name": "샌드위치",
+          "allergy": [
+            1,
+            2,
+            5,
+            6,
+            10
+          ]
+        },
+        {
+          "name": "비타민C젤리",
+          "allergy": []
+        },
+        {
+          "name": "바나나맛우유",
+          "allergy": [
+            2
+          ]
+        },
+        {
+          "name": "후레쉬삼색과일",
+          "allergy": [
+            12
+          ]
+        },
+        {
+          "name": "현미가래떡",
+          "allergy": [
+            1,
+            2,
+            5,
+            6
+          ]
+        }
+      ],
+      "calories": "463.7 Kcal",
+      "meal": "중식",
+      "source": "NEIS"
     }
   },
   "weather": {
     "place": "서울시 강서구 우장산동",
-    "obsTime": "2026-11-17T10:59:00+09:00",
+    "obsTime": "2026-11-18T06:02:00+09:00",
     "source": "Apple Weather (weather snapshot)",
     "now": {
-      "temp": 13,
-      "feels": 12,
-      "condition": "Cloudy",
-      "humidity": 71,
-      "windKmh": 6,
-      "uv": 2
+      "temp": 5,
+      "feels": 2,
+      "condition": "Partly Cloudy",
+      "humidity": 81,
+      "windKmh": 10,
+      "uv": 0
     },
     "days": [
       {
-        "date": "2026-11-17",
-        "condition": "Rain",
-        "high": 15,
-        "low": 10,
-        "precip": 88,
-        "morning": 11
-      },
-      {
         "date": "2026-11-18",
         "condition": "Drizzle",
-        "high": 10,
+        "high": 11,
         "low": 1,
-        "precip": 47,
+        "precip": 46,
         "morning": 5
       },
       {
         "date": "2026-11-19",
         "condition": "Partly Cloudy",
-        "high": 5,
-        "low": -1,
-        "precip": 33,
-        "morning": 2
+        "high": 4,
+        "low": -2,
+        "precip": 0,
+        "morning": -1
       },
       {
         "date": "2026-11-20",
         "condition": "Flurries",
         "high": 3,
-        "low": -3,
-        "precip": 41,
-        "morning": -1
+        "low": -4,
+        "precip": 34,
+        "morning": -3
       },
       {
         "date": "2026-11-21",
         "condition": "Clear",
-        "high": 2,
+        "high": 3,
         "low": -4,
         "precip": 0,
-        "morning": -3
+        "morning": -4
       },
       {
         "date": "2026-11-22",
@@ -501,27 +761,181 @@
         "high": 5,
         "low": -5,
         "precip": 0,
-        "morning": -2
+        "morning": -4
       },
       {
         "date": "2026-11-23",
         "condition": "Rain",
-        "high": 11,
+        "high": 10,
         "low": 1,
-        "precip": 62,
-        "morning": 2
+        "precip": 76,
+        "morning": 4
+      },
+      {
+        "date": "2026-11-24",
+        "condition": "Partly Cloudy",
+        "high": 6,
+        "low": -2,
+        "precip": 20,
+        "morning": 0
+      }
+    ],
+    "hours": [
+      {
+        "time": "2026-11-18 06:00",
+        "condition": "Partly Cloudy",
+        "temp": 5,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-18 07:00",
+        "condition": "Mostly Cloudy",
+        "temp": 4,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-18 08:00",
+        "condition": "Cloudy",
+        "temp": 5,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-18 09:00",
+        "condition": "Cloudy",
+        "temp": 6,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-18 10:00",
+        "condition": "Cloudy",
+        "temp": 6,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-18 11:00",
+        "condition": "Cloudy",
+        "temp": 7,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-18 12:00",
+        "condition": "Partly Cloudy",
+        "temp": 9,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-18 13:00",
+        "condition": "Mostly Cloudy",
+        "temp": 10,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-18 14:00",
+        "condition": "Mostly Cloudy",
+        "temp": 9,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-18 15:00",
+        "condition": "Mostly Cloudy",
+        "temp": 9,
+        "precip": 1
+      },
+      {
+        "time": "2026-11-18 16:00",
+        "condition": "Drizzle",
+        "temp": 9,
+        "precip": 17
+      },
+      {
+        "time": "2026-11-18 17:00",
+        "condition": "Drizzle",
+        "temp": 8,
+        "precip": 17
+      },
+      {
+        "time": "2026-11-18 18:00",
+        "condition": "Drizzle",
+        "temp": 7,
+        "precip": 15
+      },
+      {
+        "time": "2026-11-18 19:00",
+        "condition": "Mostly Cloudy",
+        "temp": 6,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-18 20:00",
+        "condition": "Mostly Cloudy",
+        "temp": 5,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-18 21:00",
+        "condition": "Partly Cloudy",
+        "temp": 4,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-18 22:00",
+        "condition": "Partly Cloudy",
+        "temp": 3,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-18 23:00",
+        "condition": "Partly Cloudy",
+        "temp": 2,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-19 00:00",
+        "condition": "Partly Cloudy",
+        "temp": 1,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-19 01:00",
+        "condition": "Mostly Clear",
+        "temp": 0,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-19 02:00",
+        "condition": "Partly Cloudy",
+        "temp": 0,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-19 03:00",
+        "condition": "Partly Cloudy",
+        "temp": -1,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-19 04:00",
+        "condition": "Partly Cloudy",
+        "temp": -1,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-19 05:00",
+        "condition": "Partly Cloudy",
+        "temp": -1,
+        "precip": 0
       }
     ],
     "air": {
       "station": "강서구",
-      "observedAt": "2026-11-17T10:00:00+09:00",
+      "observedAt": "2026-11-18T05:00:00+09:00",
       "pm10": {
-        "value": 6.0,
-        "grade": "좋음"
+        "value": 39.0,
+        "grade": "보통"
       },
       "pm25": {
-        "value": 4.0,
-        "grade": "좋음"
+        "value": 30.0,
+        "grade": "보통"
       }
     },
     "attribution": "[&#xF8FF; Weather](https://developer.apple.com/weatherkit/data-source-attribution/)",
@@ -696,11 +1110,26 @@
     "weekdaysOnly": true,
     "target": "both",
     "subjects": [
-      { "emoji": "🎨", "name": "미술" },
-      { "emoji": "📖", "name": "독서" },
-      { "emoji": "🔢", "name": "수학" },
-      { "emoji": "🔬", "name": "과학" },
-      { "emoji": "🎲", "name": "보드게임" }
+      {
+        "emoji": "🎨",
+        "name": "미술"
+      },
+      {
+        "emoji": "📖",
+        "name": "독서"
+      },
+      {
+        "emoji": "🔢",
+        "name": "수학"
+      },
+      {
+        "emoji": "🔬",
+        "name": "과학"
+      },
+      {
+        "emoji": "🎲",
+        "name": "보드게임"
+      }
     ],
     "note": "평일(월~금) 격일 저녁 8시 · 다은·승민 공통 · 2주에 5과목 한 바퀴"
   },
