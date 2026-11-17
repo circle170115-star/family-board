@@ -563,6 +563,7 @@
         renderDay();
         renderCalendar();
         renderMealTabs();
+        renderWeek();
         if (window.innerWidth < 660) $("dayCard").scrollIntoView({ behavior: "smooth", block: "start" });
       })
     );
