@@ -81,12 +81,14 @@ body{
 @media(min-width:660px){
   .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
   .calendar{grid-column:span 2}
+  .reserve{grid-column:span 2}
   .growth{grid-column:span 2}
 }
 @media(min-width:1080px){
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
   .calendar{grid-column:span 2}
-  .growth{grid-column:span 2}
+  .reserve{grid-column:span 3}
+  .growth{grid-column:span 3}
 }
 
 /* ── 카드 ── */
@@ -316,7 +318,7 @@ body{
 /* ── 강서 인근 체험 예약 ── */
 .reserve{background:linear-gradient(170deg,#FFFCF6 0%,#F7FAFF 100%);border-color:#F1E7D6}
 .res-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:11px}
-@media(min-width:560px){.res-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:660px){.res-grid{grid-template-columns:1fr 1fr}}
 @media(min-width:1080px){.res-grid{grid-template-columns:1fr 1fr 1fr}}
 .res-card{
   border:1px solid var(--line);border-radius:16px;padding:12px 13px 12px;background:#FDFEFF;
