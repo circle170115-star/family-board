@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>우리 집 모아보드</title>
+<meta name="description" content="다은이·승민이의 일정, 급식, 날씨, 건강 기록을 한 화면에 모은 가족 대시보드">
+<meta name="theme-color" content="#EFF6FF">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+</head>
+<body>
+<div class="blobs" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">🏠</div>
+      <div class="brand-text">
+        <h1>우리 집 모아보드</h1>
+        <p id="todayLine">불러오는 중…</p>
+      </div>
+    </div>
+    <div class="topbar-side">
+      <div class="seg" id="childFilter" role="group" aria-label="아이 선택">
+        <button class="seg-btn is-on" data-filter="all" type="button">전체</button>
+        <button class="seg-btn" data-filter="daeun" type="button"><i class="dot dot-daeun"></i>다은</button>
+        <button class="seg-btn" data-filter="seungmin" type="button"><i class="dot dot-seungmin"></i>승민</button>
+      </div>
+      <button class="refresh" id="refreshBtn" type="button" aria-label="새로고침" title="새로고침">↻</button>
+    </div>
+  </header>
+
+  <main class="grid" id="grid">
+
+    <!-- 날씨 -->
+    <section class="card weather" id="weatherCard" aria-labelledby="weatherTitle">
+      <div class="card-head">
+        <span class="ico">🌤️</span>
+        <h2 id="weatherTitle">날씨 &amp; 등원 옷차림</h2>
+        <span class="src" id="weatherSrc">불러오는 중</span>
+      </div>
+      <div id="weatherBody" class="weather-body">
+        <div class="wx-skel">날씨 불러오는 중…</div>
+      </div>
+    </section>
+
+    <!-- 선택한 날 -->
+    <section class="card day" id="dayCard" aria-labelledby="dayTitle">
+      <div class="card-head">
+        <span class="ico">🗓️</span>
+        <h2 id="dayTitle">오늘의 일정</h2>
+        <span class="chip-soft" id="dayChip">—</span>
+      </div>
+      <div id="dayBody"></div>
+    </section>
+
+    <!-- 급식 -->
+    <section class="card meal" id="mealCard" aria-labelledby="mealTitle">
+      <div class="card-head">
+        <span class="ico">🍱</span>
+        <h2 id="mealTitle">오늘의 급식 · 간식</h2>
+        <span class="src" id="mealSrc"></span>
+      </div>
+      <div id="mealBody"></div>
+    </section>
+
+    <!-- 달력 -->
+    <section class="card calendar" id="calendarCard" aria-labelledby="calTitle">
+      <div class="card-head">
+        <span class="ico">📅</span>
+        <h2 id="calTitle">가족 달력</h2>
+        <div class="cal-nav">
+          <button class="nav-btn" id="prevMonth" type="button" aria-label="이전 달">‹</button>
+          <button class="nav-btn today-btn" id="goToday" type="button">오늘</button>
+          <button class="nav-btn" id="nextMonth" type="button" aria-label="다음 달">›</button>
+        </div>
+      </div>
+      <div class="cal-month" id="calMonth">2026년 11월</div>
+      <div class="cal-dow" id="calDow"></div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-legend">
+        <span><i class="dot dot-daeun"></i>다은</span>
+        <span><i class="dot dot-seungmin"></i>승민</span>
+        <span><i class="dot dot-event"></i>유치원</span>
+        <span><i class="dot dot-holiday"></i>공휴일</span>
+        <span class="cal-legend-note">공휴일은 수업·등원 없음</span>
+      </div>
+    </section>
+
+    <!-- 주간 시간표 -->
+    <section class="card week" id="weekCard" aria-labelledby="weekTitle">
+      <div class="card-head">
+        <span class="ico">🧸</span>
+        <h2 id="weekTitle">다은 · 승민 주간 시간표</h2>
+      </div>
+      <div id="weekBody"></div>
+    </section>
+
+    <!-- 성장 기록 -->
+    <section class="card growth" id="growthCard" aria-labelledby="growthTitle">
+      <div class="card-head">
+        <span class="ico">📏</span>
+        <h2 id="growthTitle">아이들 성장 · 건강 기록</h2>
+        <span class="src" id="growthNote"></span>
+      </div>
+      <div id="growthBody"></div>
+    </section>
+
+    <!-- 수학 놀이터 -->
+    <section class="card math" id="mathCard" aria-labelledby="mathTitle">
+      <div class="card-head">
+        <span class="ico">🎮</span>
+        <h2 id="mathTitle">모아정원 수학 놀이터</h2>
+        <span class="src" id="mathLevel"></span>
+      </div>
+      <div class="math-tabs" id="mathTabs">
+        <button class="math-tab is-on" data-mode="seungmin" type="button">승민 <small>5세 · 한 자리 덧셈</small></button>
+        <button class="math-tab" data-mode="daeun" type="button">다은 <small>7세 · 두 자리 덧셈·뺄셈</small></button>
+      </div>
+      <div id="mathBody"></div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <div class="foot-left">
+      <strong>우리 집 모아보드</strong>
+      <span id="updatedAt">—</span>
+      <span class="foot-sep">·</span>
+      <span id="dataPath">data/board-data.json</span>
+    </div>
+    <div class="foot-right" id="footAttr"></div>
+  </footer>
+</div>
+
+<noscript><p style="text-align:center;padding:24px">이 보드는 JavaScript가 필요합니다.</p></noscript>
+<script src="assets/app.js"></script>
+</body>
+</html>
