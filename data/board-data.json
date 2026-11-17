@@ -30,7 +30,7 @@
       "name": "다은",
       "ageLabel": "7세",
       "birthYear": 2020,
-      "grade": "유치원 7세반",
+      "grade": "열매반 (유치원 7세)",
       "color": "#4F86D6",
       "soft": "#E7F0FD"
     },
@@ -39,7 +39,7 @@
       "name": "승민",
       "ageLabel": "5세",
       "birthYear": 2022,
-      "grade": "유치원 5세반",
+      "grade": "새싹반 (유치원 5세)",
       "color": "#DE7C97",
       "soft": "#FCEAF0"
     }
@@ -582,7 +582,8 @@
   "bookRental": [
     {
       "weekday": "tue",
-      "label": "새싹반 도서대여"
+      "label": "새싹반 도서대여",
+      "child": "seungmin"
     },
     {
       "weekday": "wed",
