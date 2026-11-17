@@ -505,7 +505,7 @@
     $("calMonth").textContent = y + "년 " + m + "월";
     $("calDow").innerHTML = WD.map((w, i) => '<span class="' + (i === 0 ? "sun" : i === 6 ? "sat" : "") + '">' + w + "</span>").join("");
     const first = new Date(y, m - 1, 1);
-    const startPad = (first.getDay() + 6) % 7; // 월요일 시작
+    const startPad = first.getDay(); // 일요일 시작 (헤더 WD = 일 월 화 수 목 금 토)
     const lastDay = new Date(y, m, 0).getDate();
     const prevLast = new Date(y, m - 1, 0).getDate();
     const cells = [];
