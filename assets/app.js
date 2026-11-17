@@ -663,6 +663,127 @@
       '<div class="growth-foot">💡 <b>채팅으로 키·몸무게를 알려주면 바로 업데이트됩니다</b> — 예: "다은 121cm 22kg" · 영유아검진 결과도 기록해 드려요</div>';
   }
 
+  /* ───────────────────────── 강서 인근 체험 예약 ───────────────────────── */
+  // 2026-11-18 각 기관 공식 페이지에서 직접 확인한 내용만 넣었습니다.
+  const RESERVE = [
+    {
+      emoji: "🧸",
+      name: "서울형 키즈카페 시립 화곡점",
+      area: "강서구 화곡 · 우장산역 인근",
+      tone: "pink",
+      badge: "매주 화 09:00 오픈",
+      fit: "다은·승민 둘 다 대상(4~12세)",
+      lines: [
+        "매주 화요일 9시에 다음 주 화~다다음 주 월 이용분이 열려요. 강서구는 1그룹이라 09:00부터!",
+        "아동 5,000원 · 보호자 1명 동반 / 다둥이행복카드 가정은 아동 무료(서울시민)",
+        "미끄럼방지 양말 필수(보호자도 양말) · 음식·음료 반입 불가라 텀블러 챙기기 · 일·공휴일 휴관"
+      ],
+      href: "https://umppa.seoul.go.kr/icare/user/kidsCafe/BD_selectKidsCafeView.do?q_fcltyId=GS241101",
+      alt: "https://umppa.seoul.go.kr/icare/user/kidsCafe/BD_selectKidsCafeList.do",
+      altLabel: "다른 키즈카페 보기"
+    },
+    {
+      emoji: "🌿",
+      name: "서울식물원",
+      area: "강서구 마곡 · 마곡동로 161",
+      tone: "mint",
+      badge: "동절기 09:30~17:00",
+      fit: "어린이 2,000원 · 월 휴관",
+      lines: [
+        "11~2월은 매표·입장 마감이 16:00이고, 월요일 휴관이에요(공휴일이면 다음날).",
+        "교육·문화 프로그램은 홈페이지에서 접수하고, 실제 신청·결제는 서울시 공공서비스예약(yeyak) 선착순으로 진행돼요.",
+        "겨울축제 〈헤세의 정원〉 사전모집 중. 5·7세는 초등 대상 '어린이정원학교'보다 가족 프로그램이 맞아요."
+      ],
+      href: "https://botanicpark.seoul.go.kr/front/participation/eduList.do",
+      alt: "https://yeyak.seoul.go.kr/",
+      altLabel: "공공서비스예약(yeyak)"
+    },
+    {
+      emoji: "✈️",
+      name: "국립항공박물관 어린이공항체험",
+      area: "강서구 공항동 · 하늘길 117",
+      tone: "blue",
+      badge: "화~일 10:00~18:00",
+      fit: "만 48개월~미취학 = 둘 다 OK",
+      lines: [
+        "전시 관람은 무료, 3층 어린이공항체험만 2,000원·45분이에요.",
+        "회차당 온라인 13명 + 현장 5명. 온라인 잔여분은 당일 10시부터 현장 발권으로 풀려요.",
+        "오전 회차는 일찍 마감되고 오후가 여유로운 편 · 월요일 휴관·입장마감 17:30"
+      ],
+      href: "https://aviation.mayeye.net/kor/30/expReservation/calendar?gcode=gcode4",
+      alt: "https://www.aviation.or.kr/",
+      altLabel: "박물관 홈페이지"
+    },
+    {
+      emoji: "📚",
+      name: "강서구립 도서관 프로그램",
+      area: "우장산숲속 · 마곡열린도서관 등",
+      tone: "lilac",
+      badge: "프로그램별 접수 · 선착순",
+      fit: "우장산숲속도서관은 도보권",
+      lines: [
+        "'독서·문화·행사 신청'에서 도서관별 프로그램을 접수해요(온라인·방문·선착순 혼합).",
+        "마곡열린도서관은 2026.11.14 개관한 AI 특화 도서관이고, 이곳만 금요일이 휴관이에요.",
+        "자녀 2명 이상·다둥이행복카드 가정은 수강료 50% 감면(등본+카드 지참)."
+      ],
+      href: "https://lib.gangseo.seoul.kr/LibProgramInfo",
+      alt: "https://lib.gangseo.seoul.kr/GangseoLibrary",
+      altLabel: "도서관 안내"
+    },
+    {
+      emoji: "🎨",
+      name: "겸재정선미술관",
+      area: "강서구 가양동 · 양천로47길 36",
+      tone: "cream",
+      badge: "어린이 프로그램 사전접수",
+      fit: "2층 진경문화체험실 상시 무료",
+      lines: [
+        "2층 진경문화체험실에서 퍼즐·탁본·따라그리기 무료 체험. '어린이 겸재 진경교실'은 강서구 문화시설 통합운영시스템에서 접수해요.",
+        "만 6세 미만·다둥이행복카드 무료 / 성인 1,000원 · 매월 2·4주 토요일은 무료관람.",
+        "월요일 휴관 · 관람 10:00~18:00(입장마감 17:00) · 11/28~29 '별별체험'도 열려요."
+      ],
+      href: "https://culture.gangseo.seoul.kr/gsfc/education/list.do",
+      alt: "https://culture.gangseo.seoul.kr/gsfc/main/contents.do?menuNo=800108",
+      altLabel: "관람 안내"
+    },
+    {
+      emoji: "🔭",
+      name: "국립어린이과학관",
+      area: "종로구 창경궁로 215 · 나들이 코스",
+      tone: "blue",
+      badge: "관람일 14일 전 0시 오픈",
+      fit: "천체투영관 연나이 4세 이상",
+      lines: [
+        "관람일 14일 전 0시부터 인터넷 예매가 열려요(하루씩 자동 연장). 상설전시관 주말은 인터넷 75%만 풀려요.",
+        "천체투영관·빛놀이터는 인터넷 100% 예약. 4~6세는 보호자 표를 따로 사야 해요.",
+        "월요일 휴관(공휴일이면 화요일) · 09:30~17:30(입장마감 16:30)"
+      ],
+      href: "https://www.sciencecenter.go.kr/csc/reserve/reserve-guide",
+      alt: "",
+      altLabel: ""
+    }
+  ];
+
+  function renderReserve() {
+    $("reserveBody").innerHTML =
+      '<div class="res-grid">' +
+      RESERVE.map((c) =>
+        '<article class="res-card ' + (c.tone || "") + '">' +
+          '<div class="res-head"><span class="res-ico">' + c.emoji + '</span>' +
+            '<div class="res-title"><b>' + c.name + '</b><span>' + c.area + '</span></div></div>' +
+          '<div class="res-tags"><span class="res-badge">⏰ ' + c.badge + '</span>' +
+            (c.fit ? '<span class="res-fit">' + c.fit + '</span>' : '') + "</div>" +
+          '<ul class="res-lines">' + c.lines.map((l) => "<li>" + l + "</li>").join("") + "</ul>" +
+          '<div class="res-actions">' +
+            '<a class="res-go" href="' + c.href + '" target="_blank" rel="noopener">바로가기 ↗</a>' +
+            (c.alt ? '<a class="res-alt" href="' + c.alt + '" target="_blank" rel="noopener">' + c.altLabel + '</a>' : '') +
+          "</div>" +
+        "</article>"
+      ).join("") +
+      "</div>" +
+      '<div class="res-foot">🎟️ 예약 오픈 시간·요금은 기관 사정으로 바뀔 수 있어요 — 링크에서 최신 공지를 확인하세요 · 2026.11.18 기준 확인</div>';
+  }
+
   /* ───────────────────────── 수학 놀이터 ───────────────────────── */
   const math = { answer: null, score: { right: 0, total: 0 } };
   function mathGen() {
@@ -753,6 +874,7 @@
     renderMealTabs();
     renderCalendar();
     renderWeek();
+    renderReserve();
     renderGrowth();
     btn.classList.remove("busy");
   });
@@ -789,6 +911,7 @@
   renderMealTabs();
   renderCalendar();
   renderWeek();
+  renderReserve();
   renderGrowth();
   mathGen();
 

@@ -313,6 +313,57 @@ body{
 .growth-foot{font-size:10.5px;color:var(--muted);font-weight:600;margin-top:11px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .growth-foot b{color:var(--blue-800);font-weight:750}
 
+/* ── 강서 인근 체험 예약 ── */
+.reserve{background:linear-gradient(170deg,#FFFCF6 0%,#F7FAFF 100%);border-color:#F1E7D6}
+.res-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:11px}
+@media(min-width:560px){.res-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:1080px){.res-grid{grid-template-columns:1fr 1fr 1fr}}
+.res-card{
+  border:1px solid var(--line);border-radius:16px;padding:12px 13px 12px;background:#FDFEFF;
+  display:flex;flex-direction:column;gap:9px;min-width:0;
+}
+.res-card.blue{background:linear-gradient(170deg,#F8FBFF,#EFF5FE);border-color:#DFEBFA}
+.res-card.pink{background:linear-gradient(170deg,#FFFAFB,#FCEFF3);border-color:#F6DDE5}
+.res-card.mint{background:linear-gradient(170deg,#F8FDFA,#EDF8F1);border-color:#DBEFE3}
+.res-card.lilac{background:linear-gradient(170deg,#FBFAFF,#F2EEFC);border-color:#E4DDF6}
+.res-card.cream{background:linear-gradient(170deg,#FFFDF7,#FFF7E9);border-color:#F3E8D3}
+.res-head{display:flex;align-items:flex-start;gap:8px}
+.res-ico{
+  width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-size:14px;flex:none;
+  background:#fff;border:1px solid rgba(226,236,248,.95);
+}
+.res-title{display:flex;flex-direction:column;gap:2px;min-width:0}
+.res-title b{font-size:13px;font-weight:750;letter-spacing:-.02em;color:var(--ink);line-height:1.3}
+.res-title span{font-size:10px;font-weight:600;color:var(--muted)}
+.res-tags{display:flex;flex-wrap:wrap;gap:5px}
+.res-badge{
+  font-size:10px;font-weight:750;color:var(--blue-800);background:#fff;
+  border:1px solid var(--blue-200);border-radius:999px;padding:3px 8px;white-space:nowrap;
+}
+.res-fit{
+  font-size:10px;font-weight:700;color:var(--mint-700);background:var(--mint);
+  border-radius:999px;padding:3px 8px;white-space:nowrap;
+}
+.res-lines{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+.res-lines li{
+  position:relative;padding-left:11px;font-size:11px;line-height:1.45;font-weight:600;color:var(--ink-2);
+}
+.res-lines li::before{content:"";position:absolute;left:2px;top:6px;width:4px;height:4px;border-radius:50%;background:var(--blue-400)}
+.res-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:2px}
+.res-go{
+  display:inline-flex;align-items:center;justify-content:center;gap:4px;
+  padding:8px 14px;border-radius:11px;text-decoration:none;
+  font-size:12px;font-weight:750;color:#fff;letter-spacing:-.01em;
+  background:linear-gradient(135deg,var(--blue-600),#3E71BC);
+  box-shadow:0 10px 18px -14px rgba(60,105,180,.95);
+  min-height:34px;
+}
+.res-go:hover{filter:brightness(1.05)}
+.res-go:active{transform:translateY(1px)}
+.res-alt{font-size:10.5px;font-weight:700;color:var(--blue-800);text-decoration:none;border-bottom:1px dotted #B9CCE5;padding-bottom:1px}
+.res-alt:hover{color:var(--blue-600)}
+.res-foot{font-size:10.5px;color:var(--muted);font-weight:600;margin-top:11px;line-height:1.5}
+
 /* ── 수학 놀이터 ── */
 .math{background:linear-gradient(170deg,#F3FBF6 0%,#F0F8FF 100%);border-color:#DCEFE4}
 .math-tabs{display:flex;gap:6px;margin-bottom:12px}

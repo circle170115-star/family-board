@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>우리 집 모아보드</title>
-<meta name="description" content="다은이·승민이의 일정, 급식, 날씨, 건강 기록을 한 화면에 모은 가족 대시보드">
+<meta name="description" content="다은이·승민이의 일정, 급식, 날씨, 강서 인근 체험 예약, 건강 기록을 한 화면에 모은 가족 대시보드">
 <meta name="theme-color" content="#EFF6FF">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=20261118a">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
 </head>
 <body>
@@ -100,14 +100,14 @@
       <div id="weekBody"></div>
     </section>
 
-    <!-- 성장 기록 -->
-    <section class="card growth" id="growthCard" aria-labelledby="growthTitle">
+    <!-- 체험 예약 -->
+    <section class="card reserve" id="reserveCard" aria-labelledby="reserveTitle">
       <div class="card-head">
-        <span class="ico">📏</span>
-        <h2 id="growthTitle">아이들 성장 · 건강 기록</h2>
-        <span class="src" id="growthNote"></span>
+        <span class="ico">🎟️</span>
+        <h2 id="reserveTitle">강서 인근 체험 예약</h2>
+        <span class="src">예약 오픈 규칙 · 공식 링크</span>
       </div>
-      <div id="growthBody"></div>
+      <div id="reserveBody"></div>
     </section>
 
     <!-- 수학 놀이터 -->
@@ -124,6 +124,16 @@
       <div id="mathBody"></div>
     </section>
 
+    <!-- 성장 기록 (맨 마지막) -->
+    <section class="card growth" id="growthCard" aria-labelledby="growthTitle">
+      <div class="card-head">
+        <span class="ico">📏</span>
+        <h2 id="growthTitle">아이들 성장 · 건강 기록</h2>
+        <span class="src" id="growthNote"></span>
+      </div>
+      <div id="growthBody"></div>
+    </section>
+
   </main>
 
   <footer class="foot">
@@ -138,6 +148,6 @@
 </div>
 
 <noscript><p style="text-align:center;padding:24px">이 보드는 JavaScript가 필요합니다.</p></noscript>
-<script src="assets/app.js?v=20261117b"></script>
+<script src="assets/app.js?v=20261118a"></script>
 </body>
 </html>
