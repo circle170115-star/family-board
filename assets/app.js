@@ -24,6 +24,7 @@
   const EVENTS = data.kindergartenEvents || [];
   const BOOK = data.bookRental || [];
   const SNACKS = data.kindergartenSnacks || {};
+  const EVENING = data.eveningRoutine || null;
   const CHILD = {};
   (data.children || []).forEach((c) => (CHILD[c.id] = c));
 
@@ -37,6 +38,53 @@
 
   const today = new Date();
   const todayStr = iso(today);
+
+  /* ───────────────────────── 평일 격일 저녁 홈활동 ─────────────────────────
+     미술·독서·수학·과학·보드게임 5과목을 "평일(월~금)만" 세어 격일로 돌립니다.
+     기준일 2026-11-17(화) = 평일 0번째 → 🎨 미술, 11/18(수) 1번째 → 쉼,
+     11/19(목) 2번째 → 📖 독서 … 이렇게 2주(평일 10일)에 5과목 한 바퀴.
+     토·일은 세지 않아 주말에는 홈활동이 없고, 공휴일은 평일 그대로 세어
+     리듬이 끊기지 않습니다. */
+  function weekdayIndexFromAnchor(ds) {
+    if (!EVENING || !EVENING.anchor) return -1;
+    const a = parseISO(EVENING.anchor);
+    const b = parseISO(ds);
+    if (b < a) return -1;
+    if (b.getDay() === 0 || b.getDay() === 6) return -1;
+    const total = Math.round((b - a) / 86400000);
+    const fullWeeks = Math.floor(total / 7);
+    let n = fullWeeks * 5;
+    const cur = new Date(a);
+    cur.setDate(a.getDate() + fullWeeks * 7);
+    for (let i = 0; i <= total - fullWeeks * 7; i++) {
+      const wd = cur.getDay();
+      if (wd !== 0 && wd !== 6) n++;
+      cur.setDate(cur.getDate() + 1);
+    }
+    return n - 1;
+  }
+  function eveningSubject(ds) {
+    const subs = EVENING && EVENING.subjects;
+    if (!subs || !subs.length) return null;
+    const step = EVENING.step || 2;
+    const wi = weekdayIndexFromAnchor(ds);
+    if (wi < 0 || wi % step !== 0) return null;
+    return subs[Math.floor(wi / step) % subs.length];
+  }
+  function eveningItem(ds) {
+    const subs = EVENING && EVENING.subjects;
+    if (!subs || !subs.length) return null;
+    const s = eveningSubject(ds);
+    if (!s) return null;
+    const next = subs[(subs.indexOf(s) + 1) % subs.length];
+    return {
+      type: "routine",
+      time: EVENING.time || "20:00",
+      title: s.emoji + " " + s.name,
+      note: "다은·승민 함께 · 다음 홈활동은 " + next.emoji + " " + next.name,
+      who: EVENING.target === "both" ? ["daeun", "seungmin"] : [EVENING.target || "daeun"],
+    };
+  }
 
   /* ───────────────────────── 차시 계산 ─────────────────────────
      공휴일(및 주말)을 제외하고 해당 월의 수업 요일만 순서대로 세어
@@ -90,6 +138,8 @@
     const items = [];
     if (hol) {
       items.push({ type: "holiday", name: hol.name, kind: hol.type });
+      const holEv = eveningItem(ds);
+      if (holEv) items.push(holEv);
       return items;
     }
     EVENTS.forEach((ev) => {
@@ -118,10 +168,12 @@
       if (si) note = note ? si.label + " · " + note : si.label;
       items.push({ type: "class", time, title: s.title, note, who: s.child });
     });
+    const ev = eveningItem(ds);
+    if (ev) items.push(ev);
+    const untimed = (i) => i.type === "event" || i.type === "book";
     items.sort((a, b) => {
-      if (a.type !== "class" && b.type === "class") return -1;
-      if (a.type === "class" && b.type !== "class") return 1;
-      if (a.time && b.time) return a.time < b.time ? -1 : 1;
+      if (untimed(a) !== untimed(b)) return untimed(a) ? -1 : 1;
+      if (a.time && b.time) return a.time < b.time ? -1 : a.time > b.time ? 1 : 0;
       if (a.time) return 1;
       if (b.time) return -1;
       return 0;
@@ -271,11 +323,17 @@
     $("dayTitle").textContent = isToday ? "오늘의 일정" : "그날의 일정";
     $("dayChip").textContent = d.getMonth() + 1 + "월 " + d.getDate() + "일 " + WD[d.getDay()] + "요일";
     const items = dayItems(ds, state.filter);
+    const hol = items.filter((i) => i.type === "holiday")[0] || null;
+    const rests = hol ? items.filter((i) => i.type !== "holiday") : items;
 
-    if (items.length && items[0].type === "holiday") {
+    if (hol) {
       $("dayBody").innerHTML =
-        '<div class="day-holiday">🕯️ 공휴일 · 수업 없음 <span>' + items[0].name +
+        '<div class="day-holiday">🕯️ 공휴일 · 수업 없음 <span>' + hol.name +
         " — 피아노·어퍼룸·화상수업·유치원 하원 픽업이 모두 쉬어요</span></div>" +
+        (rests.length
+          ? '<ul class="tl">' + rests.map(tlItem).join("") + "</ul>" +
+            '<div class="day-sum"><span>저녁 홈활동은 <b>공휴일에도 그대로</b></span><span>일정 <b>' + rests.length + "건</b></span></div>"
+          : "") +
         snackHtml(ds);
       return;
     }
@@ -296,8 +354,14 @@
     $("dayBody").innerHTML = html;
   }
   function tlItem(i) {
-    const who = i.who ? CHILD[i.who] : null;
-    const tag = who ? '<span class="tag ' + who.id + '">' + who.name + " (" + who.ageLabel + ")</span>" : "";
+    const ids = Array.isArray(i.who) ? i.who : i.who ? [i.who] : [];
+    const both = ids.length > 1;
+    const who = ids.length === 1 ? CHILD[ids[0]] : null;
+    const tag = both
+      ? '<span class="tag both">다은·승민 공통</span>'
+      : who
+      ? '<span class="tag ' + who.id + '">' + who.name + " (" + who.ageLabel + ")</span>"
+      : "";
     const badge = i.warn ? '<span class="tag warn">' + i.note + "</span>" : "";
     const time = i.time
       ? i.time
@@ -307,7 +371,7 @@
       ? "도서"
       : "하루";
     return (
-      '<li class="tl-item' + (who ? " child-" + who.id : " untimed") + '">' +
+      '<li class="tl-item' + (both ? " child-both" : who ? " child-" + who.id : " untimed") + '">' +
       '<span class="tl-time">' + time + "</span>" +
       '<div class="tl-main"><div class="tl-title">' + i.title + " " + tag +
       (i.warn ? "" : " " + badge) +
@@ -477,6 +541,11 @@
           chips.push('<span class="cell-item ' + (ev.important ? "warn" : "event") + '">' + (ev.important ? "⚠️ " : "") + ev.title + "</span>");
           dots.push("event");
         });
+        const evs = eveningSubject(ds);
+        if (evs) {
+          chips.unshift('<span class="cell-item both">' + evs.emoji + " " + evs.name + "</span>");
+          dots.push("both");
+        }
         return (
           '<button class="' + cls + '" data-date="' + ds + '" type="button" aria-label="' + ds + '">' +
           '<span class="dnum">' + d.getDate() + "</span>" +
@@ -541,9 +610,22 @@
       });
       body += row + "</tr>";
     });
+    const evDays = week
+      .map((ds, i) => {
+        const s = eveningSubject(ds);
+        return (
+          '<span class="ev-day' + (s ? " is-on" : "") + (ds === todayStr ? " is-today" : "") + '">' +
+          "<em>" + WD[(i + 1) % 7] + "</em><b>" +
+          (s ? '<span class="ev-emoji">' + s.emoji + '</span><span class="ev-name">' + s.name + "</span>" : "—") +
+          "</b></span>"
+        );
+      })
+      .join("");
     $("weekBody").innerHTML =
       '<table class="week-table"><thead>' + head + "</thead><tbody>" + body + "</tbody></table>" +
-      '<div class="week-more">공휴일에는 수업이 자동으로 쉬어요 · 다은 엘리하이는 매월 1·3차시 18:10 단독, 2·4차시 18:20 격주 · 어퍼룸은 월 8차시, 엘리하이는 월 4차시로 공휴일을 뺀 수업일 기준으로 자동 계산돼요.</div>';
+      '<div class="ev-week"><div class="ev-week-h">🌙 저녁 ' + ((EVENING && EVENING.time) || "20:00") +
+      ' · 평일 격일 홈활동 (다은·승민 공통)</div><div class="ev-days">' + evDays + "</div></div>" +
+      '<div class="week-more">공휴일에는 수업이 자동으로 쉬어요 · 다은 엘리하이는 매월 1·3차시 18:10 단독, 2·4차시 18:20 격주 · 어퍼룸은 월 8차시, 엘리하이는 월 4차시로 공휴일을 뺀 수업일 기준으로 자동 계산돼요. 저녁 홈활동은 평일(월~금)만 세어 격일로 돌아가요 — 토·일은 쉽니다.</div>';
   }
 
   /* ───────────────────────── 성장 기록 ───────────────────────── */

@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updatedAt": "2026-11-17T11:10:00+09:00",
+    "updatedAt": "2026-11-17T14:16:00+09:00",
     "updatedBy": "초기 구축 (아침 브리핑 자동 갱신 대상)",
     "schemaNote": "일정·급식·날씨·건강 데이터는 이 파일만 고치면 보드에 반영됩니다. 자세한 구조는 README.md 참고."
   },
@@ -687,6 +687,23 @@
     ]
   },
   "snackNote": "방과후과정 간식 (11월 가정통신문)",
+  "eveningRoutine": {
+    "id": "evening-five-subjects",
+    "title": "저녁 홈활동",
+    "time": "20:00",
+    "anchor": "2026-11-17",
+    "step": 2,
+    "weekdaysOnly": true,
+    "target": "both",
+    "subjects": [
+      { "emoji": "🎨", "name": "미술" },
+      { "emoji": "📖", "name": "독서" },
+      { "emoji": "🔢", "name": "수학" },
+      { "emoji": "🔬", "name": "과학" },
+      { "emoji": "🎲", "name": "보드게임" }
+    ],
+    "note": "평일(월~금) 격일 저녁 8시 · 다은·승민 공통 · 2주에 5과목 한 바퀴"
+  },
   "growth": [
     {
       "child": "daeun",
