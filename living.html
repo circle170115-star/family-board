@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>거실 등원 보드 · 우리 집</title>
+<meta name="description" content="다은·승민이가 거실 태블릿에서 직접 누르는 아침 등원 준비 체크리스트와 칭찬 스티커판">
+<meta name="theme-color" content="#FFFBF3">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="assets/living.css?v=20261119a">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>">
+</head>
+<body class="living">
+<div class="lv-app">
+
+  <header class="lv-head">
+    <div class="lv-clock">
+      <div class="lv-time"><span id="clockHM">--:--</span><small id="clockSec">00</small></div>
+      <div class="lv-date" id="dateLine">날짜 불러오는 중</div>
+    </div>
+    <div class="lv-mid">
+      <div class="lv-wx" id="wxLine">☀️ 오늘 날씨 불러오는 중…</div>
+      <div class="lv-outfit" id="outfitLine">등원 옷차림을 확인하고 있어요</div>
+    </div>
+    <div class="lv-actions">
+      <button class="lv-icon-btn" id="soundBtn" type="button" aria-label="효과음 켜기/끄기" title="효과음">🔊</button>
+      <button class="lv-icon-btn" id="gearBtn" type="button" aria-label="부모님 설정" title="부모님 설정">⚙️</button>
+      <a class="lv-home" id="homeLink" href="index.html">🏠 전체 모아보드</a>
+    </div>
+  </header>
+
+  <div class="lv-chips" id="chipRow" aria-label="오늘 유치원 소식"></div>
+
+  <main class="lv-grid" id="childGrid" aria-label="아이별 등원 준비">
+    <div class="lv-error">오늘 준비를 불러오는 중…</div>
+  </main>
+
+</div>
+
+<div class="celebrate" id="celebrate" role="status" aria-live="polite"><b></b><span></span></div>
+<div id="confetti" aria-hidden="true"></div>
+<div class="lv-toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="lv-modal" id="gearPanel" hidden>
+  <div class="lv-panel" role="dialog" aria-modal="true" aria-labelledby="gearTitle">
+    <h3 id="gearTitle">⚙️ 부모님 설정</h3>
+    <p>체크와 스티커는 <b>이 기기 브라우저에만</b> 저장돼요. 날짜가 바뀌면 체크만 새로 시작하고 스티커는 그대로 쌓여요.</p>
+    <div class="lv-set">
+      <span>🔊 효과음</span>
+      <button class="switch" id="soundSwitch" type="button" aria-pressed="true">켜짐</button>
+    </div>
+    <div id="stRows"></div>
+    <div class="lv-set">
+      <span>🔄 오늘 체크</span>
+      <button class="mini-btn" id="resetBtn" type="button">오늘 체크 초기화</button>
+    </div>
+    <div class="lv-set">
+      <span>📥 보드 데이터</span>
+      <button class="mini-btn" id="reloadBtn" type="button">다시 불러오기</button>
+    </div>
+    <div class="row-btns">
+      <button class="mini-btn wide" id="closeGear" type="button">닫기</button>
+    </div>
+  </div>
+</div>
+
+<noscript><p style="text-align:center;padding:24px">이 보드는 JavaScript가 필요해요.</p></noscript>
+<script src="assets/living.js?v=20261119a"></script>
+</body>
+</html>

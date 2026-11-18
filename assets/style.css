@@ -435,3 +435,15 @@ body{
   .blobs,.refresh,.cal-nav,.math-tabs,.meal-tabs{display:none}
   .card{box-shadow:none;break-inside:avoid}
 }
+
+/* ── 거실 등원 보드 바로가기 (.living-link) ── */
+.living-link{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 15px;border-radius:999px;text-decoration:none;
+  background:linear-gradient(135deg,#4F86D6,#7BA7E6);color:#fff;
+  font-size:12.5px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;
+  box-shadow:0 10px 20px -14px rgba(45,90,160,.95);
+  transition:transform .14s, box-shadow .14s;
+}
+.living-link:hover{transform:translateY(-1px);box-shadow:0 14px 22px -12px rgba(45,90,160,.8)}
+@media (max-width:560px){.living-link{font-size:12px;padding:8px 12px}}
