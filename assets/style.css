@@ -23,10 +23,10 @@
   --red-soft:#FFF1EF;
   --shadow:0 12px 34px -22px rgba(60,95,150,.55);
   --radius:22px;
-  --daeun:#4F86D6;
-  --daeun-soft:#E7F0FD;
-  --seungmin:#DE7C97;
-  --seungmin-soft:#FCEAF0;
+  --daeun:#C1687F;
+  --daeun-soft:#FDEDF2;
+  --seungmin:#3E76C4;
+  --seungmin-soft:#E9F2FE;
 }
 
 *{box-sizing:border-box}
@@ -152,15 +152,15 @@ body{
   display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:start;
   padding:9px 11px;border-radius:14px;background:#F8FBFF;border:1px solid #EDF4FD;
 }
-.tl-item.child-daeun{background:var(--daeun-soft);border-color:#DCE9FA}
-.tl-item.child-seungmin{background:var(--seungmin-soft);border-color:#F7DCE5}
+.tl-item.child-daeun{background:var(--daeun-soft);border-color:#F5D5DF}
+.tl-item.child-seungmin{background:var(--seungmin-soft);border-color:#D6E6FA}
 .tl-time{font-size:12px;font-weight:800;color:var(--ink-2);padding-top:1px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .tl-main{min-width:0}
 .tl-title{font-size:13px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .tl-note{font-size:11px;color:var(--muted);margin-top:2px;font-weight:550}
 .tag{font-size:10px; font-weight:750; padding:2px 7px; border-radius:999px; white-space:nowrap}
-.tag.daeun{background:#fff;color:var(--daeun);border:1px solid #CFE0F7}
-.tag.seungmin{background:#fff;color:var(--seungmin);border:1px solid #F3CFDB}
+.tag.daeun{background:#fff;color:var(--daeun);border:1px solid #F3CFDB}
+.tag.seungmin{background:#fff;color:var(--seungmin);border:1px solid #CFE0F7}
 .tag.session{background:#EFF6FF;color:var(--blue-800);border:1px solid #D8E8FA}
 .tag.warn{background:#FFF3E4;color:#A9681A;border:1px solid #F3DFC0}
 .tag.alert{background:#FFF6DE;color:#8A6417;border:1px solid #F0E0B4}
@@ -293,8 +293,8 @@ body{
 .growth-grid{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:560px){.growth-grid{grid-template-columns:1fr 1fr}}
 .kid-card{border:1px solid var(--line);border-radius:16px;padding:13px;background:#FCFDFF}
-.kid-card.daeun{background:linear-gradient(170deg,#F7FAFF,#EFF5FE);border-color:#DFEBFA}
-.kid-card.seungmin{background:linear-gradient(170deg,#FFFAFB,#FCEFF3);border-color:#F6DDE5}
+.kid-card.daeun{background:linear-gradient(170deg,#FFF9FB,#FDEEF3);border-color:#F5D9E3}
+.kid-card.seungmin{background:linear-gradient(170deg,#F8FBFF,#EAF3FE);border-color:#DCE9FA}
 .kid-head{display:flex;align-items:center;gap:7px;margin-bottom:10px}
 .kid-name{font-size:13px;font-weight:800;letter-spacing:-.03em}
 .kid-name .age{font-size:10.5px;font-weight:700;color:var(--muted);margin-left:3px}

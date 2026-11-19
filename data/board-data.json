@@ -31,8 +31,8 @@
       "ageLabel": "7세",
       "birthYear": 2020,
       "grade": "열매반 (유치원 7세)",
-      "color": "#4F86D6",
-      "soft": "#E7F0FD"
+      "color": "#C1687F",
+      "soft": "#FDEDF2"
     },
     {
       "id": "seungmin",
@@ -40,8 +40,8 @@
       "ageLabel": "5세",
       "birthYear": 2022,
       "grade": "새싹반 (유치원 5세)",
-      "color": "#DE7C97",
-      "soft": "#FCEAF0"
+      "color": "#3E76C4",
+      "soft": "#E9F2FE"
     }
   ],
   "schedules": [
