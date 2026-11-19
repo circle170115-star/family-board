@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CHECK · 거실 등원 보드 검증</title>
+<meta name="description" content="다은·승민이가 거실 태블릿에서 직접 누르는 아침 등원 준비 체크리스트와 칭찬 스티커판">
+<meta name="theme-color" content="#FFFBF3">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="assets/living.css?v=20261120a">
+<link rel="manifest" href="manifest-living.json">
+<meta name="application-name" content="등원 보드">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="등원 보드">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/icons/icon-64.png">
+<script>
+/* ⚠️ 검증용 임시 페이지(check-alarm.html) 전용 — living.html 사본에만 들어 있으며 검증 후 삭제합니다.
+   목적: ①예전 기본값 09:00 → 08:40 자동 이전 ②평일 8:00 / 8:20 알람 발생과 하루 1회 제한 확인 */
+(function () {
+  var q = new URLSearchParams(location.search);
+  var KEY = "familyLivingBoard.v1";
+  var d = new Date();
+  var p2 = function (n) { return String(n).padStart(2, "0"); };
+  var today = d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate());
+  var RealDate = Date;
+  var seed = q.get("seed");
+  if (seed) {
+    var s = {};
+    if (seed === "old") {
+      s = { sound: true, alarm: true, departure: "09:00", departureByDate: {}, alarmDoneBySlot: {} };
+      s.departureByDate[today] = "09:00";
+    } else if (seed === "after0800") {
+      s = { sound: true, alarm: true, departure: "08:40", departureByDate: {}, alarmDoneBySlot: { start: today }, defaultsRev: 2 };
+    } else if (seed === "off") {
+      s = { sound: true, alarm: false, departure: "08:40", departureByDate: {}, alarmDoneBySlot: {}, defaultsRev: 2 };
+    } else if (seed === "custom") {
+      s = { sound: true, alarm: true, departure: "09:10", departureByDate: {}, alarmDoneBySlot: {}, defaultsRev: 2 };
+    }
+    localStorage.setItem(KEY, JSON.stringify(s));
+  }
+  var at = q.get("at");
+  if (at === "0800" || at === "0820") {
+    var fake = new RealDate(d.getFullYear(), d.getMonth(), d.getDate(), 8, at === "0800" ? 0 : 20, 5);
+    function FD() {
+      if (arguments.length === 0) return new RealDate(fake.getTime());
+      return new (Function.prototype.bind.apply(RealDate, [null].concat([].slice.call(arguments))))();
+    }
+    FD.now = function () { return fake.getTime(); };
+    FD.parse = RealDate.parse;
+    FD.UTC = RealDate.UTC;
+    FD.prototype = RealDate.prototype;
+    window.Date = FD;
+  }
+  window.addEventListener("load", function () {
+    setTimeout(function () {
+      var st = null;
+      try { st = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { st = null; }
+      var bn = document.getElementById("alarmBanner");
+      var g = function (id) { var el = document.getElementById(id); return el ? (el.value || el.textContent) : null; };
+      var box = document.createElement("div");
+      box.id = "checkBox";
+      box.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:999;background:#0b1a2b;color:#8ff;font:600 12px/1.5 monospace;padding:9px 12px;border-radius:10px;max-width:74vw;white-space:pre-wrap";
+      box.textContent = JSON.stringify({
+        at: at || "real",
+        now: new RealDate().getFullYear() + "-" + p2(new RealDate().getMonth() + 1) + "-" + p2(new RealDate().getDate()) + " " + String(new Date().getHours()).padStart(2, "0") + ":" + p2(new Date().getMinutes()),
+        departure: st && st.departure,
+        departureByDate: st && st.departureByDate,
+        alarm: st && st.alarm,
+        alarmDoneBySlot: st && st.alarmDoneBySlot,
+        defaultsRev: st && st.defaultsRev,
+        depTodayInput: g("depToday"),
+        depDefaultInput: g("depDefault"),
+        cdMeta: g("cdMeta"),
+        bannerClass: bn ? bn.className : null,
+        bannerTitle: bn ? (bn.querySelector(".alarm-title") || {}).textContent : null,
+        bannerSub: bn ? (bn.querySelector(".alarm-sub") || {}).textContent : null
+      }, null, 1);
+      document.body.appendChild(box);
+    }, 2600);
+  });
+})();
+</script>
+</head>
+<body class="living">
+<div class="lv-alarm" id="alarmBanner" role="alert" aria-live="assertive" title="누르면 닫힙니다">
+  <span class="alarm-ico" aria-hidden="true">⏰</span>
+  <span class="alarm-body">
+    <b class="alarm-title">오전 8시예요!</b>
+    <span class="alarm-sub">다은·승민 등원 준비 시작할 시간이에요 · 출발 08:40</span>
+  </span>
+</div>
+<div class="lv-app">
+
+  <header class="lv-head">
+    <div class="lv-clock">
+      <div class="lv-time"><span id="clockHM">--:--</span><small id="clockSec">00</small></div>
+      <div class="lv-date" id="dateLine">날짜 불러오는 중</div>
+    </div>
+    <div class="lv-mid">
+      <div class="lv-wx" id="wxLine">☀️ 오늘 날씨 불러오는 중…</div>
+      <div class="lv-outfit" id="outfitLine">등원 옷차림을 확인하고 있어요</div>
+    </div>
+    <div class="lv-actions">
+      <button class="lv-icon-btn" id="alarmBtn" type="button" aria-label="등원 알람 켜기/끄기" aria-pressed="true" title="등원 알람 · 평일 8:00 / 8:20">🔔</button>
+      <button class="lv-icon-btn" id="soundBtn" type="button" aria-label="효과음 켜기/끄기" title="효과음">🔊</button>
+      <button class="lv-icon-btn" id="gearBtn" type="button" aria-label="부모님 설정" title="부모님 설정">⚙️</button>
+      <a class="lv-home" id="homeLink" href="index.html">🏠 전체 모아보드</a>
+    </div>
+  </header>
+
+  <section class="lv-count" id="countdown" aria-label="출발까지 남은 시간">
+    <div class="cd-left"><span class="cd-ico">🚀</span><span id="cdTitle">출발까지</span></div>
+    <div class="cd-time"><b id="cdTime">—</b><span id="cdUnit">남았어요!</span></div>
+    <div class="cd-track" id="cdTrack" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="출발까지 남은 시간">
+      <div class="cd-fill" id="cdFill"></div>
+    </div>
+    <div class="cd-meta" id="cdMeta">목표 출발 08:40</div>
+  </section>
+
+  <div class="lv-chips" id="chipRow" aria-label="오늘 유치원 소식"></div>
+
+  <main class="lv-grid" id="childGrid" aria-label="아이별 등원 준비">
+    <div class="lv-error">오늘 준비를 불러오는 중…</div>
+  </main>
+
+</div>
+
+<div class="celebrate" id="celebrate" role="status" aria-live="polite"><b></b><span></span></div>
+<div id="confetti" aria-hidden="true"></div>
+<div class="lv-toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="lv-modal" id="gearPanel" hidden>
+  <div class="lv-panel" role="dialog" aria-modal="true" aria-labelledby="gearTitle">
+    <h3 id="gearTitle">⚙️ 부모님 설정</h3>
+    <p>체크·스티커·출발 시각은 <b>이 기기 브라우저에만</b> 저장돼요. 날짜가 바뀌면 체크만 새로 시작하고 스티커는 그대로 쌓여요.</p>
+
+    <div class="lv-set">
+      <span>🚀 오늘 출발 시각</span>
+      <span class="mini">
+        <button class="num-btn sm" id="depTodayMinus" type="button" aria-label="오늘 출발 시각 5분 앞당기기">−5</button>
+        <input type="time" id="depToday" class="time-in" aria-label="오늘 출발 시각">
+        <button class="num-btn sm" id="depTodayPlus" type="button" aria-label="오늘 출발 시각 5분 늦추기">+5</button>
+        <button class="mini-btn xs" id="depAuto" type="button">자동</button>
+      </span>
+    </div>
+    <div class="lv-set">
+      <span>🕘 평소 출발 시각</span>
+      <span class="mini">
+        <button class="num-btn sm" id="depDefaultMinus" type="button" aria-label="평소 출발 시각 5분 앞당기기">−5</button>
+        <input type="time" id="depDefault" class="time-in" aria-label="평소 출발 시각">
+        <button class="num-btn sm" id="depDefaultPlus" type="button" aria-label="평소 출발 시각 5분 늦추기">+5</button>
+      </span>
+    </div>
+    <div class="lv-set">
+      <span>🔔 등원 알람<small class="alarm-hint" id="alarmHint">평일 8:00 · 8:20</small></span>
+      <button class="switch" id="alarmSwitch" type="button" aria-pressed="true">켜짐</button>
+    </div>
+    <div class="lv-set">
+      <span>🔊 알람 소리 테스트</span>
+      <span class="mini">
+        <button class="mini-btn xs" id="alarmTestStart" type="button">8시 시작음</button>
+        <button class="mini-btn xs" id="alarmTestWarn" type="button">8:20 경고음</button>
+      </span>
+    </div>
+    <p class="alarm-note">💡 이 화면을 켜 둔 동안 평일 8:00·8:20에 울려요. 소리는 화면을 한 번 눌러 주면 나고, 태블릿이 잠들었으면 깰 때 한 번 울립니다.</p>
+    <div class="lv-set">
+      <span>🌞 등원 시간 자동 전환</span>
+      <button class="switch" id="focusSwitch" type="button" aria-pressed="true">켜짐</button>
+    </div>
+    <div class="lv-set">
+      <span>🙈 오늘만 자동 전환 끄기</span>
+      <button class="mini-btn" id="offToday" type="button">오늘은 끄기</button>
+    </div>
+    <div class="lv-set">
+      <span>🔊 효과음</span>
+      <button class="switch" id="soundSwitch" type="button" aria-pressed="true">켜짐</button>
+    </div>
+
+    <div id="stRows"></div>
+
+    <div class="lv-set">
+      <span>🔄 오늘 체크</span>
+      <button class="mini-btn" id="resetBtn" type="button">오늘 체크 초기화</button>
+    </div>
+    <div class="lv-set">
+      <span>📥 보드 데이터</span>
+      <button class="mini-btn" id="reloadBtn" type="button">다시 불러오기</button>
+    </div>
+    <div class="row-btns">
+      <button class="mini-btn wide" id="closeGear" type="button">닫기</button>
+    </div>
+  </div>
+</div>
+
+<noscript><p style="text-align:center;padding:24px">이 보드는 JavaScript가 필요해요.</p></noscript>
+<script src="assets/living.js?v=20261120a"></script>
+</body>
+</html>
