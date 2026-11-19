@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>living 저장소(날짜 바뀜) 검증</title>
+<style>
+  body{margin:0;font-family:monospace}
+  #out{padding:10px;font-size:14px;white-space:pre-wrap}
+  iframe{width:1280px;height:800px;border:1px solid #ccc}
+</style>
+</head>
+<body>
+<div id="out">running…</div>
+<iframe id="f" src="about:blank" title="living"></iframe>
+<script>
+(function () {
+  var mode = new URLSearchParams(location.search).get('mode') || 'rollover';
+  function p2(n) { return String(n).padStart(2, '0'); }
+  function ds(d) { return d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate()); }
+  var now = new Date();
+  var today = ds(now);
+  var yest = ds(new Date(now.getTime() - 86400000));
+  var seed = {
+    sound: true,
+    departure: '09:00',
+    departureByDate: {},
+    stickers: { daeun: 7, seungmin: 3 },
+    date: mode === 'rollover' ? yest : today,
+    checks: {
+      daeun: { morning: ['wash', 'clothes'], evening: [], awarded: { morning: '', evening: '' } },
+      seungmin: { morning: [], evening: ['hands'], awarded: { morning: '', evening: '' } }
+    }
+  };
+  try { localStorage.setItem('familyLivingBoard.v1', JSON.stringify(seed)); } catch (e) {}
+  var f = document.getElementById('f');
+  f.onload = function () {
+    setTimeout(function () {
+      var d = f.contentDocument;
+      var q = function (sel) { var el = d.querySelector(sel); return el ? el.textContent.trim() : null; };
+      var res = {
+        mode: mode,
+        seededDate: seed.date,
+        today: today,
+        daeunMorningTab: q('.kid[data-child="daeun"] .kid-tab[data-part="morning"] b'),
+        seungminMorningTab: q('.kid[data-child="seungmin"] .kid-tab[data-part="morning"] b'),
+        daeunStickers: q('.kid[data-child="daeun"] .st-num'),
+        seungminStickers: q('.kid[data-child="seungmin"] .st-num'),
+        doneTiles: d.querySelectorAll('.tile.is-done').length,
+        savedDate: (JSON.parse(localStorage.getItem('familyLivingBoard.v1') || '{}') || {}).date
+      };
+      document.getElementById('out').textContent = JSON.stringify(res, null, 1);
+      document.title = 'result-ready';
+    }, 1500);
+  };
+  f.src = 'living.html?t=' + Date.now();
+})();
+</script>
+</body>
+</html>
