@@ -322,6 +322,18 @@
     let pct = left <= 0 ? 0 : Math.max(0, Math.min(100, (left / windowMin) * 100));
     fEl.style.width = pct.toFixed(1) + "%";
 
+    if (isRestDay(todayStr)) {
+      box.classList.add("is-done");
+      titleEl.textContent = "오늘은";
+      tEl.textContent = "쉬는 날";
+      uEl.textContent = "푹 쉬어요 🌴";
+      mEl.textContent = HOLIDAYS[todayStr] ? HOLIDAYS[todayStr].name + " · 등원 없음" : "주말 · 등원 없음";
+      fEl.style.width = "100%";
+      pct = 100;
+      if (track) track.setAttribute("aria-valuenow", "100");
+      return;
+    }
+
     if (cur > dep.min + DAY_END) {
       box.classList.add("is-done");
       titleEl.textContent = "오늘 등원";
