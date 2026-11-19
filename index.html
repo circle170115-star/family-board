@@ -10,6 +10,34 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="assets/style.css?v=20261119a">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+<script>
+/* 등원 집중 모드 — 평일 07:30~09:15(오늘 출발 시각을 늦게 잡았으면 그 15분 뒤까지)에
+   이 모아보드를 열면 거실 등원 보드(living.html)로 자동 전환합니다.
+   living.html ⚙️ 에서 끄고 켤 수 있고, 거실 보드의 '전체 모아보드' 버튼으로 들어오면
+   이번 세션은 그대로 모아보드에 머뭅니다. */
+(function () {
+  try {
+    var cfg = JSON.parse(localStorage.getItem("familyFocusMode.v1") || "null") || { enabled: true };
+    if (cfg.enabled === false) return;
+    if (sessionStorage.getItem("familyLivingBypass") === "1") return;
+    var now = new Date();
+    var wd = now.getDay();
+    if (wd === 0 || wd === 6) return;
+    var p2 = function (n) { return String(n).padStart(2, "0"); };
+    var today = now.getFullYear() + "-" + p2(now.getMonth() + 1) + "-" + p2(now.getDate());
+    if (localStorage.getItem("familyFocusOffDate") === today) return;
+    var start = 7 * 60 + 30, end = 9 * 60 + 15;
+    var lv = JSON.parse(localStorage.getItem("familyLivingBoard.v1") || "null");
+    if (lv && lv.departureByDate && lv.departureByDate[today]) {
+      var p = String(lv.departureByDate[today]).split(":");
+      var d = parseInt(p[0], 10) * 60 + parseInt(p[1] || "0", 10);
+      if (d + 15 > end) end = d + 15;
+    }
+    var cur = now.getHours() * 60 + now.getMinutes();
+    if (cur >= start && cur <= end) location.replace("living.html");
+  } catch (e) { /* 저장소를 못 쓰면 그냥 모아보드를 보여줍니다 */ }
+})();
+</script>
 </head>
 <body>
 <div class="blobs" aria-hidden="true"><span></span><span></span><span></span></div>
@@ -24,7 +52,7 @@
       </div>
     </div>
     <div class="topbar-side">
-      <a class="living-link" href="living.html" title="아이들이 직접 누르는 거실용 등원 준비 보드">🏠 거실 등원 보드</a>
+      <a class="living-link" href="living.html" title="아이들이 직접 누르는 거실용 등원 준비 보드" onclick="try{sessionStorage.setItem('familyLivingBypass','1')}catch(e){}">🏠 거실 등원 보드</a>
       <div class="seg" id="childFilter" role="group" aria-label="아이 선택">
         <button class="seg-btn is-on" data-filter="all" type="button">전체</button>
         <button class="seg-btn" data-filter="daeun" type="button"><i class="dot dot-daeun"></i>다은</button>

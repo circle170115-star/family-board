@@ -1,7 +1,7 @@
 /* 거실 등원 보드 — living.js
    data/board-data.json 한 파일만 읽어서 오늘 날짜·우장산동 날씨/옷차림·다은·승민 일정·
    저녁 홈활동·급식·간식을 자동 반영합니다. (매일 06:00 아침 브리핑이 이 파일을 갱신)
-   체크 상태와 칭찬 스티커는 이 기기 브라우저의 localStorage 에만 저장됩니다. */
+   체크·칭찬 스티커·출발 시각은 이 기기 브라우저의 localStorage 에만 저장됩니다. */
 (async function () {
   "use strict";
 
@@ -12,7 +12,10 @@
   const WD = ["일", "월", "화", "수", "목", "금", "토"];
   const WDKEY = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
   const STORE_KEY = "familyLivingBoard.v1";
+  const FOCUS_KEY = "familyFocusMode.v1";
   const ST_ICONS = ["⭐", "💖", "🦕"];
+  const PREP_START = 7 * 60 + 30;   /* 아침 준비 시작 07:30 */
+  const DAY_END = 3 * 60;           /* 출발 3시간 뒤부터는 '오늘 등원 끝' 표시 */
   const esc = (s) =>
     String(s == null ? "" : s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
 
@@ -83,24 +86,25 @@
 
   /* ───────────── 저장소 (localStorage) ───────────── */
   let store = null;
+  function blankCheck() { return { morning: [], evening: [], awarded: { morning: "", evening: "" } }; }
   function blankChecks() {
     const o = {};
-    CHILDREN.forEach((c) => { o[c.id] = { morning: [], evening: [], awarded: { morning: "", evening: "" } }; });
+    CHILDREN.forEach((c) => { o[c.id] = blankCheck(); });
     return o;
   }
-  function blankCheck() { return { morning: [], evening: [], awarded: { morning: "", evening: "" } }; }
-
   function loadStore() {
     let s = null;
     try { s = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); } catch (e) { s = null; }
     if (!s || typeof s !== "object") s = {};
     if (typeof s.sound !== "boolean") s.sound = true;
+    if (typeof s.departure !== "string" || !/^\d{1,2}:\d{2}$/.test(s.departure)) s.departure = "09:00";
+    s.departureByDate = s.departureByDate && typeof s.departureByDate === "object" ? s.departureByDate : {};
     s.stickers = s.stickers && typeof s.stickers === "object" ? s.stickers : {};
     CHILDREN.forEach((c) => {
       const n = parseInt(s.stickers[c.id], 10);
       s.stickers[c.id] = Number.isFinite(n) && n > 0 ? n : 0;
     });
-    /* 날짜가 바뀌면 체크만 새로 — 누적 스티커는 그대로 */
+    /* 날짜가 바뀌면 체크만 새로 — 누적 스티커와 출발 시각 설정은 그대로 */
     if (s.date !== todayStr) {
       s.date = todayStr;
       s.checks = blankChecks();
@@ -112,39 +116,46 @@
     });
     return s;
   }
-  function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) { /* 저장 불가 모드 */ } }
+  function save() {
+    if (store) {
+      /* 오래된 날짜별 출발 시각은 정리 */
+      const keys = Object.keys(store.departureByDate || {});
+      keys.forEach((k) => { if (k < todayStr) delete store.departureByDate[k]; });
+    }
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) { /* 저장 불가 모드 */ }
+  }
   function ensureCheck(cid) {
     if (!store.checks[cid]) store.checks[cid] = blankCheck();
     return store.checks[cid];
   }
 
-  /* ───────────── 체크리스트 정의 ───────────── */
+  /* ───────────── 체크리스트 정의 (큰 그림 타일) ───────────── */
   function bookForToday(cid, ds) {
     const wk = weekdayKey(ds);
     return BOOK.find((b) => b.weekday === wk && b.child === cid) || null;
   }
   function buildChecklists(cid, ds) {
     const morning = [
-      { id: "wash", e: "🪥", t: "세수하고 양치하기" },
-      { id: "clothes", e: "👕", t: "오늘 옷 입기" },
-      { id: "meal", e: "🍚", t: "아침 밥 먹기" },
-      { id: "bag", e: "🎒", t: "가방·물통 챙기기" },
+      { id: "wash", e: "🪥", t: "세수·양치하기" },
+      { id: "clothes", e: "👕", t: "옷 입기" },
+      { id: "meal", e: "🍚", t: "아침 먹기" },
+      { id: "bag", e: "🎒", t: "가방·물통" },
     ];
-    if (bookForToday(cid, ds)) morning.push({ id: "book", e: "📚", t: "도서대여 가방 챙기기" });
+    if (bookForToday(cid, ds)) morning.push({ id: "book", e: "📚", t: "도서대여 가방" });
     morning.push({ id: "shoes", e: "👟", t: "신발 신고 출발!" });
 
     const act = eveningActivity(ds);
     const evening = [
       { id: "hands", e: "🧼", t: "손 씻기" },
-      { id: "unpack", e: "🎒", t: "가방·물통 꺼내기" },
-      act ? { id: "fun", e: act.emoji, t: "오늘 밤은 " + act.name + " 놀이!" } : { id: "fun", e: "🧸", t: "오늘 밤은 자유놀이!" },
-      { id: "brush", e: "🪥", t: "양치하고 꿈나라 준비" },
+      { id: "unpack", e: "🎒", t: "가방 정리" },
+      act ? { id: "fun", e: act.emoji, t: act.name + " 놀이!" } : { id: "fun", e: "🧸", t: "자유놀이!" },
+      { id: "brush", e: "🪥", t: "양치하고 자기" },
     ];
     return { morning: morning, evening: evening };
   }
   function progressOf(cid, part, lists) {
     const items = (lists || buildChecklists(cid, todayStr))[part] || [];
-    const arr = (ensureCheck(cid)[part]) || [];
+    const arr = ensureCheck(cid)[part] || [];
     const done = items.filter((i) => arr.indexOf(i.id) >= 0).length;
     return { done: done, total: items.length };
   }
@@ -164,12 +175,12 @@
     return out;
   }
   function childTodayText(cid, ds) {
-    if (isRestDay(ds)) return '<i>🌴 오늘은 쉬는 날</i>';
+    if (isRestDay(ds)) return "<i>🌴 오늘은 쉬는 날</i>";
     const items = childTodayItems(cid, ds);
     if (!items.length) return "<i>오늘은 따로 일정이 없어요</i>";
     return items
       .slice(0, 4)
-      .map((i) => (i.time ? '<i>' + esc(i.time) + "</i> " : "") + esc(i.text))
+      .map((i) => (i.time ? "<i>" + esc(i.time) + "</i> " : "") + esc(i.text))
       .join(" · ");
   }
 
@@ -195,7 +206,6 @@
     const dc = COND[dd.condition] || ["🌡️", dd.condition || ""];
     return { now: n, nc: nc, day: dd, dc: dc, air: w.air || {} };
   }
-
   function renderHead() {
     const d = new Date();
     $("#dateLine").textContent = d.getFullYear() + "년 " + (d.getMonth() + 1) + "월 " + d.getDate() + "일 " + WD[d.getDay()] + "요일 · " + PLACE;
@@ -257,22 +267,117 @@
   }
   function renderChips() { $("#chipRow").innerHTML = chipsHTML(); }
 
+  /* ───────────── 출발 시각 · 카운트다운 ───────────── */
+  function parseHM(s) {
+    const m = /^(\d{1,2}):(\d{2})$/.exec(String(s || "").trim());
+    if (!m) return null;
+    const h = +m[1], mi = +m[2];
+    if (h > 23 || mi > 59) return null;
+    return h * 60 + mi;
+  }
+  const hhmm = (min) => pad(Math.floor(min / 60)) + ":" + pad(min % 60);
+
+  /* 오늘 유치원 안내문의 "등원 시간 10시부터로 조정" 같은 문구에서 등원 시각을 읽습니다 */
+  function arrivalOverride() {
+    const ev = EVENTS.find((e) => e.date === todayStr && e.detail && /등원\s*시간/.test(e.detail));
+    if (!ev) return null;
+    const m = /(\d{1,2})\s*시(?:\s*(\d{1,2})\s*분)?/.exec(ev.detail);
+    if (!m) return null;
+    const h = +m[1];
+    if (h > 23) return null;
+    return h * 60 + (m[2] ? +m[2] : 0);
+  }
+  function departureInfo() {
+    /* 우선순위: 오늘 직접 설정 > 등원 시각에서 자동(15분 전 출발) > 평소 출발 시각 */
+    const byDate = (store.departureByDate || {})[todayStr];
+    const manual = parseHM(byDate);
+    const arr = arrivalOverride();
+    if (manual != null) return { min: manual, src: "manual", arrival: arr };
+    if (arr != null) return { min: Math.max(0, arr - 15), src: "auto", arrival: arr };
+    return { min: parseHM(store.departure) || 9 * 60, src: "default", arrival: null };
+  }
+  function leftText(m) {
+    if (m >= 60) {
+      const h = Math.floor(m / 60), r = m % 60;
+      return h + "시간" + (r ? " " + r + "분" : "");
+    }
+    return m + "분";
+  }
+  function renderCountdown() {
+    const box = $("#countdown");
+    if (!box) return;
+    const dep = departureInfo();
+    const d = new Date();
+    const cur = d.getHours() * 60 + d.getMinutes() + d.getSeconds() / 60;
+    const left = dep.min - cur;
+    const tEl = $("#cdTime"), uEl = $("#cdUnit"), fEl = $("#cdFill"), mEl = $("#cdMeta"), titleEl = $("#cdTitle"), track = $("#cdTrack");
+
+    const metas = ["목표 출발 " + hhmm(dep.min)];
+    if (dep.src === "auto" && dep.arrival != null) metas.push("등원 " + hhmm(dep.arrival) + "에 맞춤");
+    else if (dep.src === "manual") metas.push("설정한 시각");
+    mEl.textContent = metas.join(" · ");
+
+    box.classList.remove("is-green", "is-orange", "is-red", "is-done");
+    const windowMin = Math.max(20, dep.min - PREP_START);
+    let pct = left <= 0 ? 0 : Math.max(0, Math.min(100, (left / windowMin) * 100));
+    fEl.style.width = pct.toFixed(1) + "%";
+
+    if (cur > dep.min + DAY_END) {
+      box.classList.add("is-done");
+      titleEl.textContent = "오늘 등원";
+      tEl.textContent = "끝!";
+      uEl.textContent = "내일도 화이팅 🌙";
+      fEl.style.width = "100%";
+      pct = 100;
+    } else if (left <= 0) {
+      box.classList.add("is-red");
+      titleEl.textContent = "출발 시간";
+      tEl.textContent = Math.max(1, Math.ceil(-left)) + "분";
+      uEl.textContent = "지났어요! 서둘러요 🏃";
+      fEl.style.width = "0%";
+      pct = 0;
+    } else {
+      const m = Math.ceil(left);
+      if (m <= 10) box.classList.add("is-red");
+      else if (m <= 20) box.classList.add("is-orange");
+      else box.classList.add("is-green");
+      titleEl.textContent = "출발까지";
+      tEl.textContent = leftText(m);
+      uEl.textContent = "남았어요!";
+    }
+    if (track) track.setAttribute("aria-valuenow", String(Math.round(pct)));
+  }
+
+  /* ───────────── 등원 시간대 자동 전환 설정 (index.html 과 공유) ───────────── */
+  function focusCfg() {
+    let c = null;
+    try { c = JSON.parse(localStorage.getItem(FOCUS_KEY) || "null"); } catch (e) { c = null; }
+    if (!c || typeof c !== "object") c = { enabled: true };
+    if (typeof c.enabled !== "boolean") c.enabled = true;
+    return c;
+  }
+  function setFocus(on) {
+    try { localStorage.setItem(FOCUS_KEY, JSON.stringify({ enabled: !!on })); } catch (e) { /* noop */ }
+    renderSettings();
+    toast(on ? "등원 시간대 자동 전환을 켰어요 🌞" : "등원 시간대 자동 전환을 껐어요");
+  }
+
   /* ───────────── 아이 카드 ───────────── */
   const state = { tab: {} };
   function defaultTab() { const h = new Date().getHours(); return h >= 17 || h < 4 ? "evening" : "morning"; }
   const tabOf = (cid) => state.tab[cid] || defaultTab();
 
-  function stepsHTML(items, arr) {
+  function tilesHTML(items, arr) {
     return (
-      '<ul class="steps">' +
+      '<ul class="tiles">' +
       items
         .map((i) => {
           const on = arr.indexOf(i.id) >= 0;
           return (
-            '<li><button type="button" class="step' + (on ? " is-done" : "") + '" data-id="' + i.id + '" aria-pressed="' + on + '">' +
-            '<span class="step-emoji">' + i.e + "</span>" +
-            '<span class="step-label">' + esc(i.t) + "</span>" +
-            '<span class="step-check">✓</span>' +
+            '<li><button type="button" class="tile' + (on ? " is-done" : "") + '" data-id="' + i.id + '" aria-pressed="' + on + '">' +
+            '<span class="tile-emoji" aria-hidden="true">' + i.e + "</span>" +
+            '<span class="tile-label">' + esc(i.t) + "</span>" +
+            '<span class="tile-badge">✓ 완료!</span>' +
             "</button></li>"
           );
         })
@@ -302,9 +407,7 @@
       }
       html += '<div class="st-row">' + cells + "</div>";
     }
-    if (!html) {
-      html = '<div class="st-row">' + Array.from({ length: 10 }, () => '<i class="st"></i>').join("") + "</div>";
-    }
+    if (!html) html = '<div class="st-row">' + Array.from({ length: 10 }, () => '<i class="st"></i>').join("") + "</div>";
     if (t > 20) html += '<div class="st-more">앞에서 ' + (t - 20) + "개 더 모았어요</div>";
     return html;
   }
@@ -321,7 +424,7 @@
     const grade = String(c.grade || "").split(" (")[0];
     return (
       '<div class="kid-head">' +
-        '<div class="kid-avatar">' + emoji + "</div>" +
+        '<div class="kid-avatar" aria-hidden="true">' + emoji + "</div>" +
         '<div style="min-width:0;flex:1">' +
           '<div class="kid-name"><h2>' + esc(c.name) + "</h2><span>" + esc(c.ageLabel || "") + (grade ? " · " + esc(grade) : "") + "</span></div>" +
           '<div class="kid-today">' + childTodayText(c.id, todayStr) + "</div>" +
@@ -333,17 +436,20 @@
       "</div>" +
       '<div class="kid-body" data-part="' + part + '">' +
         (isRestDay(todayStr) && part === "morning" ? '<p class="kid-rest">🌴 오늘은 쉬는 날이에요 · 등원 준비는 없어요</p>' : "") +
-        stepsHTML(items, arr) +
+        tilesHTML(items, arr) +
       "</div>" +
       '<div class="kid-foot">' +
-        '<div class="st-head"><span class="st-star">⭐</span><span class="st-num">' + st + '</span><span class="st-unit">개</span></div>' +
+        '<div class="st-head"><span class="st-star" aria-hidden="true">⭐</span><span class="st-num">' + st + '</span><span class="st-unit">개</span></div>' +
         '<div class="st-board">' + stickerRows(st) + "</div>" +
       "</div>"
     );
   }
   function renderKids() {
     const grid = $("#childGrid");
-    if (!CHILDREN.length) { grid.innerHTML = '<div class="lv-error">아이 정보가 아직 없어요.<br><small>data/board-data.json 의 children 을 확인해 주세요.</small></div>'; return; }
+    if (!CHILDREN.length) {
+      grid.innerHTML = '<div class="lv-error">아이 정보가 아직 없어요.<br><small>data/board-data.json 의 children 을 확인해 주세요.</small></div>';
+      return;
+    }
     grid.innerHTML = CHILDREN.map((c) => '<section class="kid" data-child="' + esc(c.id) + '" aria-label="' + esc(c.name) + '">' + kidHTML(c) + "</section>").join("");
   }
   function renderKid(cid) {
@@ -459,7 +565,7 @@
   }
 
   /* ───────────── 체크 동작 ───────────── */
-  function paintStep(btn, on) {
+  function paintTile(btn, on) {
     btn.classList.toggle("is-done", on);
     btn.setAttribute("aria-pressed", on ? "true" : "false");
   }
@@ -467,8 +573,8 @@
     const c = ensureCheck(cid);
     const arr = c[part];
     const at = arr.indexOf(id);
-    if (at >= 0) { arr.splice(at, 1); paintStep(btn, false); tapSound(false); }
-    else { arr.push(id); paintStep(btn, true); tapSound(true); }
+    if (at >= 0) { arr.splice(at, 1); paintTile(btn, false); tapSound(false); }
+    else { arr.push(id); paintTile(btn, true); tapSound(true); }
     save();
     refreshBadges(cid);
     if (at < 0) maybeAward(cid, part);
@@ -503,6 +609,18 @@
         "</span></div>"
       );
     }).join("");
+    renderSettings();
+  }
+  function renderSettings() {
+    const depToday = $("#depToday"), depDefault = $("#depDefault"), fs = $("#focusSwitch");
+    if (depToday && document.activeElement !== depToday) depToday.value = hhmm(departureInfo().min);
+    if (depDefault && document.activeElement !== depDefault) depDefault.value = store.departure;
+    if (fs) {
+      const on = focusCfg().enabled;
+      fs.textContent = on ? "켜짐" : "꺼짐";
+      fs.classList.toggle("off", !on);
+      fs.setAttribute("aria-pressed", String(on));
+    }
   }
   function adjustSticker(cid, delta) {
     const cur = parseInt(store.stickers[cid] || 0, 10) || 0;
@@ -523,6 +641,7 @@
     renderChips();
     renderKids();
     renderPanel();
+    renderCountdown();
   }
   async function refreshData(notify) {
     try {
@@ -535,8 +654,7 @@
     }
   }
   function dayRollover() {
-    const d = new Date();
-    const next = iso(d);
+    const next = iso(new Date());
     if (next === todayStr) return;
     todayStr = next;
     store.date = todayStr;
@@ -550,7 +668,8 @@
     const d = new Date();
     $("#clockHM").textContent = pad(d.getHours()) + ":" + pad(d.getMinutes());
     $("#clockSec").textContent = pad(d.getSeconds());
-    if (iso(d) !== todayStr) dayRollover();
+    if (iso(d) !== todayStr) { dayRollover(); return; }
+    renderCountdown();
   }
 
   /* ───────────── 이벤트 ───────────── */
@@ -563,12 +682,12 @@
         renderKid(cid);
         return;
       }
-      const step = e.target.closest(".step");
-      if (step) {
-        const kid = step.closest(".kid");
-        const body = step.closest(".kid-body");
+      const tile = e.target.closest(".tile");
+      if (tile) {
+        const kid = tile.closest(".kid");
+        const body = tile.closest(".kid-body");
         if (!kid || !body) return;
-        toggleStep(kid.dataset.child, body.dataset.part, step.dataset.id, step);
+        toggleStep(kid.dataset.child, body.dataset.part, tile.dataset.id, tile);
       }
     });
 
@@ -587,6 +706,36 @@
       if (minus) { adjustSticker(minus.dataset.minus, -1); return; }
     });
     $("#soundSwitch").addEventListener("click", () => { setSound(!store.sound); if (store.sound) tapSound(true); });
+    $("#focusSwitch").addEventListener("click", () => setFocus(!focusCfg().enabled));
+    $("#offToday").addEventListener("click", () => {
+      try { localStorage.setItem("familyFocusOffDate", todayStr); } catch (e) { /* noop */ }
+      toast("오늘은 모아보드를 열어도 자동 전환하지 않아요");
+    });
+    $("#depToday").addEventListener("change", (e) => {
+      const v = e.target.value;
+      if (parseHM(v) == null) { renderSettings(); return; }
+      store.departureByDate[todayStr] = v;
+      save();
+      renderCountdown();
+      renderSettings();
+      toast("오늘 출발 시각을 " + v + "로 맞췄어요 🚀");
+    });
+    $("#depAuto").addEventListener("click", () => {
+      delete store.departureByDate[todayStr];
+      save();
+      renderCountdown();
+      renderSettings();
+      toast("오늘은 자동 출발 시각으로 돌아갔어요");
+    });
+    $("#depDefault").addEventListener("change", (e) => {
+      const v = e.target.value;
+      if (parseHM(v) == null) { renderSettings(); return; }
+      store.departure = v;
+      save();
+      renderCountdown();
+      renderSettings();
+      toast("평소 출발 시각을 " + v + "로 저장했어요");
+    });
     $("#resetBtn").addEventListener("click", () => {
       if (!window.confirm("오늘 체크를 모두 지울까요? (칭찬 스티커는 그대로 남아요)")) return;
       store.checks = blankChecks();
@@ -595,6 +744,10 @@
       toast("오늘 체크를 초기화했어요");
     });
     $("#reloadBtn").addEventListener("click", async () => { await refreshData(true); openGear(false); });
+    $("#homeLink").addEventListener("click", () => {
+      /* 모아보드로 돌아갈 때는 이번 세션 동안 자동 전환을 하지 않습니다 */
+      try { sessionStorage.setItem("familyLivingBypass", "1"); } catch (e) { /* noop */ }
+    });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") openGear(false); });
   }
 

@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#FFFBF3">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="assets/living.css?v=20261119a">
+<link rel="stylesheet" href="assets/living.css?v=20261119b">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>">
 </head>
 <body class="living">
@@ -30,6 +30,15 @@
     </div>
   </header>
 
+  <section class="lv-count" id="countdown" aria-label="출발까지 남은 시간">
+    <div class="cd-left"><span class="cd-ico">🚀</span><span id="cdTitle">출발까지</span></div>
+    <div class="cd-time"><b id="cdTime">—</b><span id="cdUnit">남았어요!</span></div>
+    <div class="cd-track" id="cdTrack" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="출발까지 남은 시간">
+      <div class="cd-fill" id="cdFill"></div>
+    </div>
+    <div class="cd-meta" id="cdMeta">목표 출발 09:00</div>
+  </section>
+
   <div class="lv-chips" id="chipRow" aria-label="오늘 유치원 소식"></div>
 
   <main class="lv-grid" id="childGrid" aria-label="아이별 등원 준비">
@@ -45,12 +54,31 @@
 <div class="lv-modal" id="gearPanel" hidden>
   <div class="lv-panel" role="dialog" aria-modal="true" aria-labelledby="gearTitle">
     <h3 id="gearTitle">⚙️ 부모님 설정</h3>
-    <p>체크와 스티커는 <b>이 기기 브라우저에만</b> 저장돼요. 날짜가 바뀌면 체크만 새로 시작하고 스티커는 그대로 쌓여요.</p>
+    <p>체크·스티커·출발 시각은 <b>이 기기 브라우저에만</b> 저장돼요. 날짜가 바뀌면 체크만 새로 시작하고 스티커는 그대로 쌓여요.</p>
+
+    <div class="lv-set">
+      <span>🚀 오늘 출발 시각</span>
+      <span class="mini"><input type="time" id="depToday" class="time-in" aria-label="오늘 출발 시각"><button class="mini-btn xs" id="depAuto" type="button">자동</button></span>
+    </div>
+    <div class="lv-set">
+      <span>🕘 평소 출발 시각</span>
+      <span class="mini"><input type="time" id="depDefault" class="time-in" aria-label="평소 출발 시각"></span>
+    </div>
+    <div class="lv-set">
+      <span>🌞 등원 시간 자동 전환</span>
+      <button class="switch" id="focusSwitch" type="button" aria-pressed="true">켜짐</button>
+    </div>
+    <div class="lv-set">
+      <span>🙈 오늘만 자동 전환 끄기</span>
+      <button class="mini-btn" id="offToday" type="button">오늘은 끄기</button>
+    </div>
     <div class="lv-set">
       <span>🔊 효과음</span>
       <button class="switch" id="soundSwitch" type="button" aria-pressed="true">켜짐</button>
     </div>
+
     <div id="stRows"></div>
+
     <div class="lv-set">
       <span>🔄 오늘 체크</span>
       <button class="mini-btn" id="resetBtn" type="button">오늘 체크 초기화</button>
@@ -66,6 +94,6 @@
 </div>
 
 <noscript><p style="text-align:center;padding:24px">이 보드는 JavaScript가 필요해요.</p></noscript>
-<script src="assets/living.js?v=20261119a"></script>
+<script src="assets/living.js?v=20261119b"></script>
 </body>
 </html>
