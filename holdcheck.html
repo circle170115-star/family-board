@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<title>hold test (임시 검증용)</title>
+<style>
+  body{font:13px/1.6 ui-monospace,monospace;padding:12px}
+  iframe{width:1180px;height:760px;border:1px solid #ccc;display:block;margin-bottom:10px}
+  pre{background:#111;color:#cff;padding:10px;border-radius:8px;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<iframe id="f" src="living.html?holdcheck=1"></iframe>
+<pre id="log">loading…</pre>
+<script>
+const L = [];
+const log = (s) => { L.push(s); document.getElementById("log").textContent = L.join("\n"); };
+const f = document.getElementById("f");
+let phase = 0;
+
+f.addEventListener("load", () => {
+  const href = (() => { try { return f.contentWindow.location.pathname; } catch (e) { return "?"; } })();
+  if (phase === 1 && href.indexOf("index.html") > -1) { log("LONG: ✅ 2초 뒤 모아보드로 이동함 → " + href); phase = 2; return; }
+  if (phase === 0) { runShort(); phase = 1; return; }
+  if (phase === 1) { log("page reloaded unexpectedly: " + href); }
+});
+
+function link() { return f.contentDocument.getElementById("homeLink"); }
+
+function press(a, ms) {
+  const W = f.contentWindow;
+  a.dispatchEvent(new W.MouseEvent("mousedown", { bubbles: true, cancelable: true, button: 0, buttons: 1 }));
+  const holding = a.classList.contains("is-holding");
+  return new Promise((res) => setTimeout(() => {
+    a.dispatchEvent(new W.MouseEvent("mouseup", { bubbles: true, cancelable: true, button: 0 }));
+    res(holding);
+  }, ms));
+}
+
+async function runShort() {
+  const a = link();
+  if (!a) return log("FAIL: #homeLink 없음");
+  const holding = await press(a, 150);
+  await new Promise((r) => setTimeout(r, 250));
+  const t = f.contentDocument.getElementById("toast");
+  log("SHORT(0.15s): url=" + f.contentWindow.location.pathname +
+      " / holding표시=" + holding +
+      " / toast=" + JSON.stringify(t && t.textContent));
+  await runLong();
+}
+
+async function runLong() {
+  const a = link();
+  const holding = await press(a, 2600);
+  // 2초에 go() 가 돌면 iframe 이 index.html 로 넘어가 위 load 핸들러가 기록함
+  setTimeout(() => {
+    if (phase === 1) log("LONG: ❌ 이동하지 않음 (url=" + f.contentWindow.location.pathname + ", holding표시=" + holding + ")");
+  }, 600);
+}
+</script>
+</body>
+</html>
