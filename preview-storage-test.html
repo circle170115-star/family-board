@@ -15,6 +15,9 @@
 <script>
 (function () {
   var mode = new URLSearchParams(location.search).get('mode') || 'rollover';
+  var qp = new URLSearchParams(location.search);
+  var dStickers = qp.get('d') != null ? parseInt(qp.get('d'), 10) : 7;
+  var sStickers = qp.get('s') != null ? parseInt(qp.get('s'), 10) : 3;
   function p2(n) { return String(n).padStart(2, '0'); }
   function ds(d) { return d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate()); }
   var now = new Date();
@@ -24,11 +27,11 @@
     sound: true,
     departure: '09:00',
     departureByDate: {},
-    stickers: { daeun: 7, seungmin: 3 },
+    stickers: { daeun: dStickers, seungmin: sStickers },
     date: mode === 'rollover' ? yest : today,
     checks: {
-      daeun: { morning: ['wash', 'clothes'], evening: [], awarded: { morning: '', evening: '' } },
-      seungmin: { morning: [], evening: ['hands'], awarded: { morning: '', evening: '' } }
+      daeun: { morning: mode === 'empty' ? [] : ['wash', 'clothes'], evening: [], awarded: { morning: '', evening: '' } },
+      seungmin: { morning: [], evening: mode === 'empty' ? [] : ['hands'], awarded: { morning: '', evening: '' } }
     }
   };
   try { localStorage.setItem('familyLivingBoard.v1', JSON.stringify(seed)); } catch (e) {}
