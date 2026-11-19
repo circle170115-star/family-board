@@ -797,8 +797,9 @@
     if (ico) ico.textContent = isWarn ? "⚠️" : "⏰";
     if (title) title.textContent = isWarn ? "오전 8시 20분!" : "오전 8시예요!";
     if (sub) {
+      const warnLeft = Math.max(0, departureInfo().min - (8 * 60 + 20));
       sub.textContent = isWarn
-        ? "출발까지 20분 남았어요 · " + dep + " 출발"
+        ? "출발까지 " + warnLeft + "분 남았어요 · " + dep + " 출발"
         : "다은·승민 등원 준비 시작할 시간이에요 · 출발 " + dep;
     }
     b.classList.toggle("is-warn", isWarn);
