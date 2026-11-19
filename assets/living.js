@@ -377,7 +377,7 @@
             '<li><button type="button" class="tile' + (on ? " is-done" : "") + '" data-id="' + i.id + '" aria-pressed="' + on + '">' +
             '<span class="tile-emoji" aria-hidden="true">' + i.e + "</span>" +
             '<span class="tile-label">' + esc(i.t) + "</span>" +
-            '<span class="tile-badge">✓ 완료!</span>' +
+            '<span class="tile-badge" aria-hidden="true">✓ 완료!</span>' +
             "</button></li>"
           );
         })
