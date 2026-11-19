@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updatedAt": "2026-11-20T06:02:21+09:00",
+    "updatedAt": "2026-11-20T06:04:06+09:00",
     "updatedBy": "아침 브리핑 자동 갱신",
     "schemaNote": "일정·급식·날씨·건강 데이터는 이 파일만 고치면 보드에 반영됩니다. 자세한 구조는 README.md 참고."
   },
@@ -706,6 +706,58 @@
         }
       ],
       "calories": "463.7 Kcal",
+      "meal": "중식",
+      "source": "NEIS"
+    },
+    "2026-11-30": {
+      "menu": [
+        {
+          "name": "찰옥수수밥",
+          "allergy": []
+        },
+        {
+          "name": "감자탕",
+          "allergy": [
+            5,
+            6,
+            9,
+            10
+          ]
+        },
+        {
+          "name": "쑥갓두부무침",
+          "allergy": [
+            5,
+            6,
+            13
+          ]
+        },
+        {
+          "name": "미역줄기볶음",
+          "allergy": [
+            1,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "깍두기",
+          "allergy": [
+            9
+          ]
+        },
+        {
+          "name": "귤(노지)",
+          "allergy": []
+        },
+        {
+          "name": "우유",
+          "allergy": [
+            2
+          ]
+        }
+      ],
+      "calories": "624.8 Kcal",
       "meal": "중식",
       "source": "NEIS"
     }
