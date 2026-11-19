@@ -161,8 +161,12 @@ body.living::before{
 .kid-head{flex:none;display:flex;align-items:center;gap:11px;padding:12px 16px 4px}
 .kid-avatar{
   width:clamp(40px,5.8vh,54px);height:clamp(40px,5.8vh,54px);flex:none;
-  border-radius:16px;background:var(--k-soft);display:grid;place-items:center;
+  border-radius:16px;background:var(--k-soft);display:grid;place-items:center;overflow:hidden;
   font-size:clamp(22px,3.3vh,31px);border:1px solid var(--k-line);
+}
+.kid-avatar img{
+  width:100%;height:100%;object-fit:cover;object-position:center 18%;
+  display:block;transform:scale(1.06);
 }
 .kid-name{display:flex;align-items:baseline;gap:8px;min-width:0}
 .kid-name h2{margin:0;font-size:clamp(20px,3.1vh,31px);font-weight:850;letter-spacing:-.035em}
@@ -212,9 +216,18 @@ body.living::before{
 .tile:hover{border-color:var(--k-line);box-shadow:0 14px 24px -20px rgba(60,95,150,.9)}
 .tile:active{transform:scale(.97)}
 .tile-emoji{
-  font-size:clamp(38px,7.4vh,84px);line-height:1;
-  filter:drop-shadow(0 3px 5px rgba(30,50,80,.16));
+  display:flex;align-items:center;justify-content:center;
+  min-height:0;max-width:100%;
+  filter:drop-shadow(0 4px 6px rgba(30,50,80,.13));
   transition:transform .18s;
+}
+.tile-emoji img{
+  height:clamp(36px,7vh,78px);width:auto;max-width:100%;object-fit:contain;display:block;
+  pointer-events:none;-webkit-user-drag:none;
+}
+.face-ico{
+  width:22px;height:22px;border-radius:50%;object-fit:cover;object-position:center 18%;
+  vertical-align:-6px;margin-right:3px;background:#fff;
 }
 .tile-label{font-size:clamp(12.5px,1.95vh,19.5px);font-weight:850;letter-spacing:-.035em;line-height:1.15;color:var(--ink)}
 .tile-badge{

@@ -134,22 +134,28 @@
     const wk = weekdayKey(ds);
     return BOOK.find((b) => b.weekday === wk && b.child === cid) || null;
   }
+  /* 캐릭터·타일 일러스트 (assets/illustrations/*.png — 배경 투명 PNG) */
+  const ILL_DIR = "assets/illustrations/";
+  const ILL_FUN = { "미술": "tile-fun-art", "독서": "tile-fun-read", "수학": "tile-fun-math", "과학": "tile-fun-science", "보드게임": "tile-fun-board" };
+  const avatarOf = (cid) => (cid === "daeun" || cid === "seungmin" ? ILL_DIR + cid + "-avatar.png" : "");
+  const illImg = (name) => '<img src="' + ILL_DIR + name + '.png" alt="" aria-hidden="true" draggable="false" decoding="async">';
+
   function buildChecklists(cid, ds) {
     const morning = [
-      { id: "wash", e: "🪥", t: "세수·양치하기" },
-      { id: "clothes", e: "👕", t: "옷 입기" },
-      { id: "meal", e: "🍚", t: "아침 먹기" },
-      { id: "bag", e: "🎒", t: "가방·물통" },
+      { id: "wash", ill: "tile-wash", t: "세수·양치하기" },
+      { id: "clothes", ill: "tile-clothes", t: "옷 입기" },
+      { id: "meal", ill: "tile-meal", t: "아침 먹기" },
+      { id: "bag", ill: "tile-bag", t: "가방·물통" },
     ];
-    if (bookForToday(cid, ds)) morning.push({ id: "book", e: "📚", t: "도서대여 가방" });
-    morning.push({ id: "shoes", e: "👟", t: "신발 신고 출발!" });
+    if (bookForToday(cid, ds)) morning.push({ id: "book", ill: "tile-book", t: "도서대여 가방" });
+    morning.push({ id: "shoes", ill: "tile-shoes", t: "신발 신고 출발!" });
 
     const act = eveningActivity(ds);
     const evening = [
-      { id: "hands", e: "🧼", t: "손 씻기" },
-      { id: "unpack", e: "🎒", t: "가방 정리" },
-      act ? { id: "fun", e: act.emoji, t: act.name + " 놀이!" } : { id: "fun", e: "🧸", t: "자유놀이!" },
-      { id: "brush", e: "🪥", t: "양치하고 자기" },
+      { id: "hands", ill: "tile-hands", t: "손 씻기" },
+      { id: "unpack", ill: "tile-unpack", t: "가방 정리" },
+      act ? { id: "fun", ill: ILL_FUN[act.name] || "tile-fun-free", t: act.name + " 놀이!" } : { id: "fun", ill: "tile-fun-free", t: "자유놀이!" },
+      { id: "brush", ill: "tile-brush", t: "양치하고 자기" },
     ];
     return { morning: morning, evening: evening };
   }
@@ -387,7 +393,7 @@
           const on = arr.indexOf(i.id) >= 0;
           return (
             '<li><button type="button" class="tile' + (on ? " is-done" : "") + '" data-id="' + i.id + '" aria-pressed="' + on + '">' +
-            '<span class="tile-emoji" aria-hidden="true">' + i.e + "</span>" +
+            '<span class="tile-emoji" aria-hidden="true">' + illImg(i.ill) + "</span>" +
             '<span class="tile-label">' + esc(i.t) + "</span>" +
             '<span class="tile-badge" aria-hidden="true">✓ 완료!</span>' +
             "</button></li>"
@@ -432,11 +438,11 @@
     const pm = progressOf(c.id, "morning", lists);
     const pe = progressOf(c.id, "evening", lists);
     const st = store.stickers[c.id] || 0;
-    const emoji = c.id === "seungmin" ? "🌱" : "🌸";
+    const face = avatarOf(c.id);
     const grade = String(c.grade || "").split(" (")[0];
     return (
       '<div class="kid-head">' +
-        '<div class="kid-avatar" aria-hidden="true">' + emoji + "</div>" +
+        '<div class="kid-avatar" aria-hidden="true">' + (face ? '<img src="' + face + '" alt="" draggable="false">' : "") + "</div>" +
         '<div style="min-width:0;flex:1">' +
           '<div class="kid-name"><h2>' + esc(c.name) + "</h2><span>" + esc(c.ageLabel || "") + (grade ? " · " + esc(grade) : "") + "</span></div>" +
           '<div class="kid-today">' + childTodayText(c.id, todayStr) + "</div>" +
@@ -611,9 +617,9 @@
     const box = $("#stRows");
     if (!box) return;
     box.innerHTML = CHILDREN.map((c) => {
-      const face = c.id === "seungmin" ? "🌱" : "🌸";
+      const face = avatarOf(c.id);
       return (
-        '<div class="lv-set"><span>' + face + " " + esc(c.name) + " 스티커</span>" +
+        '<div class="lv-set"><span>' + (face ? '<img class="face-ico" src="' + face + '" alt="" aria-hidden="true">' : "") + esc(c.name) + " 스티커</span>" +
         '<span class="mini">' +
           '<button class="num-btn" type="button" data-minus="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' 스티커 줄이기">−</button>' +
           '<b class="st-num-b">' + (store.stickers[c.id] || 0) + "</b>" +
