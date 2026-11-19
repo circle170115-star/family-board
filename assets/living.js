@@ -138,7 +138,11 @@
   const ILL_DIR = "assets/illustrations/";
   const ILL_FUN = { "미술": "tile-fun-art", "독서": "tile-fun-read", "수학": "tile-fun-math", "과학": "tile-fun-science", "보드게임": "tile-fun-board" };
   const avatarOf = (cid) => (cid === "daeun" || cid === "seungmin" ? ILL_DIR + cid + "-avatar.png" : "");
-  const illImg = (name) => '<img src="' + ILL_DIR + name + '.png" alt="" aria-hidden="true" draggable="false" decoding="async">';
+  /* 타일 일러스트 톤 — 다은 = 핑크·코랄, 승민 = 스카이블루·블루 (없으면 원본 그린) */
+  const ILL_TONE = { daeun: "-pink", seungmin: "-blue" };
+  const ILL_VER = "20261119a";
+  const illImg = (name, cid) =>
+    '<img src="' + ILL_DIR + name + (ILL_TONE[cid] || "") + ".png?v=" + ILL_VER + '" alt="" aria-hidden="true" draggable="false" decoding="async">';
 
   function buildChecklists(cid, ds) {
     const morning = [
@@ -385,7 +389,7 @@
   function defaultTab() { const h = new Date().getHours(); return h >= 17 || h < 4 ? "evening" : "morning"; }
   const tabOf = (cid) => state.tab[cid] || defaultTab();
 
-  function tilesHTML(items, arr) {
+  function tilesHTML(items, arr, cid) {
     return (
       '<ul class="tiles">' +
       items
@@ -393,7 +397,7 @@
           const on = arr.indexOf(i.id) >= 0;
           return (
             '<li><button type="button" class="tile' + (on ? " is-done" : "") + '" data-id="' + i.id + '" aria-pressed="' + on + '">' +
-            '<span class="tile-emoji" aria-hidden="true">' + illImg(i.ill) + "</span>" +
+            '<span class="tile-emoji" aria-hidden="true">' + illImg(i.ill, cid) + "</span>" +
             '<span class="tile-label">' + esc(i.t) + "</span>" +
             '<span class="tile-badge" aria-hidden="true">✓ 완료!</span>' +
             "</button></li>"
@@ -454,7 +458,7 @@
       "</div>" +
       '<div class="kid-body" data-part="' + part + '">' +
         (isRestDay(todayStr) && part === "morning" ? '<p class="kid-rest">🌴 오늘은 쉬는 날이에요 · 등원 준비는 없어요</p>' : "") +
-        tilesHTML(items, arr) +
+        tilesHTML(items, arr, c.id) +
       "</div>" +
       '<div class="kid-foot">' +
         '<div class="st-head"><span class="st-star" aria-hidden="true">⭐</span><span class="st-num">' + st + '</span><span class="st-unit">개</span></div>' +
