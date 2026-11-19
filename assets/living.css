@@ -159,12 +159,12 @@ body.living::before{
 .kid[data-child="daeun"]{
   --k:#C1687F;--k-soft:#FDEDF2;--k-line:#F4C9D6;--k-wash:#FFF9FB;
   --k-grad:linear-gradient(90deg,#E98FA6,#F8CCD6);
-  --tl1:#FFF8FA;--tl2:#FFF9F2;--tl3:#FDF3F8;--tl4:#FFFBF7;
+  --tl1:#FFF8FA;--tl2:#FDEEF3;--tl3:#FFFBF8;--tl4:#FDF2F7;
 }
 .kid[data-child="seungmin"]{
   --k:#3E76C4;--k-soft:#E9F2FE;--k-line:#C2D8F5;--k-wash:#F7FBFF;
   --k-grad:linear-gradient(90deg,#5F97E2,#A9C9F2);
-  --tl1:#F6FAFF;--tl2:#FBFDFF;--tl3:#F1F7FF;--tl4:#F9FCFF;
+  --tl1:#F7FBFF;--tl2:#EBF3FE;--tl3:#FBFDFF;--tl4:#F1F7FF;
 }
 
 .kid-head{flex:none;display:flex;align-items:center;gap:11px;padding:12px 16px 4px}
