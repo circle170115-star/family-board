@@ -26,6 +26,18 @@
     "Snow": ["❄️", "눈"], "Foggy": ["🌫️", "안개"], "Thunderstorm": ["⛈️", "뇌우"],
   };
 
+  /* ───────────── PWA: 홈 화면/앱 설치용 서비스 워커 ─────────────
+     living.html 은 네트워크 우선으로 받아 오고(sw.js), 그림·아이콘만 캐싱합니다. */
+  function registerServiceWorker() {
+    if (!("serviceWorker" in navigator)) return;
+    const run = () => {
+      navigator.serviceWorker.register("sw.js", { scope: "./" }).catch(() => { /* 등록 실패는 보드 사용에 영향 없음 */ });
+    };
+    if (document.readyState === "complete") run();
+    else window.addEventListener("load", run, { once: true });
+  }
+  registerServiceWorker();
+
   /* ───────────── 데이터 ───────────── */
   async function fetchData() {
     const res = await fetch("data/board-data.json?ts=" + Date.now(), { cache: "no-store" });
@@ -780,11 +792,89 @@
       toast("오늘 체크를 초기화했어요");
     });
     $("#reloadBtn").addEventListener("click", async () => { await refreshData(true); openGear(false); });
-    $("#homeLink").addEventListener("click", () => {
+    wireHomeLock();
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") openGear(false); });
+  }
+
+  /* ───────────── 🏠 전체 모아보드 — 2초 길게 누르기 잠금 ─────────────
+     아이가 짧게 눌러 다른 페이지로 나가는 일을 막습니다.
+     어른이 2초 이상 누르고 있으면 모아보드(index.html)로 이동합니다. */
+  const HOME_HOLD_MS = 2000;
+  function wireHomeLock() {
+    const home = $("#homeLink");
+    if (!home) return;
+
+    let timer = null;
+    let armed = false;      /* 지금 누르고 있는 중 */
+    let navigated = false;  /* 이번 누름에서 이미 이동했는지 */
+    let lastTouchEnd = 0;   /* 터치 뒤에 따라오는 마우스 이벤트를 무시하려고 */
+
+    function cleanup() {
+      if (timer) { clearTimeout(timer); timer = null; }
+      armed = false;
+      home.classList.remove("is-holding");
+      home.removeAttribute("aria-busy");
+    }
+    function go() {
+      if (navigated) return;
+      navigated = true;
+      cleanup();
       /* 모아보드로 돌아갈 때는 이번 세션 동안 자동 전환을 하지 않습니다 */
       try { sessionStorage.setItem("familyLivingBypass", "1"); } catch (e) { /* noop */ }
+      location.assign(home.getAttribute("href") || "index.html");
+    }
+    function start() {
+      if (armed || navigated) return;
+      armed = true;
+      home.classList.add("is-holding");
+      home.setAttribute("aria-busy", "true");
+      timer = setTimeout(go, HOME_HOLD_MS);
+    }
+    function end(showHint) {
+      const wasArmed = armed;
+      const fired = navigated;
+      cleanup();
+      if (!wasArmed || fired) return;
+      if (showHint) toast("어른용: 2초 길게 누르면 전체 보드로 이동해요");
+    }
+
+    /* 터치 (태블릿) */
+    home.addEventListener("touchstart", (e) => {
+      if (e.touches && e.touches.length > 1) return;  /* 손가락 여러 개는 무시 */
+      e.preventDefault();                             /* 길게 눌러도 메뉴·복사가 뜨지 않게 */
+      start();
+    }, { passive: false });
+    home.addEventListener("touchend", (e) => {
+      lastTouchEnd = Date.now();
+      e.preventDefault();
+      end(true);
+    }, { passive: false });
+    home.addEventListener("touchcancel", () => {
+      lastTouchEnd = Date.now();
+      end(false);
     });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") openGear(false); });
+
+    /* 마우스 (PC·태블릿 트랙패드) */
+    home.addEventListener("mousedown", (e) => {
+      if (Date.now() - lastTouchEnd < 800) return;
+      if (typeof e.button === "number" && e.button !== 0) return;
+      e.preventDefault();
+      start();
+    });
+    home.addEventListener("mouseup", () => {
+      if (Date.now() - lastTouchEnd < 800) return;
+      end(true);
+    });
+    home.addEventListener("mouseleave", () => end(false));
+
+    /* 길게 눌러도 브라우저 메뉴(새 탭에서 열기 등)가 뜨지 않게 */
+    home.addEventListener("contextmenu", (e) => e.preventDefault());
+
+    /* 짧은 탭·클릭으로는 절대 이동하지 않습니다 (키보드·보조기기만 예외) */
+    home.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (e.detail === 0) go();
+    });
   }
 
   /* ───────────── 시작 ───────────── */
