@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="assets/style.css?v=20261119b">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
 <script>
-/* 등원 집중 모드 — 평일 07:30~09:15(오늘 출발 시각을 늦게 잡았으면 그 15분 뒤까지)에
+/* 등원 집중 모드 — 평일 07:30~(평일 기본 출발 08:40 + 15분 = 08:55, 오늘 출발을 더 늦게 잡았으면 그 15분 뒤까지)에
    이 모아보드를 열면 거실 등원 보드(living.html)로 자동 전환합니다.
    living.html ⚙️ 에서 끄고 켤 수 있고, 거실 보드의 '전체 모아보드' 버튼으로 들어오면
    이번 세션은 그대로 모아보드에 머뭅니다. */
@@ -26,12 +26,19 @@
     var p2 = function (n) { return String(n).padStart(2, "0"); };
     var today = now.getFullYear() + "-" + p2(now.getMonth() + 1) + "-" + p2(now.getDate());
     if (localStorage.getItem("familyFocusOffDate") === today) return;
-    var start = 7 * 60 + 30, end = 9 * 60 + 15;
+    var start = 7 * 60 + 30;   /* 아침 준비 시작 07:30 */
     var lv = JSON.parse(localStorage.getItem("familyLivingBoard.v1") || "null");
+    var toMin = function (v) {
+      var p = String(v || "").split(":");
+      var h = parseInt(p[0], 10), m = parseInt(p[1] || "0", 10);
+      return isFinite(h) && isFinite(m) ? h * 60 + m : null;
+    };
+    var baseDep = 8 * 60 + 40;   /* 평일 기본 출발 08:40 */
+    if (lv && toMin(lv.departure) != null) baseDep = toMin(lv.departure);
+    var end = baseDep + 15;
     if (lv && lv.departureByDate && lv.departureByDate[today]) {
-      var p = String(lv.departureByDate[today]).split(":");
-      var d = parseInt(p[0], 10) * 60 + parseInt(p[1] || "0", 10);
-      if (d + 15 > end) end = d + 15;
+      var d = toMin(lv.departureByDate[today]);
+      if (d != null && d + 15 > end) end = d + 15;
     }
     var cur = now.getHours() * 60 + now.getMinutes();
     if (cur >= start && cur <= end) location.replace("living.html");

@@ -430,3 +430,25 @@ body.living::before{
   .cf{display:none}
   .lv-count.is-red .cd-ico{animation:none}
 }
+
+/* ── ⏰ 등원 알람 배너 (08:00 시작 · 08:20 경고) ── */
+.lv-alarm{
+  position:fixed;left:50%;top:max(10px,env(safe-area-inset-top));z-index:92;
+  display:flex;align-items:center;gap:14px;
+  max-width:min(92vw,820px);padding:14px 24px;border-radius:22px;cursor:pointer;
+  background:linear-gradient(135deg,#FFF8E1,#FFE9AE);border:2px solid #F0D68C;
+  box-shadow:0 22px 44px -24px rgba(130,95,20,.85);
+  transform:translate(-50%,-22px);opacity:0;pointer-events:none;
+  transition:opacity .32s ease, transform .32s ease;
+}
+.lv-alarm.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.lv-alarm .alarm-ico{font-size:clamp(24px,4vh,36px);line-height:1;flex:0 0 auto;animation:alarmRing 1.6s ease-in-out 3}
+.lv-alarm .alarm-title{display:block;font-size:clamp(17px,2.6vh,25px);font-weight:900;letter-spacing:-.03em;color:#8A6412}
+.lv-alarm .alarm-sub{display:block;margin-top:2px;font-size:clamp(12.5px,1.85vh,17px);font-weight:750;color:#A67C1E}
+.lv-alarm.is-warn{background:linear-gradient(135deg,#FFF0DC,#FFD8A8);border-color:#F3B67A;box-shadow:0 22px 44px -24px rgba(150,80,10,.9)}
+.lv-alarm.is-warn .alarm-title{color:#8F4510}
+.lv-alarm.is-warn .alarm-sub{color:#A9601F}
+.alarm-hint{font-size:11.5px;font-weight:750;color:var(--muted);margin-left:6px}
+@keyframes alarmRing{0%,100%{transform:rotate(0)}25%{transform:rotate(-14deg)}75%{transform:rotate(14deg)}}
+@media (prefers-reduced-motion: reduce){.lv-alarm .alarm-ico{animation:none}}
+.alarm-note{font-size:12px;line-height:1.5;font-weight:700;color:var(--muted);margin:8px 0 2px}

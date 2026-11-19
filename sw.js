@@ -10,7 +10,7 @@
 
 "use strict";
 
-const CACHE = "family-living-v3-20261119b";
+const CACHE = "family-living-v4-20261120a";
 
 /* 설치할 때 미리 받아 둘 것 — 하나가 실패해도 설치 자체는 계속한다 */
 const PRECACHE = [

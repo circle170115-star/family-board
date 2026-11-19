@@ -15,6 +15,14 @@
   const FOCUS_KEY = "familyFocusMode.v1";
   const ST_ICONS = ["⭐", "💖", "🦕"];
   const PREP_START = 7 * 60 + 30;   /* 아침 준비 시작 07:30 */
+  const DEFAULT_DEPARTURE = "08:40"; /* 평일 기본 출발 시각 (2026-11-20 09:00 → 08:40) */
+  const DEFAULT_DEP_MIN = 8 * 60 + 40;
+  /* ⏰ 등원 준비 알람 — ① 08:00 시작 ② 08:20 경고(출발 20분 전). 각각 08:00~08:09 / 08:20~08:29 사이 하루 한 번 */
+  const ALARMS = [
+    { key: "start", hm: 8 * 60, grace: 10, kind: "start" },
+    { key: "warn", hm: 8 * 60 + 20, grace: 10, kind: "warn" },
+  ];
+  const DEFAULTS_REV = 2;           /* 기본값 개정 번호 — 예전 기본값이 저장돼 있으면 한 번만 새 기본값으로 옮깁니다 */
   const DAY_END = 3 * 60;           /* 출발 3시간 뒤부터는 '오늘 등원 끝' 표시 */
   const esc = (s) =>
     String(s == null ? "" : s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
@@ -109,9 +117,19 @@
     try { s = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); } catch (e) { s = null; }
     if (!s || typeof s !== "object") s = {};
     if (typeof s.sound !== "boolean") s.sound = true;
-    if (typeof s.departure !== "string" || !/^\d{1,2}:\d{2}$/.test(s.departure)) s.departure = "09:00";
+    if (typeof s.alarm !== "boolean") s.alarm = true;      /* ⏰ 08:00 · 08:20 알람 (기본 켜짐) */
+    s.alarmDoneBySlot = s.alarmDoneBySlot && typeof s.alarmDoneBySlot === "object" ? s.alarmDoneBySlot : {};  /* 슬롯별 마지막으로 울린 날짜 */
+    if (typeof s.departure !== "string" || !/^\d{1,2}:\d{2}$/.test(s.departure)) s.departure = DEFAULT_DEPARTURE;
     s.departureByDate = s.departureByDate && typeof s.departureByDate === "object" ? s.departureByDate : {};
     s.stickers = s.stickers && typeof s.stickers === "object" ? s.stickers : {};
+    /* 기본값 개정(rev 2, 2026-11-20): 평일 기본 출발이 09:00 → 08:40 으로 바뀌었습니다.
+       이 기기에 예전 기본값 09:00 이 그대로 저장돼 있으면 새 기본값으로 옮깁니다.
+       부모님이 직접 고른 다른 시각은 그대로 두고, 개정 번호를 남겨 다시는 건드리지 않습니다. */
+    if (parseInt(s.defaultsRev, 10) !== DEFAULTS_REV) {
+      if (s.departure === "09:00") s.departure = DEFAULT_DEPARTURE;
+      Object.keys(s.departureByDate).forEach((k) => { if (s.departureByDate[k] === "09:00") delete s.departureByDate[k]; });
+      s.defaultsRev = DEFAULTS_REV;
+    }
     CHILDREN.forEach((c) => {
       const n = parseInt(s.stickers[c.id], 10);
       s.stickers[c.id] = Number.isFinite(n) && n > 0 ? n : 0;
@@ -323,7 +341,7 @@
     const arr = arrivalOverride();
     if (manual != null) return { min: manual, src: "manual", arrival: arr };
     if (arr != null) return { min: Math.max(0, arr - 15), src: "auto", arrival: arr };
-    return { min: parseHM(store.departure) || 9 * 60, src: "default", arrival: null };
+    return { min: parseHM(store.departure) || DEFAULT_DEP_MIN, src: "default", arrival: null };
   }
   function leftText(m) {
     if (m >= 60) {
@@ -710,7 +728,116 @@
     $("#clockHM").textContent = pad(d.getHours()) + ":" + pad(d.getMinutes());
     $("#clockSec").textContent = pad(d.getSeconds());
     if (iso(d) !== todayStr) { dayRollover(); return; }
+    checkAlarm(d);
     renderCountdown();
+  }
+
+  /* ───────────── ⏰ 등원 준비 알람 (평일 08:00 · 08:20) ─────────────
+     ① 08:00 시작 차임 — 맑은 도-미-솔-도
+     ② 08:20 경고 차임 — 두 번 반복되는 또렷한 딩동댕 (출발 20분 전)
+     주말·공휴일에는 울리지 않고, 두 알람 모두 하루 한 번만 울립니다. */
+  function alarmOn() { return store.alarm !== false; }
+  function renderAlarmBtn() {
+    const on = alarmOn();
+    const btn = $("#alarmBtn");
+    if (btn) {
+      btn.textContent = on ? "🔔" : "🔕";
+      btn.classList.toggle("is-off", !on);
+      btn.title = on ? "등원 알람 켜짐 · 평일 8:00 / 8:20 (누르면 끄기)" : "등원 알람 꺼짐 (누르면 켜기)";
+      btn.setAttribute("aria-label", on ? "등원 알람 끄기" : "등원 알람 켜기");
+      btn.setAttribute("aria-pressed", String(on));
+    }
+    const sw = $("#alarmSwitch");
+    if (sw) {
+      sw.textContent = on ? "켜짐" : "꺼짐";
+      sw.classList.toggle("off", !on);
+      sw.setAttribute("aria-pressed", String(on));
+    }
+    const hint = $("#alarmHint");
+    if (hint) hint.textContent = on ? "평일 8:00 · 8:20" : "꺼짐";
+  }
+  function setAlarm(on) {
+    store.alarm = !!on;
+    save();
+    renderAlarmBtn();
+  }
+  /* ① 08:00 시작 — 맑은 차임벨 도(C5)-미(E5)-솔(G5)-높은 도(C6), 약 2.8초 */
+  function chimeStart() {
+    if (!audio()) return false;
+    [
+      [523.25, 0.00, 1.5, 0.085],
+      [659.25, 0.30, 1.5, 0.090],
+      [783.99, 0.60, 1.6, 0.095],
+      [1046.5, 0.95, 2.0, 0.105],
+    ].forEach((n) => {
+      tone(n[0], n[1], n[2], "sine", n[3]);
+      tone(n[0] * 2, n[1], n[2] * 0.8, "sine", n[3] * 0.32);  /* 한 옥타브 위로 은은하게 */
+    });
+    return true;
+  }
+  /* ② 08:20 경고 — 또렷한 딩동댕(G5-B5-D6)을 두 번, 삼각파로 밝고 분명하게 */
+  function chimeWarn() {
+    if (!audio()) return false;
+    const beat = [[880, 0.00, 0.30, 0.10], [1174.66, 0.18, 0.30, 0.10], [1567.98, 0.36, 0.55, 0.11]];
+    [0, 0.95].forEach((off) => beat.forEach((n) => {
+      tone(n[0], off + n[1], n[2], "triangle", n[3]);
+      tone(n[0] * 2, off + n[1], n[2] * 0.7, "sine", n[3] * 0.26);
+    }));
+    return true;
+  }
+  function playAlarm(kind) { return kind === "warn" ? chimeWarn() : chimeStart(); }
+  function showAlarmBanner(kind) {
+    const b = $("#alarmBanner");
+    if (!b) return;
+    const isWarn = kind === "warn";
+    const dep = hhmm(departureInfo().min);
+    const ico = b.querySelector(".alarm-ico");
+    const title = b.querySelector(".alarm-title");
+    const sub = b.querySelector(".alarm-sub");
+    if (ico) ico.textContent = isWarn ? "⚠️" : "⏰";
+    if (title) title.textContent = isWarn ? "오전 8시 20분!" : "오전 8시예요!";
+    if (sub) {
+      sub.textContent = isWarn
+        ? "출발까지 20분 남았어요 · " + dep + " 출발"
+        : "다은·승민 등원 준비 시작할 시간이에요 · 출발 " + dep;
+    }
+    b.classList.toggle("is-warn", isWarn);
+    b.classList.remove("show");
+    void b.offsetWidth;
+    b.classList.add("show");
+    clearTimeout(showAlarmBanner.timer);
+    showAlarmBanner.timer = setTimeout(() => b.classList.remove("show"), isWarn ? 15000 : 12000);
+  }
+  function hideAlarmBanner() {
+    const b = $("#alarmBanner");
+    if (b) b.classList.remove("show");
+    clearTimeout(showAlarmBanner.timer);
+  }
+  function checkAlarm(d) {
+    if (!alarmOn() || isRestDay(todayStr)) return;   /* 주말·공휴일은 등원이 없어요 */
+    const cur = d.getHours() * 60 + d.getMinutes();
+    ALARMS.forEach((a) => {
+      if (cur < a.hm || cur >= a.hm + a.grace) return;
+      if (store.alarmDoneBySlot[a.key] === todayStr) return;
+      store.alarmDoneBySlot[a.key] = todayStr;
+      save();
+      const rang = playAlarm(a.kind);
+      showAlarmBanner(a.kind);
+      if (!rang) toast("⏰ " + (a.kind === "warn" ? "오전 8시 20분" : "오전 8시") + "! 소리는 화면을 한 번 누르면 나요");
+    });
+  }
+  /* 브라우저는 첫 터치·클릭 전에는 소리를 막습니다. 첫 조작에서 오디오를 한 번 깨워 둡니다. */
+  function primeAudio() {
+    const c = audio();
+    if (!c) return;
+    try { c.resume(); } catch (e) { /* noop */ }
+    tone(1046.5, 0, 0.05, "sine", 0.0001);
+  }
+  function wireAudioUnlock() {
+    const run = () => { primeAudio(); };
+    ["pointerdown", "touchstart", "keydown"].forEach((ev) => {
+      document.addEventListener(ev, run, { once: true, passive: true });
+    });
   }
 
   /* ───────────── 이벤트 ───────────── */
@@ -737,6 +864,33 @@
       if (store.sound) tapSound(true);
       toast(store.sound ? "효과음을 켰어요 🔊" : "효과음을 껐어요 🔇");
     });
+
+    /* ⏰ 등원 알람 — 헤더 종버튼·설정 토글·두 가지 소리 테스트 */
+    function toggleAlarm() {
+      const on = !alarmOn();
+      setAlarm(on);
+      if (on) { primeAudio(); chimeStart(); toast("등원 알람을 켰어요 🔔 (평일 8:00 · 8:20)"); }
+      else { toast("등원 알람을 껐어요 🔕"); }
+    }
+    const alarmBtn = $("#alarmBtn");
+    if (alarmBtn) alarmBtn.addEventListener("click", toggleAlarm);
+    const alarmSwitch = $("#alarmSwitch");
+    if (alarmSwitch) alarmSwitch.addEventListener("click", toggleAlarm);
+    [
+      ["#alarmTestStart", "start", "8시 시작음"],
+      ["#alarmTestWarn", "warn", "8시 20분 경고음"],
+    ].forEach((t) => {
+      const btn = $(t[0]);
+      if (!btn) return;
+      btn.addEventListener("click", () => {
+        primeAudio();
+        if (!playAlarm(t[1])) { toast("이 브라우저에서는 소리를 낼 수 없어요"); return; }
+        showAlarmBanner(t[1]);
+        toast(t[2] + " — 평일 8:00/8:20에 이렇게 울려요");
+      });
+    });
+    const banner = $("#alarmBanner");
+    if (banner) banner.addEventListener("click", hideAlarmBanner);
     $("#gearBtn").addEventListener("click", () => openGear(true));
     $("#closeGear").addEventListener("click", () => openGear(false));
     $("#gearPanel").addEventListener("click", (e) => {
@@ -762,7 +916,7 @@
       toast("오늘 출발 시각을 " + hhmm(parseHM(v)) + "로 맞췄어요 🚀");
     });
     function nudge(kind, delta) {
-      const cur = kind === "today" ? departureInfo().min : (parseHM(store.departure) || 9 * 60);
+      const cur = kind === "today" ? departureInfo().min : (parseHM(store.departure) || DEFAULT_DEP_MIN);
       const next = Math.min(23 * 60 + 55, Math.max(0, cur + delta));
       if (kind === "today") store.departureByDate[todayStr] = hhmm(next);
       else store.departure = hhmm(next);
@@ -896,6 +1050,8 @@
   todayStr = iso(new Date());
   store = loadStore();
   setSound(store.sound);
+  renderAlarmBtn();
+  wireAudioUnlock();
   renderAll();
   wire();
   tick();
