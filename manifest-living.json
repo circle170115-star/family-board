@@ -6,7 +6,7 @@
   "start_url": "/family-board/living.html",
   "scope": "/family-board/",
   "display": "standalone",
-  "orientation": "any",
+  "orientation": "landscape",
   "background_color": "#FFFBF3",
   "theme_color": "#FFFBF3",
   "lang": "ko",
