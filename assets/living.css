@@ -222,9 +222,20 @@ body.living::before{
 }
 
 /* ── 큰 그림 타일 (글자 없이도 알아보게) ── */
-.tiles{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px;height:100%;grid-auto-rows:1fr}
+.tiles{
+  list-style:none;margin:0;padding:0;display:grid;
+  grid-template-columns:repeat(var(--cols,2),minmax(0,1fr));
+  gap:10px;height:100%;grid-auto-rows:1fr;
+}
+/* 타일 개수에 맞춰 칸 수 조절 — 7개(다은 도서대여 날 아침)는 3열, 8개(저녁 루틴)는 4열 */
+.tiles[data-n="7"]{--cols:3}
+.tiles[data-n="8"]{--cols:4}
 .tiles li{min-height:0}
 .tiles li:last-child:nth-child(odd){grid-column:1 / -1}
+/* 타일이 많은 칸은 글자·배지도 한 단계 작게 */
+.tiles[data-n="7"] .tile-label,.tiles[data-n="8"] .tile-label{font-size:clamp(11.5px,1.75vh,17px)}
+.tiles[data-n="7"] .tile-badge,.tiles[data-n="8"] .tile-badge{padding:3px 8px;font-size:clamp(9px,1.3vh,11.5px)}
+.tiles[data-n="7"] .tile,.tiles[data-n="8"] .tile{padding:6px 8px;gap:3px}
 .tile{
   position:relative;width:100%;height:100%;min-height:clamp(74px,11vh,140px);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
@@ -385,8 +396,11 @@ body.living::before{
   .kid-body{padding:0 9px 6px}
   .kid-foot{padding:4px 13px 6px;gap:10px}
   .tiles{gap:8px}
+  .tiles[data-n="7"],.tiles[data-n="8"]{gap:7px}
   .tile{padding:6px 8px;border-radius:16px;min-height:clamp(64px,11vh,120px)}
   .tile-emoji img{max-height:clamp(64px,15vh,150px)}
+  .tiles[data-n="7"] .tile-label,.tiles[data-n="8"] .tile-label{font-size:clamp(10.5px,1.8vh,15px)}
+  .tiles[data-n="8"] .tile{padding:5px 6px}
   .tile-label{font-size:clamp(12px,2vh,18px)}
 }
 

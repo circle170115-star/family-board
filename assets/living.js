@@ -152,25 +152,32 @@
   const avatarOf = (cid) => (cid === "daeun" || cid === "seungmin" ? ILL_DIR + cid + "-avatar.png" : "");
   /* 타일 일러스트 톤 — 다은 = 핑크·코랄, 승민 = 스카이블루·블루 (없으면 원본 그린) */
   const ILL_TONE = { daeun: "-pink", seungmin: "-blue" };
-  const ILL_VER = "20261119a";
+  const ILL_VER = "20261119b";
   const illImg = (name, cid) =>
     '<img src="' + ILL_DIR + name + (ILL_TONE[cid] || "") + ".png?v=" + ILL_VER + '" alt="" aria-hidden="true" draggable="false" decoding="async">';
 
   function buildChecklists(cid, ds) {
+    /* 아침 준비 — 머리 빗기·묶기는 다은이만 */
     const morning = [
       { id: "wash", ill: "tile-wash", t: "세수·양치하기" },
       { id: "clothes", ill: "tile-clothes", t: "옷 입기" },
-      { id: "meal", ill: "tile-meal", t: "아침 먹기" },
-      { id: "bag", ill: "tile-bag", t: "가방·물통" },
     ];
+    if (cid === "daeun") morning.push({ id: "hair", ill: "tile-hair", t: "머리 빗기·묶기" });
+    morning.push({ id: "meal", ill: "tile-meal", t: "아침 먹기" });
+    morning.push({ id: "bag", ill: "tile-bag", t: "가방·물통" });
     if (bookForToday(cid, ds)) morning.push({ id: "book", ill: "tile-book", t: "도서대여 가방" });
     morning.push({ id: "shoes", ill: "tile-shoes", t: "신발 신고 출발!" });
 
+    /* 저녁 루틴 — 두 아이 모두 8개 (엘리하이 학습·정리·씻기·옷 갈아입기 포함) */
     const act = eveningActivity(ds);
     const evening = [
       { id: "hands", ill: "tile-hands", t: "손 씻기" },
       { id: "unpack", ill: "tile-unpack", t: "가방 정리" },
       act ? { id: "fun", ill: ILL_FUN[act.name] || "tile-fun-free", t: act.name + " 놀이!" } : { id: "fun", ill: "tile-fun-free", t: "자유놀이!" },
+      { id: "study", ill: "tile-study", t: "엘리하이 오늘의 학습" },
+      { id: "tidy", ill: "tile-tidy", t: "놀이한 거 정리하기" },
+      { id: "shower", ill: "tile-shower", t: "씻기" },
+      { id: "pajamas", ill: "tile-pajamas", t: "옷 갈아입기" },
       { id: "brush", ill: "tile-brush", t: "양치하고 자기" },
     ];
     return { morning: morning, evening: evening };
@@ -403,7 +410,7 @@
 
   function tilesHTML(items, arr, cid) {
     return (
-      '<ul class="tiles">' +
+      '<ul class="tiles" data-n="' + items.length + '">' +
       items
         .map((i) => {
           const on = arr.indexOf(i.id) >= 0;
