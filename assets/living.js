@@ -713,13 +713,27 @@
     });
     $("#depToday").addEventListener("change", (e) => {
       const v = e.target.value;
-      if (parseHM(v) == null) { renderSettings(); return; }
-      store.departureByDate[todayStr] = v;
+      if (parseHM(v) == null) { e.target.value = hhmm(departureInfo().min); return; }
+      store.departureByDate[todayStr] = hhmm(parseHM(v));
       save();
       renderCountdown();
       renderSettings();
-      toast("오늘 출발 시각을 " + v + "로 맞췄어요 🚀");
+      toast("오늘 출발 시각을 " + hhmm(parseHM(v)) + "로 맞췄어요 🚀");
     });
+    function nudge(kind, delta) {
+      const cur = kind === "today" ? departureInfo().min : (parseHM(store.departure) || 9 * 60);
+      const next = Math.min(23 * 60 + 55, Math.max(0, cur + delta));
+      if (kind === "today") store.departureByDate[todayStr] = hhmm(next);
+      else store.departure = hhmm(next);
+      save();
+      renderCountdown();
+      renderSettings();
+      toast((kind === "today" ? "오늘 " : "평소 ") + "출발 시각 " + hhmm(next));
+    }
+    $("#depTodayMinus").addEventListener("click", () => nudge("today", -5));
+    $("#depTodayPlus").addEventListener("click", () => nudge("today", 5));
+    $("#depDefaultMinus").addEventListener("click", () => nudge("default", -5));
+    $("#depDefaultPlus").addEventListener("click", () => nudge("default", 5));
     $("#depAuto").addEventListener("click", () => {
       delete store.departureByDate[todayStr];
       save();
@@ -729,12 +743,12 @@
     });
     $("#depDefault").addEventListener("change", (e) => {
       const v = e.target.value;
-      if (parseHM(v) == null) { renderSettings(); return; }
-      store.departure = v;
+      if (parseHM(v) == null) { e.target.value = store.departure; return; }
+      store.departure = hhmm(parseHM(v));
       save();
       renderCountdown();
       renderSettings();
-      toast("평소 출발 시각을 " + v + "로 저장했어요");
+      toast("평소 출발 시각을 " + store.departure + "로 저장했어요");
     });
     $("#resetBtn").addEventListener("click", () => {
       if (!window.confirm("오늘 체크를 모두 지울까요? (칭찬 스티커는 그대로 남아요)")) return;
