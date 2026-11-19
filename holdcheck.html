@@ -11,52 +11,71 @@
 </style>
 </head>
 <body>
-<iframe id="f" src="living.html?holdcheck=1"></iframe>
+<iframe id="f" src="living.html?holdcheck=2"></iframe>
 <pre id="log">loading…</pre>
 <script>
 const L = [];
-const log = (s) => { L.push(s); document.getElementById("log").textContent = L.join("\n"); };
+const log = (s) => { L.push(s); document.getElementById("log").textContent = L.join("\n"); console.log(s); };
 const f = document.getElementById("f");
-let phase = 0;
+let started = false, navigated = false;
 
 f.addEventListener("load", () => {
-  const href = (() => { try { return f.contentWindow.location.pathname; } catch (e) { return "?"; } })();
-  if (phase === 1 && href.indexOf("index.html") > -1) { log("LONG: ✅ 2초 뒤 모아보드로 이동함 → " + href); phase = 2; return; }
-  if (phase === 0) { runShort(); phase = 1; return; }
-  if (phase === 1) { log("page reloaded unexpectedly: " + href); }
+  let href = "?";
+  try { href = f.contentWindow.location.pathname; } catch (e) {}
+  if (href.indexOf("index.html") > -1) {
+    navigated = true;
+    log("LONG: ✅ 2초 넘게 누르자 모아보드로 이동함 → " + href);
+    return;
+  }
+  if (!started) { started = true; main(); }
 });
 
-function link() { return f.contentDocument.getElementById("homeLink"); }
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function waitReady() {
+  for (let i = 0; i < 60; i++) {
+    try {
+      if (f.contentDocument.querySelector(".kid") && f.contentDocument.getElementById("homeLink")) {
+        await sleep(300);
+        return true;
+      }
+    } catch (e) {}
+    await sleep(100);
+  }
+  return false;
+}
 
 function press(a, ms) {
   const W = f.contentWindow;
   a.dispatchEvent(new W.MouseEvent("mousedown", { bubbles: true, cancelable: true, button: 0, buttons: 1 }));
   const holding = a.classList.contains("is-holding");
-  return new Promise((res) => setTimeout(() => {
-    a.dispatchEvent(new W.MouseEvent("mouseup", { bubbles: true, cancelable: true, button: 0 }));
+  return new Promise((res) => setTimeout(async () => {
+    if (!navigated) a.dispatchEvent(new W.MouseEvent("mouseup", { bubbles: true, cancelable: true, button: 0 }));
     res(holding);
   }, ms));
 }
 
-async function runShort() {
-  const a = link();
-  if (!a) return log("FAIL: #homeLink 없음");
-  const holding = await press(a, 150);
-  await new Promise((r) => setTimeout(r, 250));
+async function main() {
+  if (!(await waitReady())) return log("FAIL: 보드가 준비되지 않음");
+  log("ready");
+
+  // 1) 짧은 누름(0.15초) — 이동하면 안 되고 안내 토스트만
+  let a = f.contentDocument.getElementById("homeLink");
+  const holdingShort = await press(a, 150);
+  await sleep(200);
   const t = f.contentDocument.getElementById("toast");
   log("SHORT(0.15s): url=" + f.contentWindow.location.pathname +
-      " / holding표시=" + holding +
-      " / toast=" + JSON.stringify(t && t.textContent));
-  await runLong();
-}
+      " / holding표시=" + holdingShort +
+      " / toast=" + JSON.stringify(t ? t.textContent : null));
 
-async function runLong() {
-  const a = link();
-  const holding = await press(a, 2600);
-  // 2초에 go() 가 돌면 iframe 이 index.html 로 넘어가 위 load 핸들러가 기록함
-  setTimeout(() => {
-    if (phase === 1) log("LONG: ❌ 이동하지 않음 (url=" + f.contentWindow.location.pathname + ", holding표시=" + holding + ")");
-  }, 600);
+  await sleep(2000); // 토스트가 사라질 때까지
+
+  // 2) 길게 누름(2.6초) — 2초 지나면 모아보드로 이동해야 함
+  a = f.contentDocument.getElementById("homeLink");
+  if (!a) return log("FAIL: 두 번째 시도에서 #homeLink 없음");
+  const holdingLong = await press(a, 2600);
+  await sleep(900);
+  if (!navigated) log("LONG: ❌ 이동하지 않음 (url=" + f.contentWindow.location.pathname + " / holding표시=" + holdingLong + ")");
 }
 </script>
 </body>
