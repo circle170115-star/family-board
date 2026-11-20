@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>거실 등원 보드 · 우리 집</title>
-<meta name="description" content="다은·승민이가 거실 태블릿에서 직접 누르는 아침 등원 준비 체크리스트와 칭찬 스티커판, 한 번에 열리는 더하기 놀이">
+<meta name="description" content="다은·승민이가 거실 태블릿에서 직접 누르는 아침 등원 준비 체크리스트와 칭찬 스티커판, 한 번에 열리는 더하기·빼기 놀이">
 <meta name="theme-color" content="#FFFBF3">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="assets/living.css?v=20261120c">
+<link rel="stylesheet" href="assets/living.css?v=20261121a">
 <link rel="manifest" href="manifest-living.json">
 <meta name="application-name" content="등원 보드">
 <meta name="mobile-web-app-capable" content="yes">
@@ -39,9 +39,9 @@
       <div class="lv-outfit" id="outfitLine">등원 옷차림을 확인하고 있어요</div>
     </div>
     <div class="lv-actions">
-      <button class="lv-play" id="playBtn" type="button" aria-label="더하기 놀이 열기" title="더하기 놀이 · 승민 한 자리 덧셈 / 다은 두 자리 덧셈·뺄셈">
+      <button class="lv-play" id="playBtn" type="button" aria-label="더하기·빼기 놀이 열기" title="더하기·빼기 놀이 · 승민 덧셈구구·뺄셈구구(9까지) / 다은 두 자리 덧셈·뺄셈">
         <span class="play-plus" aria-hidden="true">➕</span>
-        <span class="play-txt">더하기 놀이</span>
+        <span class="play-txt">더하기·빼기 놀이</span>
       </button>
       <button class="lv-icon-btn" id="alarmBtn" type="button" aria-label="등원 알람 켜기/끄기" aria-pressed="true" title="등원 알람 · 평일 8:00 / 8:20">🔔</button>
       <button class="lv-icon-btn" id="soundBtn" type="button" aria-label="효과음 켜기/끄기" title="효과음">🔊</button>
@@ -71,13 +71,13 @@
 <div id="confetti" aria-hidden="true"></div>
 <div class="lv-toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- ➕ 더하기 놀이 — 모아보드 '수학 놀이터'와 같은 문제 규칙을 거실 화면 전체로 띄웁니다 -->
+<!-- ➕ 더하기·빼기 놀이 — 승민은 덧셈구구(합 9까지)·뺄셈구구(9 이내), 다은은 두 자리 덧셈·뺄셈 -->
 <div class="lv-game" id="gamePanel" hidden>
   <div class="gp-wrap" role="dialog" aria-modal="true" aria-labelledby="gpTitle">
     <header class="gp-head">
-      <h2 class="gp-title" id="gpTitle"><span aria-hidden="true">➕</span> 더하기 놀이</h2>
+      <h2 class="gp-title" id="gpTitle"><span aria-hidden="true">➕</span> 더하기·빼기 놀이</h2>
       <div class="gp-tabs" role="group" aria-label="누구 놀이를 할까요">
-        <button class="gp-tab is-on" type="button" data-mode="seungmin">승민 <small>5세 · 한 자리 덧셈</small></button>
+        <button class="gp-tab is-on" type="button" data-mode="seungmin">승민 <small>5세 · 덧셈구구·뺄셈구구</small></button>
         <button class="gp-tab" type="button" data-mode="daeun">다은 <small>7세 · 두 자리 덧셈·뺄셈</small></button>
       </div>
       <div class="gp-score">맞힌 문제 <b id="gpRight">0</b> <i>/</i> 시도 <b id="gpTotal">0</b></div>
@@ -151,6 +151,6 @@
 </div>
 
 <noscript><p style="text-align:center;padding:24px">이 보드는 JavaScript가 필요해요.</p></noscript>
-<script src="assets/living.js?v=20261120c"></script>
+<script src="assets/living.js?v=20261121a"></script>
 </body>
 </html>

@@ -582,12 +582,16 @@
     }
   }
 
-  /* ───────────── ➕ 더하기 놀이 (전체화면) ─────────────
-     모아보드(index.html) '수학 놀이터'와 같은 규칙입니다 — 승민(5세) 한 자리 덧셈,
-     다은(7세) 두 자리 덧셈·뺄셈, 보기 4개 중 정답 고르기, 맞히면 1.1초·틀리면 1.9초 뒤 다음 문제.
+  /* ───────────── ➕ 더하기·빼기 놀이 (전체화면) ─────────────
+     승민(5세)은 교재의 **덧셈구구(합이 9까지)** 와 **뺄셈구구(9 이내)** 안에서만 문제가 나옵니다.
+       · 덧셈: 1 + 0 … 9 + 0  (a = 1~9, b = 0~(9−a), 답 1~9)
+       · 뺄셈: 1 − 1 … 9 − 9  (a = 1~9, b = 1~a, 답 0~8)
+       · 덧셈·뺄셈을 반반 섞고, 바로 앞 문제와 같은 식은 다시 내지 않습니다.
+     다은(7세)은 두 자리 덧셈·뺄셈 그대로입니다.
+     보기 4개 중 정답 고르기, 맞히면 1.1초·틀리면 1.9초 뒤 다음 문제.
      거실 태블릿에서 승민이가 직접 누를 수 있게 숫자·보기를 화면 크기에 맞춰 크게 띄웁니다.
      보드 데이터를 못 불러와도 놀이는 열리도록 데이터 요청 전에 먼저 연결합니다. */
-  const gp = { mode: "seungmin", open: false, answer: null, right: 0, total: 0, streak: 0, busy: false, timer: null };
+  const gp = { mode: "seungmin", open: false, answer: null, right: 0, total: 0, streak: 0, busy: false, timer: null, last: "" };
   function gpSound(freqs, gap, dur, type, vol) {
     if (store && store.sound === false) return;   /* ⚙️ 효과음 꺼짐을 그대로 따릅니다 */
     if (!audio()) return;
@@ -602,12 +606,24 @@
   }
   function gpNew() {
     clearTimeout(gp.timer);
-    let a, b, op, ans;
+    let a, b, op, ans, key = "", tries = 0;
     if (gp.mode === "seungmin") {
-      a = 1 + Math.floor(Math.random() * 9);
-      b = 1 + Math.floor(Math.random() * 9);
-      op = "+";
-      ans = a + b;
+      /* 덧셈구구(합 9까지) · 뺄셈구구(9 이내)를 반반 섞고, 직전 식은 건너뜁니다 */
+      do {
+        if (Math.random() < 0.5) {
+          a = 1 + Math.floor(Math.random() * 9);          /* 1~9 */
+          b = Math.floor(Math.random() * (10 - a));       /* 0~(9-a) */
+          op = "+";
+          ans = a + b;                                     /* 1~9 */
+        } else {
+          a = 1 + Math.floor(Math.random() * 9);          /* 1~9 */
+          b = 1 + Math.floor(Math.random() * a);          /* 1~a */
+          op = "−";
+          ans = a - b;                                     /* 0~8 */
+        }
+        key = a + op + b;
+      } while (key === gp.last && ++tries < 12);
+      gp.last = key;
     } else {
       a = 10 + Math.floor(Math.random() * 80);
       b = 10 + Math.floor(Math.random() * 80);
@@ -618,6 +634,7 @@
     gp.busy = false;
     const opts = new Set([ans]);
     while (opts.size < 4) {
+      if (gp.mode === "seungmin") { opts.add(Math.floor(Math.random() * 10)); continue; }  /* 보기 0~9 */
       const d = ans + (Math.floor(Math.random() * 19) - 9);
       if (d >= 0 && d !== ans) opts.add(d);
     }
@@ -673,7 +690,8 @@
   function gpOpen() {
     const panel = $("#gamePanel");
     if (!panel) return;
-    gp.mode = "seungmin";   /* 승민이가 눌렀을 때 언제나 자기 놀이(한 자리 덧셈)로 시작 — 다은이는 안에서 탭 */
+    gp.mode = "seungmin";   /* 승민이가 눌렀을 때 언제나 자기 놀이(덧셈구구·뺄셈구구)로 시작 — 다은이는 안에서 탭 */
+    gp.last = "";
     gpTabs();
     panel.hidden = false;
     gp.open = true;
