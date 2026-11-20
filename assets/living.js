@@ -673,6 +673,7 @@
   function gpOpen() {
     const panel = $("#gamePanel");
     if (!panel) return;
+    gp.mode = "seungmin";   /* 승민이가 눌렀을 때 언제나 자기 놀이(한 자리 덧셈)로 시작 — 다은이는 안에서 탭 */
     gpTabs();
     panel.hidden = false;
     gp.open = true;
