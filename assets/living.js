@@ -582,6 +582,132 @@
     }
   }
 
+  /* ───────────── ➕ 더하기 놀이 (전체화면) ─────────────
+     모아보드(index.html) '수학 놀이터'와 같은 규칙입니다 — 승민(5세) 한 자리 덧셈,
+     다은(7세) 두 자리 덧셈·뺄셈, 보기 4개 중 정답 고르기, 맞히면 1.1초·틀리면 1.9초 뒤 다음 문제.
+     거실 태블릿에서 승민이가 직접 누를 수 있게 숫자·보기를 화면 크기에 맞춰 크게 띄웁니다.
+     보드 데이터를 못 불러와도 놀이는 열리도록 데이터 요청 전에 먼저 연결합니다. */
+  const gp = { mode: "seungmin", open: false, answer: null, right: 0, total: 0, streak: 0, busy: false, timer: null };
+  function gpSound(freqs, gap, dur, type, vol) {
+    if (store && store.sound === false) return;   /* ⚙️ 효과음 꺼짐을 그대로 따릅니다 */
+    if (!audio()) return;
+    freqs.forEach((f, i) => tone(f, i * gap, dur, type, vol));
+  }
+  function gpTabs() {
+    document.querySelectorAll("#gamePanel .gp-tab").forEach((t) => {
+      const on = t.dataset.mode === gp.mode;
+      t.classList.toggle("is-on", on);
+      t.setAttribute("aria-pressed", String(on));
+    });
+  }
+  function gpNew() {
+    clearTimeout(gp.timer);
+    let a, b, op, ans;
+    if (gp.mode === "seungmin") {
+      a = 1 + Math.floor(Math.random() * 9);
+      b = 1 + Math.floor(Math.random() * 9);
+      op = "+";
+      ans = a + b;
+    } else {
+      a = 10 + Math.floor(Math.random() * 80);
+      b = 10 + Math.floor(Math.random() * 80);
+      if (Math.random() < 0.5) { op = "+"; ans = a + b; }
+      else { if (b > a) { const t = a; a = b; b = t; } op = "−"; ans = a - b; }
+    }
+    gp.answer = ans;
+    gp.busy = false;
+    const opts = new Set([ans]);
+    while (opts.size < 4) {
+      const d = ans + (Math.floor(Math.random() * 19) - 9);
+      if (d >= 0 && d !== ans) opts.add(d);
+    }
+    const arr = [...opts].sort(() => Math.random() - 0.5);
+    const body = $("#gpBody");
+    if (!body) return;
+    body.innerHTML =
+      '<div class="gq-box" id="gqBox">' +
+        '<span class="gq-burst" id="gqBurst" aria-hidden="true">🎉</span>' +
+        '<div class="gq-text">' + a + '<span class="op">' + (op === "+" ? "+" : "−") + "</span>" + b + " = ?</div>" +
+        '<div class="gq-opts">' + arr.map((o) => '<button class="gopt" type="button" data-v="' + o + '">' + o + "</button>").join("") + "</div>" +
+        '<div class="gq-fb" id="gqFb" role="status" aria-live="polite">정답을 골라 보세요!</div>' +
+      "</div>" +
+      '<div class="gp-foot">' +
+        '<span class="gp-streak" id="gpStreak">' + (gp.streak > 1 ? "연속 " + gp.streak + "문제! 🔥" : "천천히 골라도 좋아요") + "</span>" +
+        '<button class="gp-next" id="gpNext" type="button">다음 문제 →</button>' +
+      "</div>";
+    body.querySelectorAll(".gopt").forEach((o) => o.addEventListener("click", () => gpAnswer(Number(o.dataset.v), o)));
+    $("#gpNext").addEventListener("click", gpNew);
+  }
+  function gpAnswer(v, btn) {
+    if (gp.busy) return;
+    gp.busy = true;
+    const box = $("#gqBox"), fb = $("#gqFb");
+    document.querySelectorAll("#gpBody .gopt").forEach((b) => (b.disabled = true));
+    gp.total++;
+    const ok = v === gp.answer;
+    if (ok) {
+      btn.classList.add("correct");
+      box.classList.add("pop");
+      const burst = $("#gqBurst");
+      if (burst) burst.classList.add("on");
+      fb.textContent = "정답! 정말 잘했어요 🎉";
+      gp.right++;
+      gp.streak++;
+      gpSound([880, 1174.66, 1567.98], 0.09, 0.34, "triangle", 0.1);
+    } else {
+      btn.classList.add("wrong");
+      box.classList.add("shake");
+      const right = document.querySelector('#gpBody .gopt[data-v="' + gp.answer + '"]');
+      if (right) right.classList.add("correct");
+      fb.textContent = "앗, 다시 해볼까요? 정답은 " + gp.answer + "!";
+      fb.classList.add("wrong");
+      gp.streak = 0;
+      gpSound([392], 0, 0.22, "sine", 0.09);
+    }
+    $("#gpRight").textContent = gp.right;
+    $("#gpTotal").textContent = gp.total;
+    const st = $("#gpStreak");
+    if (st) st.textContent = ok ? (gp.streak > 1 ? "연속 " + gp.streak + "문제! 🔥" : "잘했어요! ⭐") : "괜찮아요, 다음 문제!";
+    gp.timer = setTimeout(gpNew, ok ? 1100 : 1900);
+  }
+  function gpOpen() {
+    const panel = $("#gamePanel");
+    if (!panel) return;
+    gpTabs();
+    panel.hidden = false;
+    gp.open = true;
+    document.body.classList.add("is-playing");
+    primeAudio();          /* 태블릿에서 누른 김에 소리 잠금을 풀어 둡니다 */
+    gpNew();
+  }
+  function gpClose() {
+    const panel = $("#gamePanel");
+    if (!panel || !gp.open) return;
+    panel.hidden = true;
+    gp.open = false;
+    clearTimeout(gp.timer);
+    gp.timer = null;
+    document.body.classList.remove("is-playing");
+    const btn = $("#playBtn");
+    if (btn) btn.focus({ preventScroll: true });
+  }
+  function initGame() {
+    const panel = $("#gamePanel"), btn = $("#playBtn");
+    if (!panel || !btn) return;
+    btn.addEventListener("click", gpOpen);
+    const close = $("#gpClose");
+    if (close) close.addEventListener("click", gpClose);
+    document.querySelectorAll("#gamePanel .gp-tab").forEach((t) =>
+      t.addEventListener("click", () => {
+        if (gp.mode === t.dataset.mode) return;
+        gp.mode = t.dataset.mode;
+        gpTabs();
+        gpNew();
+      })
+    );
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && gp.open) gpClose(); });
+  }
+
   /* ───────────── 축하 · 폭죽 · 토스트 ───────────── */
   let celebrateT = null, toastT = null;
   function toast(msg) {
@@ -1040,6 +1166,8 @@
   }
 
   /* ───────────── 시작 ───────────── */
+  /* 놀이 화면은 보드 데이터와 상관없이 한 번에 열 수 있게 먼저 연결합니다 */
+  initGame();
   try {
     data = await fetchData();
   } catch (e) {
