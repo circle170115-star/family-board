@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#FFFBF3">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="assets/living.css?v=20261121f">
+<link rel="stylesheet" href="assets/living.css?v=20261121g">
 <link rel="manifest" href="manifest-living.json">
 <meta name="application-name" content="등원 보드">
 <meta name="mobile-web-app-capable" content="yes">
@@ -120,15 +120,19 @@
 
 </div>
 
-<!-- 📖 오늘의 읽을거리 — 전체화면 포스터 -->
-<div class="lv-reading" id="readingPanel" hidden>
+<!-- 📖 오늘의 읽을거리 — 전체화면 모달 (📖 오늘의 속담 · 🌱 오늘의 영단어 두 탭) -->
+<div class="lv-reading" id="readingPanel" hidden data-tab="proverb">
   <div class="rd-wrap" role="dialog" aria-modal="true" aria-labelledby="rdTitle">
     <header class="rd-head">
-      <h2 class="rd-title" id="rdTitle"><span aria-hidden="true">📖</span> <span id="rdTitleText">오늘의 읽을거리</span></h2>
+      <h2 class="rd-title" id="rdTitle"><span aria-hidden="true">📖</span> 오늘의 읽을거리</h2>
+      <div class="rd-tabs" role="tablist" aria-label="읽을거리 고르기">
+        <button class="rd-tab is-on" id="rdTabProverb" type="button" role="tab" aria-selected="true" aria-controls="rdStage" data-tab="proverb"><span aria-hidden="true">📖</span> 오늘의 속담</button>
+        <button class="rd-tab" id="rdTabWord" type="button" role="tab" aria-selected="false" aria-controls="rdStage" data-tab="word" tabindex="-1"><span aria-hidden="true">🌱</span> 오늘의 영단어</button>
+      </div>
       <span class="rd-sub" id="rdSub"></span>
       <button class="rd-close" id="rdClose" type="button" aria-label="읽을거리를 닫고 보드로 돌아가기"><span aria-hidden="true">✕</span> 닫기</button>
     </header>
-    <div class="rd-stage" id="rdStage"></div>
+    <div class="rd-stage" id="rdStage" role="tabpanel" aria-labelledby="rdTabProverb"></div>
   </div>
 </div>
 
@@ -218,6 +222,6 @@
 <noscript><p style="text-align:center;padding:24px">이 보드는 JavaScript가 필요해요.</p></noscript>
 <script src="assets/kr-holidays.js?v=20261122a"></script>
 <script src="assets/math-engine.js?v=20261121a"></script>
-<script src="assets/living.js?v=20261121f"></script>
+<script src="assets/living.js?v=20261121g"></script>
 </body>
 </html>

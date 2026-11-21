@@ -779,63 +779,323 @@
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && gp.open) gpClose(); });
   }
 
-  /* ───────────── 📖 오늘의 읽을거리 (전체화면 포스터) ─────────────
-     data/board-data.json 의
-       "readingPoster": { "date": "2026-11-21", "title": "...", "subtitle": "...", "image": "assets/reading/2026-11-21.png" }
-     를 읽어 상단 카드 부제와 전체화면 포스터를 채웁니다.
-     아직 포스터가 없으면 assets/reading-poster.png 를 한 번 시도하고,
-     그것도 없으면 깔끔한 안내 카드를 띄웁니다.
-     → 확정된 포스터 PNG 를 assets/reading-poster.png 로 올리거나 board-data.json 의
-       readingPoster.image 에 경로를 적으면 다음 새로고침부터 바로 뜹니다. */
-  const READING_FALLBACK = "assets/reading-poster.png";
-  const rd = { open: false };
+  /* ───────────── 📖 오늘의 읽을거리 (전체화면 모달 · 속담/영단어 2탭) ─────────────
+     data/board-data.json 의 readingPoster 를 읽어 두 탭을 그립니다.
+       "readingPoster": {
+         "date": "2026-11-21",
+         "proverb": { badge, title, subtitle, summary,
+                      panels:[{num,speech,caption,image}], meaning, promise },
+         "word":    { badge, word, meaning, bannerImage, audio,
+                      examples:[{num,en,ko,audio,highlight}], tip }
+       }
+     · 속담 탭 — 제목·뜻·4컷 만화·오늘의 약속 (기본 탭)
+     · 영단어 탭 — 큰 단어/예문을 터치하면 원어민 발음 MP3 재생 + 반짝임,
+       🔊 전체 듣기 = grow → 예문1 → 2 → 3 (0.7초 간격, ⏹ 멈춤 토글)
+     · MP3 가 없거나 재생에 실패하면 window.speechSynthesis(en-US, rate 0.9) 로 자동 대체
+     proverb·word 가 모두 비어 있으면 안내 카드를 띄웁니다. */
+  const RD_ICO = "assets/reading/ico/";
+  const rd = { open: false, tab: "proverb" };
+  const rda = { audio: null, seq: false, seqId: 0, timer: 0, el: null, sayId: 0 };
 
-  function readingPoster() {
+  function readingData() {
     const rp = (data && data.readingPoster) || null;
-    if (!rp) return { img: "", title: "", sub: "", date: "", stale: false };
-    if (typeof rp === "string") return { img: rp, title: "", sub: "", date: "", stale: false };
+    if (!rp) return { date: "", title: "", sub: "", img: "", proverb: null, word: null, stale: false };
+    if (typeof rp === "string") return { date: "", title: "", sub: "", img: rp, proverb: null, word: null, stale: false };
     const date = rp.date ? String(rp.date).slice(0, 10) : "";
+    const proverb = rp.proverb && typeof rp.proverb === "object" ? rp.proverb : null;
+    const word = rp.word && typeof rp.word === "object" ? rp.word : null;
     return {
-      img: rp.image || rp.src || rp.url || "",
-      title: rp.title || "",
-      sub: rp.subtitle || rp.sub || "",
       date: date,
+      title: rp.title || (proverb && proverb.title) || "",
+      sub: rp.subtitle || rp.sub || "",
+      img: rp.image || rp.src || rp.url || "",
+      proverb: proverb,
+      word: word,
       stale: !!date && date !== todayStr,
     };
   }
   function renderReadingCard() {
-    const p = readingPoster();
+    const p = readingData();
     const sub = $("#readSub"), btn = $("#readBtn");
     if (sub) sub.textContent = p.title || "오늘의 포스터 보기";
-    if (btn) btn.title = "오늘의 읽을거리 · " + (p.title || "오늘의 포스터") + " 화면 가득 보기";
+    if (btn) {
+      const what = p.proverb && p.word ? "오늘의 속담·영단어" : p.proverb ? "오늘의 속담" : p.word ? "오늘의 영단어" : "오늘의 포스터";
+      btn.title = "오늘의 읽을거리 · " + what + " 화면 가득 보기";
+    }
   }
   function readingEmptyHTML() {
     return (
       '<div class="rd-empty">' +
         '<div class="rd-empty-ico" aria-hidden="true">📖</div>' +
         '<h3>오늘의 읽을거리를 준비하고 있어요</h3>' +
-        '<p>매일 아침 새 읽을거리 포스터가 이 자리에 <b>화면 가득</b> 떠요.<br>속담 4컷 만화 · 그림 영단어 · 자연·과학 호기심</p>' +
-        '<span class="rd-empty-tip">🌱 포스터가 확정되면 바로 여기에 나타나요</span>' +
+        '<p>매일 아침 새 읽을거리가 이 자리에 <b>화면 가득</b> 떠요.<br>속담 4컷 만화 · 터치로 듣는 그림 영단어</p>' +
+        '<span class="rd-empty-tip">🌱 읽을거리가 확정되면 바로 여기에 나타나요</span>' +
       "</div>"
     );
   }
+
+  /* 예문 속에 오늘의 단어(또는 highlight 낱말)만 노랗게 표시 */
+  function rdHighlight(text, list) {
+    const s = String(text == null ? "" : text);
+    const words = (Array.isArray(list) ? list : []).filter(Boolean).map(String);
+    if (!words.length) return esc(s);
+    const pattern = words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+    let re;
+    try { re = new RegExp("\\b(" + pattern + ")\\b", "g"); } catch (e) { return esc(s); }
+    let out = "", last = 0, m;
+    while ((m = re.exec(s))) {
+      out += esc(s.slice(last, m.index)) + '<span class="hl">' + esc(m[0]) + "</span>";
+      last = m.index + m[0].length;
+      if (re.lastIndex === m.index) re.lastIndex++;
+    }
+    return out + esc(s.slice(last));
+  }
+
+  function rdProverbHTML(pv) {
+    const panels = (Array.isArray(pv.panels) ? pv.panels : []).slice(0, 4).map((p, i) => {
+      const n = p.num != null ? p.num : i + 1;
+      return (
+        '<div class="pv-panel">' +
+          '<div class="pv-ph">' +
+            (p.image ? '<img src="' + esc(p.image) + '" alt="' + esc((pv.title || "속담") + " " + n + "컷 만화") + '" decoding="async">' : "") +
+            '<div class="pv-num">' + esc(n) + "</div>" +
+            (p.speech ? '<div class="pv-bub b' + (i + 1) + '">' + esc(p.speech) + "</div>" : "") +
+          "</div>" +
+          '<div class="pv-cap">' + esc(p.caption || "") + "</div>" +
+        "</div>"
+      );
+    }).join("");
+    const minis =
+      (pv.meaning ? '<div class="pv-mini a"><h4><img src="' + RD_ICO + 'speech.png" alt="">이런 뜻이에요</h4><p>' + esc(pv.meaning) + "</p></div>" : "") +
+      (pv.promise ? '<div class="pv-mini b"><h4><img src="' + RD_ICO + 'star.png" alt="">오늘의 약속</h4><p>' + esc(pv.promise) + "</p></div>" : "");
+    return (
+      '<section class="rd-poster is-proverb" aria-label="오늘의 속담">' +
+        '<div class="pv-left">' +
+          '<div class="pv-spark" aria-hidden="true"><img src="' + RD_ICO + 'sparkle.png" alt=""><img src="' + RD_ICO + 'star.png" alt=""><img src="' + RD_ICO + 'sparkle.png" alt=""></div>' +
+          '<span class="rd-badge"><img src="' + RD_ICO + 'book.png" alt="">' + esc(pv.badge || "오늘의 속담") + "</span>" +
+          '<h3 class="pv-title"><em>' + esc(pv.title || "") + "</em></h3>" +
+          (pv.subtitle ? '<p class="pv-sub">' + esc(pv.subtitle) + "</p>" : "") +
+          (pv.summary ? '<div class="pv-summary"><img src="' + RD_ICO + 'speech.png" alt=""><span>' + esc(pv.summary) + "</span></div>" : "") +
+          (minis ? '<div class="pv-minis">' + minis + "</div>" : "") +
+        "</div>" +
+        '<div class="pv-right">' +
+          '<div class="rd-sec"><img src="' + RD_ICO + 'palette.png" alt=""><b>4컷 만화로 배워요</b><span class="line"></span></div>' +
+          '<div class="pv-comic">' + panels + "</div>" +
+        "</div>" +
+      "</section>"
+    );
+  }
+
+  function rdWordHTML(wd) {
+    const word = String(wd.word || "");
+    const letters = word.split("").map((ch, i) => '<i class="w' + ((i % 4) + 1) + '">' + esc(ch) + "</i>").join("");
+    const examples = (Array.isArray(wd.examples) ? wd.examples : []).map((e, i) => {
+      const n = e.num != null ? e.num : i + 1;
+      const en = rdHighlight(e.en, (Array.isArray(e.highlight) && e.highlight.length ? e.highlight : [word]));
+      return (
+        '<button class="wd-ex" type="button"' +
+          ' data-rd-audio="' + esc(e.audio || "") + '" data-rd-text="' + esc(e.en || "") + '"' +
+          ' aria-label="' + esc((e.en || "") + " · " + (e.ko || "") + " 발음 듣기") + '">' +
+          '<span class="n" aria-hidden="true">' + esc(n) + "</span>" +
+          '<span class="txt"><span class="en">' + en + '</span><span class="ko">' + esc(e.ko || "") + "</span></span>" +
+          '<span class="spk" aria-hidden="true">🔊</span>' +
+        "</button>"
+      );
+    }).join("");
+    return (
+      '<section class="rd-poster is-word" aria-label="오늘의 영단어">' +
+        '<div class="wd-left">' +
+          '<span class="rd-badge"><img src="' + RD_ICO + 'sprout.png" alt="">' + esc(wd.badge || "오늘의 영단어") + "</span>" +
+          '<button class="wd-hero" type="button"' +
+            ' data-rd-audio="' + esc(wd.audio || "") + '" data-rd-text="' + esc(word) + '"' +
+            ' aria-label="' + esc(word + " 발음 듣기") + '">' +
+            '<img src="' + RD_ICO + 'sprout.png" alt="">' +
+            '<span class="wd-word">' + letters + "</span>" +
+            '<img src="' + RD_ICO + 'sun.png" alt="">' +
+          "</button>" +
+          '<div class="wd-mean-row">' +
+            (wd.meaning ? '<span class="wd-mean">' + esc(wd.meaning) + "</span>" : "") +
+            '<span class="wd-hint">👆 눌러서 들어 봐요</span>' +
+          "</div>" +
+          (wd.bannerImage ? '<div class="wd-banner"><img src="' + esc(wd.bannerImage) + '" alt="' + esc(word + " 그림: 씨앗이 물과 햇빛을 받아 나무로 자라는 모습") + '" decoding="async"></div>' : "") +
+          (wd.tip ? '<div class="wd-tip"><img src="' + RD_ICO + 'bulb.png" alt=""><div><b>기억 쏙 한마디</b><p>' + rdHighlight(wd.tip, [word]) + "</p></div></div>" : "") +
+        "</div>" +
+        '<div class="wd-right">' +
+          '<div class="rd-sec"><img src="' + RD_ICO + 'book.png" alt=""><b>따라 읽어 봐요</b><span class="line"></span></div>' +
+          '<div class="wd-tools">' +
+            '<button class="wd-all" id="rdListenAll" type="button" aria-pressed="false"><span aria-hidden="true">🔊</span> 전체 듣기</button>' +
+            '<span class="wd-tools-note">단어나 예문을 누르면 원어민 발음이 나와요</span>' +
+          "</div>" +
+          '<div class="wd-cards">' + examples + "</div>" +
+        "</div>" +
+      "</section>"
+    );
+  }
+
   function renderReadingStage() {
     const stage = $("#rdStage");
     if (!stage) return;
-    const p = readingPoster();
-    const src = p.img || READING_FALLBACK;
-    stage.innerHTML = '<img class="rd-img" id="rdImg" src="' + esc(src) + '" alt="' + esc(p.title || "오늘의 읽을거리 포스터") + '">';
-    const img = $("#rdImg");
-    if (!img) return;
-    img.addEventListener("error", () => { stage.innerHTML = readingEmptyHTML(); }, { once: true });
+    const p = readingData();
+    stage.classList.toggle("is-card", !(p.proverb || p.word));
+    if (p.proverb || p.word) {
+      stage.innerHTML = (p.proverb ? rdProverbHTML(p.proverb) : "") + (p.word ? rdWordHTML(p.word) : "");
+      setReadingTab(p.proverb ? "proverb" : "word");
+      return;
+    }
+    if (p.img) {
+      stage.innerHTML = '<img class="rd-img" id="rdImg" src="' + esc(p.img) + '" alt="' + esc(p.title || "오늘의 읽을거리 포스터") + '">';
+      const img = $("#rdImg");
+      if (img) img.addEventListener("error", () => { stage.classList.add("is-card"); stage.innerHTML = readingEmptyHTML(); }, { once: true });
+      return;
+    }
+    stage.innerHTML = readingEmptyHTML();
   }
+
+  /* ── 탭 ── */
+  function setReadingTab(tab) {
+    const panel = $("#readingPanel");
+    if (!panel) return;
+    const hasPv = !!$("#rdStage .rd-poster.is-proverb");
+    const hasWd = !!$("#rdStage .rd-poster.is-word");
+    let next = tab === "word" ? "word" : "proverb";
+    if (next === "word" && !hasWd) next = "proverb";
+    if (next === "proverb" && !hasPv && hasWd) next = "word";
+    if (rd.tab !== next) rdHardStop();
+    rd.tab = next;
+    panel.dataset.tab = next;
+    document.querySelectorAll("#readingPanel .rd-tab").forEach((b) => {
+      const on = b.dataset.tab === next;
+      b.classList.toggle("is-on", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+      b.tabIndex = on ? 0 : -1;
+    });
+    const stage = $("#rdStage");
+    if (stage) stage.setAttribute("aria-labelledby", next === "word" ? "rdTabWord" : "rdTabProverb");
+  }
+
+  /* ── 발음 재생 (MP3 → 실패하면 Web Speech) ── */
+  const rdSpeak = (text, cb) => {
+    const S = window.speechSynthesis;
+    if (!S || !window.SpeechSynthesisUtterance || !text) { if (cb) cb(); return; }
+    try {
+      S.cancel();
+      const u = new SpeechSynthesisUtterance(String(text));
+      u.lang = "en-US";
+      u.rate = 0.9;
+      u.pitch = 1;
+      const voices = (S.getVoices() || []).filter((v) => /^en/i.test(v.lang || ""));
+      const pick = voices.filter((v) => /en[-_]US/i.test(v.lang))[0] || voices[0];
+      if (pick) u.voice = pick;
+      let done = false;
+      let guard = 0;
+      const once = () => { if (done) return; done = true; clearTimeout(guard); if (cb) cb(); };
+      guard = setTimeout(once, Math.max(1600, String(text).length * 140) + 2500);
+      u.onend = once;
+      u.onerror = once;
+      S.speak(u);
+    } catch (e) { if (cb) cb(); }
+  };
+
+  function rdClearSaying() {
+    if (rda.el) { rda.el.classList.remove("is-saying"); rda.el = null; }
+  }
+  function rdListenBtn(playing) {
+    const b = $("#rdListenAll");
+    if (!b) return;
+    b.classList.toggle("is-playing", !!playing);
+    b.setAttribute("aria-pressed", playing ? "true" : "false");
+    b.innerHTML = playing ? '<span aria-hidden="true">⏹</span> 멈춤' : '<span aria-hidden="true">🔊</span> 전체 듣기';
+  }
+  /* 완전 정지 — 닫기·탭 전환·⏹ 멈춤 */
+  function rdHardStop() {
+    rda.seqId++;
+    rda.seq = false;
+    clearTimeout(rda.timer);
+    rda.timer = 0;
+    rda.sayId++;
+    if (rda.audio) {
+      try { rda.audio.pause(); rda.audio.currentTime = 0; } catch (e) { /* noop */ }
+      rda.audio.onended = null;
+      rda.audio.onerror = null;
+    }
+    if (window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch (e) { /* noop */ } }
+    rdClearSaying();
+    rdListenBtn(false);
+  }
+  /* 한 조각 재생 — el 에 반짝임, 끝나면 onDone */
+  function rdSay(el, src, text, onDone) {
+    const id = ++rda.sayId;
+    rdClearSaying();
+    if (el) { el.classList.add("is-saying"); rda.el = el; }
+    let done = false;
+    const finish = () => {
+      if (done || id !== rda.sayId) return;
+      done = true;
+      if (el) el.classList.remove("is-saying");
+      if (rda.el === el) rda.el = null;
+      if (onDone) onDone();
+    };
+    if (!src) { rdSpeak(text, finish); return; }
+    if (!rda.audio) {
+      rda.audio = new Audio();
+      rda.audio.preload = "auto";
+    }
+    const a = rda.audio;
+    a.onended = finish;
+    a.onerror = () => { a.onerror = null; rdSpeak(text, finish); };
+    try {
+      a.src = src;
+      a.currentTime = 0;
+    } catch (e) { rdSpeak(text, finish); return; }
+    let pr = null;
+    try { pr = a.play(); } catch (e) { a.onerror = null; rdSpeak(text, finish); return; }
+    if (pr && typeof pr.catch === "function") {
+      pr.catch(() => { if (id !== rda.sayId) return; a.onerror = null; rdSpeak(text, finish); });
+    }
+  }
+  function rdSeqItems() {
+    const out = [];
+    const hero = $("#rdStage .wd-hero");
+    if (hero) out.push({ el: hero, src: hero.dataset.rdAudio || "", text: hero.dataset.rdText || "" });
+    document.querySelectorAll("#rdStage .wd-ex").forEach((b) => {
+      out.push({ el: b, src: b.dataset.rdAudio || "", text: b.dataset.rdText || "" });
+    });
+    return out;
+  }
+  function rdPlayAll() {
+    if (rda.seq) { rdHardStop(); return; }
+    rdHardStop();
+    const items = rdSeqItems();
+    if (!items.length) return;
+    const gen = rda.seqId;
+    rda.seq = true;
+    rdListenBtn(true);
+    const step = (i) => {
+      if (!rda.seq || gen !== rda.seqId) return;
+      if (i >= items.length) { rda.seq = false; rdListenBtn(false); return; }
+      const it = items[i];
+      rda.timer = 0;
+      rdSay(it.el, it.src, it.text, () => {
+        if (!rda.seq || gen !== rda.seqId) return;
+        rda.timer = setTimeout(() => step(i + 1), 700);
+      });
+    };
+    step(0);
+  }
+
   function openReading() {
     const panel = $("#readingPanel");
     if (!panel) return;
-    const p = readingPoster();
+    const p = readingData();
     const sEl = $("#rdSub");
     if (sEl) {
-      sEl.textContent = p.stale ? "지난 읽을거리 · " + p.date : (p.sub || "");
+      let label = "";
+      if (p.stale) label = "지난 읽을거리 · " + p.date;
+      else if (p.date) {
+        const d = parseISO(p.date);
+        label = "오늘 · " + (d.getMonth() + 1) + "월 " + d.getDate() + "일";
+      }
+      sEl.textContent = label;
       sEl.classList.toggle("is-stale", !!p.stale);
     }
     renderReadingStage();
@@ -849,6 +1109,7 @@
   function closeReading() {
     const panel = $("#readingPanel");
     if (!panel || !rd.open) return;
+    rdHardStop();
     panel.hidden = true;
     rd.open = false;
     document.body.classList.remove("is-reading");
@@ -861,11 +1122,38 @@
     btn.addEventListener("click", openReading);
     const close = $("#rdClose");
     if (close) close.addEventListener("click", closeReading);
-    /* 포스터 바깥 여백을 눌러도 닫힙니다 */
-    panel.addEventListener("click", (e) => {
-      if (e.target === panel || e.target.classList.contains("rd-stage")) closeReading();
+    document.querySelectorAll("#readingPanel .rd-tab").forEach((b) => {
+      b.addEventListener("click", () => setReadingTab(b.dataset.tab));
     });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && rd.open) closeReading(); });
+    /* 포스터 바깥 여백을 눌러도 닫힙니다 */
+    panel.addEventListener("click", (e) => { if (e.target === panel) closeReading(); });
+    const stage = $("#rdStage");
+    if (stage) {
+      stage.addEventListener("click", (e) => {
+        const b = e.target.closest(".wd-ex, .wd-hero");
+        if (!b) return;
+        const src = b.dataset.rdAudio || "";
+        const text = b.dataset.rdText || "";
+        if (!src && !text) return;
+        if (rda.seq) rdHardStop();
+        rdSay(b, src, text, null);
+      });
+      stage.addEventListener("click", (e) => {
+        if (e.target.closest("#rdListenAll")) rdPlayAll();
+      });
+    }
+    document.addEventListener("keydown", (e) => {
+      if (!rd.open) return;
+      if (e.key === "Escape") { closeReading(); return; }
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        const tabs = $("#readingPanel .rd-tabs");
+        if (!tabs || !tabs.contains(document.activeElement)) return;
+        e.preventDefault();
+        setReadingTab(rd.tab === "proverb" ? "word" : "proverb");
+        const on = $("#readingPanel .rd-tab.is-on");
+        if (on) on.focus({ preventScroll: true });
+      }
+    });
   }
 
   /* ───────────── 📺 주말 TV 30분 타이머 (쉬는 날에만) ─────────────

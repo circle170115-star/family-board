@@ -1955,9 +1955,73 @@
   "holidayNote": "관공서의 공휴일에 관한 규정 · 2026/2027년 월력요항 기준. 공휴일에는 모든 수업·등원이 자동 제외됩니다.",
   "readingPoster": {
     "date": "2026-11-21",
-    "title": "",
-    "subtitle": "",
-    "image": "",
-    "note": "거실 보드 '📖 오늘의 읽을거리' 전체화면 포스터. image 에 PNG/JPG 경로(예: assets/reading/2026-11-21.png)를 넣으면 그대로 뜹니다. 비워 두면 안내 카드가 보입니다."
+    "title": "백지장도 맞들면 낫다",
+    "subtitle": "오늘의 속담 + 오늘의 영단어",
+    "proverb": {
+      "badge": "오늘의 속담 1",
+      "title": "백지장도 맞들면 낫다",
+      "subtitle": "혼자보다 둘이! 같이 하면 더 쉬워요",
+      "summary": "아무리 쉬운 일도 함께 힘을 모으면 훨씬 가볍고 빨라져요!",
+      "panels": [
+        {
+          "num": 1,
+          "speech": "으쌰… 너무 무거워!",
+          "caption": "혼자서는 낑낑",
+          "image": "assets/reading/panel1-crop.png"
+        },
+        {
+          "num": 2,
+          "speech": "누나, 내가 같이 들게!",
+          "caption": "동생이 같이 들어요",
+          "image": "assets/reading/panel2-crop.png"
+        },
+        {
+          "num": 3,
+          "speech": "우와, 진짜 가볍다!",
+          "caption": "둘이면 번쩍",
+          "image": "assets/reading/panel3-crop.png"
+        },
+        {
+          "num": 4,
+          "speech": "같이 하니까 금방이네!",
+          "caption": "금방 끝, 하이파이브",
+          "image": "assets/reading/panel4-crop.png"
+        }
+      ],
+      "meaning": "하얀 종이 한 장처럼 가벼운 일도 둘이 같이 들면 훨씬 쉽다는 말이에요.",
+      "promise": "오늘 집에서 하나만 같이 정리해 볼까요?"
+    },
+    "word": {
+      "badge": "오늘의 영단어 1",
+      "word": "grow",
+      "meaning": "자라다 · 크다",
+      "audio": "assets/reading/audio/grow.mp3",
+      "bannerImage": "assets/reading/word-banner.png",
+      "examples": [
+        {
+          "num": 1,
+          "en": "Seeds grow.",
+          "ko": "씨앗이 자라요.",
+          "highlight": ["grow"],
+          "audio": "assets/reading/audio/ex1.mp3"
+        },
+        {
+          "num": 2,
+          "en": "Plants grow tall.",
+          "ko": "식물이 쑥쑥 커요.",
+          "highlight": ["tall"],
+          "audio": "assets/reading/audio/ex2.mp3"
+        },
+        {
+          "num": 3,
+          "en": "I grow every day!",
+          "ko": "나는 매일매일 자라요!",
+          "highlight": ["grow"],
+          "audio": "assets/reading/audio/ex3.mp3"
+        }
+      ],
+      "tip": "물 주고 햇빛 받으면 쑥쑥 크는 모습이 바로 grow예요!"
+    },
+    "note": "거실 보드 '📖 오늘의 읽을거리' 전체화면 모달. proverb(속담 4컷) · word(터치 발음 영단어) 두 탭을 이 객체만 고쳐 바꿉니다. 이미지는 assets/reading/ 아래에 두고 audio 는 MP3 경로(없으면 Web Speech en-US 로 자동 대체)를 적습니다. proverb·word 가 모두 비면 안내 카드가 보입니다."
   }
 }
