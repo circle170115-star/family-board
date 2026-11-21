@@ -791,8 +791,12 @@ body.is-reading{overflow:hidden}
   .lv-act.is-tv.is-done .tv-time{font-size:clamp(15px,3.2vh,22px)}
 }
 @media (max-width:719px),(max-height:430px){
-  .lv-topmid.has-tv .lv-act{flex-direction:row;align-items:center;text-align:left;min-height:0}
-  .lv-topmid.has-tv .lv-act .act-body{align-items:flex-start}
-  .lv-act.is-tv{min-height:186px}
-  .lv-act.is-tv .tv-time{font-size:34px}
+  .lv-topmid.has-tv .lv-act{flex-direction:row;align-items:center;text-align:left;justify-content:flex-start;gap:10px;min-height:0;padding:10px 12px}
+  .lv-topmid.has-tv .lv-act .act-body{align-items:flex-start;width:auto;flex:1}
+  .lv-act.is-tv{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px 10px;min-height:0;padding:12px 14px}
+  .lv-act.is-tv .tv-head{grid-column:1/2;grid-row:1/2;justify-content:flex-start}
+  .lv-act.is-tv .tv-time{grid-column:2/3;grid-row:1/2;width:auto;text-align:right;font-size:32px}
+  .lv-act.is-tv .tv-bar{grid-column:1/-1;grid-row:2/3}
+  .lv-act.is-tv .tv-btns{grid-column:1/-1;grid-row:3/4}
+  .lv-act.is-tv.is-done .tv-time{font-size:24px}
 }
