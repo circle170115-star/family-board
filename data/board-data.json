@@ -1,8 +1,8 @@
 {
   "meta": {
     "version": 1,
-    "updatedAt": "2026-11-22T04:00:00+09:00",
-    "updatedBy": "읽을거리 2호 자동 생성·배포",
+    "updatedAt": "2026-11-22T06:04:50+09:00",
+    "updatedBy": "아침 브리핑 자동 갱신",
     "schemaNote": "일정·급식·날씨·건강 데이터는 이 파일만 고치면 보드에 반영됩니다. 자세한 구조는 README.md 참고."
   },
   "family": {
@@ -1342,223 +1342,223 @@
   },
   "weather": {
     "place": "서울시 강서구 우장산동",
-    "obsTime": "2026-11-21T06:01:00+09:00",
+    "obsTime": "2026-11-22T06:04:00+09:00",
     "source": "Apple Weather (weather snapshot)",
     "now": {
-      "temp": -3,
-      "feels": -7,
+      "temp": -4,
+      "feels": -4,
       "condition": "Clear",
-      "humidity": 51,
-      "windKmh": 10,
+      "humidity": 60,
+      "windKmh": 3,
       "uv": 0
     },
     "days": [
       {
-        "date": "2026-11-21",
+        "date": "2026-11-22",
         "condition": "Clear",
-        "high": 3,
+        "high": 5,
         "low": -4,
         "precip": 0,
-        "morning": -3
-      },
-      {
-        "date": "2026-11-22",
-        "condition": "Mostly Clear",
-        "high": 5,
-        "low": -6,
-        "precip": 0,
-        "morning": -5
+        "morning": -4
       },
       {
         "date": "2026-11-23",
         "condition": "Rain",
         "high": 11,
         "low": 1,
-        "precip": 89,
+        "precip": 91,
         "morning": 3
       },
       {
         "date": "2026-11-24",
         "condition": "Mostly Clear",
         "high": 4,
-        "low": -4,
+        "low": -3,
         "precip": 0,
         "morning": -1
       },
       {
         "date": "2026-11-25",
         "condition": "Partly Cloudy",
-        "high": 8,
-        "low": -5,
+        "high": 7,
+        "low": -4,
         "precip": 0,
-        "morning": -3
+        "morning": -4
       },
       {
         "date": "2026-11-26",
-        "condition": "Drizzle",
+        "condition": "Partly Cloudy",
         "high": 14,
         "low": 5,
-        "precip": 44,
-        "morning": 7
+        "precip": 0,
+        "morning": 6
       },
       {
         "date": "2026-11-27",
-        "condition": "Drizzle",
+        "condition": "Rain",
         "high": 15,
-        "low": 8,
-        "precip": 41,
-        "morning": 10
+        "low": 7,
+        "precip": 39,
+        "morning": 11
+      },
+      {
+        "date": "2026-11-28",
+        "condition": "Mostly Clear",
+        "high": 7,
+        "low": 1,
+        "precip": 29,
+        "morning": 4
       }
     ],
     "hours": [
       {
-        "time": "2026-11-21 00:00",
-        "condition": "Mostly Clear",
-        "temp": -2,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 01:00",
-        "condition": "Mostly Clear",
-        "temp": -2,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 02:00",
-        "condition": "Mostly Clear",
-        "temp": -2,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 03:00",
+        "time": "2026-11-22 00:00",
         "condition": "Clear",
         "temp": -2,
         "precip": 0
       },
       {
-        "time": "2026-11-21 04:00",
+        "time": "2026-11-22 01:00",
+        "condition": "Clear",
+        "temp": -2,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 02:00",
         "condition": "Clear",
         "temp": -3,
         "precip": 0
       },
       {
-        "time": "2026-11-21 05:00",
-        "condition": "Clear",
-        "temp": -3,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 06:00",
-        "condition": "Clear",
-        "temp": -3,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 07:00",
-        "condition": "Clear",
-        "temp": -3,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 08:00",
-        "condition": "Clear",
-        "temp": -3,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 09:00",
-        "condition": "Clear",
-        "temp": -2,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 10:00",
-        "condition": "Clear",
-        "temp": -1,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 11:00",
-        "condition": "Clear",
-        "temp": 1,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 12:00",
-        "condition": "Clear",
-        "temp": 2,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 13:00",
-        "condition": "Clear",
-        "temp": 2,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 14:00",
-        "condition": "Clear",
-        "temp": 3,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 15:00",
-        "condition": "Clear",
-        "temp": 3,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 16:00",
-        "condition": "Clear",
-        "temp": 3,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 17:00",
-        "condition": "Mostly Clear",
-        "temp": 2,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 18:00",
-        "condition": "Mostly Clear",
-        "temp": 1,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 19:00",
-        "condition": "Clear",
-        "temp": 0,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 20:00",
-        "condition": "Clear",
-        "temp": -1,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 21:00",
-        "condition": "Clear",
-        "temp": -2,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-21 22:00",
+        "time": "2026-11-22 03:00",
         "condition": "Clear",
         "temp": -4,
         "precip": 0
       },
       {
-        "time": "2026-11-21 23:00",
+        "time": "2026-11-22 04:00",
         "condition": "Clear",
         "temp": -4,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 05:00",
+        "condition": "Clear",
+        "temp": -3,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 06:00",
+        "condition": "Clear",
+        "temp": -4,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 07:00",
+        "condition": "Clear",
+        "temp": -4,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 08:00",
+        "condition": "Clear",
+        "temp": -4,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 09:00",
+        "condition": "Clear",
+        "temp": -2,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 10:00",
+        "condition": "Clear",
+        "temp": -1,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 11:00",
+        "condition": "Clear",
+        "temp": 1,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 12:00",
+        "condition": "Clear",
+        "temp": 2,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 13:00",
+        "condition": "Clear",
+        "temp": 3,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 14:00",
+        "condition": "Mostly Clear",
+        "temp": 4,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 15:00",
+        "condition": "Clear",
+        "temp": 5,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 16:00",
+        "condition": "Clear",
+        "temp": 5,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 17:00",
+        "condition": "Clear",
+        "temp": 4,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 18:00",
+        "condition": "Mostly Clear",
+        "temp": 3,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 19:00",
+        "condition": "Partly Cloudy",
+        "temp": 3,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 20:00",
+        "condition": "Mostly Cloudy",
+        "temp": 3,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 21:00",
+        "condition": "Mostly Cloudy",
+        "temp": 2,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 22:00",
+        "condition": "Mostly Cloudy",
+        "temp": 1,
+        "precip": 0
+      },
+      {
+        "time": "2026-11-22 23:00",
+        "condition": "Mostly Cloudy",
+        "temp": 1,
         "precip": 0
       }
     ],
     "air": {
       "station": "강서구",
-      "observedAt": "2026-11-21T05:00:00+09:00",
+      "observedAt": "2026-11-22T05:00:00+09:00",
       "pm10": {
         "value": 22.0,
         "grade": "좋음"
