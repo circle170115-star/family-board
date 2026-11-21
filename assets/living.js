@@ -1019,8 +1019,9 @@
     clearTimeout(showAlarmBanner.timer);
   }
   function checkAlarm(d) {
-    /* 주말·공휴일(그리고 휴원일)에는 배너도 차임벨도 내지 않습니다 */
-    if (isRestDay(todayStr)) { hideAlarmBanner(); return; }
+    /* 주말·공휴일(그리고 휴원일)에는 배너도 차임벨도 내지 않습니다.
+       (⚙️ 알람 소리 미리 듣기 버튼은 부모님이 직접 누를 때만 배너를 보여 줍니다) */
+    if (isRestDay(todayStr)) return;
     if (!alarmOn()) return;
     const cur = d.getHours() * 60 + d.getMinutes();
     ALARMS.forEach((a) => {
