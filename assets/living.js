@@ -445,8 +445,8 @@
       if (icoEl) icoEl.textContent = "🌴";
       titleEl.textContent = "🌴 주말·공휴일";
       tEl.textContent = "쉬는 날";
-      uEl.textContent = "푹 쉬어요!";
-      mEl.textContent = (restName(todayStr) || "주말") + " · 등원 없음";
+      uEl.textContent = "";
+      mEl.textContent = (restName(todayStr) || "주말") + " · 등원 없이 푹 쉬어요";
       fEl.style.width = "100%";
       pct = 100;
       if (track) track.setAttribute("aria-valuenow", "100");
