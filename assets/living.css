@@ -482,9 +482,9 @@ body.is-playing{overflow:hidden}
 .gp-wrap{flex:1;min-height:0;display:flex;flex-direction:column;gap:clamp(8px,1.5vh,16px);width:min(1180px,100%);margin:0 auto}
 .gp-head{flex:none;display:flex;align-items:center;gap:clamp(8px,1.2vw,16px);flex-wrap:wrap}
 .gp-title{margin:0;display:flex;align-items:center;gap:9px;font-size:clamp(18px,3vh,30px);font-weight:900;letter-spacing:-.035em;color:#1D2B3C}
-.gp-tabs{display:flex;gap:8px}
+.gp-tabs{display:flex;gap:8px;flex:none}
 .gp-tab{
-  display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;flex:none;white-space:nowrap;
   border:1px solid var(--line2);background:#fff;border-radius:14px;
   padding:clamp(7px,1.3vh,11px) clamp(11px,1.7vw,18px);
   font:inherit;font-size:clamp(13px,2vh,18px);font-weight:850;color:var(--ink2);letter-spacing:-.03em;
