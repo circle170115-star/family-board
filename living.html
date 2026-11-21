@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#FFFBF3">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="assets/living.css?v=20261121d">
+<link rel="stylesheet" href="assets/living.css?v=20261122a">
 <link rel="manifest" href="manifest-living.json">
 <meta name="application-name" content="등원 보드">
 <meta name="mobile-web-app-capable" content="yes">
@@ -120,7 +120,7 @@
         <button class="mini-btn xs" id="alarmTestWarn" type="button">8:20 경고음</button>
       </span>
     </div>
-    <p class="alarm-note">💡 이 화면을 켜 둔 동안 평일 8:00·8:20에 울려요. 소리는 화면을 한 번 눌러 주면 나고, 태블릿이 잠들었으면 깰 때 한 번 울립니다.</p>
+    <p class="alarm-note">💡 이 화면을 켜 둔 동안 <b>평일(등원일)</b> 8:00·8:20에 울려요. 주말·공휴일·휴원일에는 울리지 않아요. 소리는 화면을 한 번 눌러 주면 나고, 태블릿이 잠들었으면 깰 때 한 번 울립니다.</p>
     <div class="lv-set">
       <span>🌞 등원 시간 자동 전환</span>
       <button class="switch" id="focusSwitch" type="button" aria-pressed="true">켜짐</button>
@@ -151,7 +151,8 @@
 </div>
 
 <noscript><p style="text-align:center;padding:24px">이 보드는 JavaScript가 필요해요.</p></noscript>
+<script src="assets/kr-holidays.js?v=20261122a"></script>
 <script src="assets/math-engine.js?v=20261121a"></script>
-<script src="assets/living.js?v=20261121d"></script>
+<script src="assets/living.js?v=20261122a"></script>
 </body>
 </html>

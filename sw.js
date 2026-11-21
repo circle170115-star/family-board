@@ -10,13 +10,14 @@
 
 "use strict";
 
-const CACHE = "family-living-v6-20261121a";
+const CACHE = "family-living-v7-20261122a";
 
 /* 설치할 때 미리 받아 둘 것 — 하나가 실패해도 설치 자체는 계속한다 */
 const PRECACHE = [
   "living.html",
   "assets/living.css",
   "assets/living.js",
+  "assets/kr-holidays.js",
   "assets/math-engine.js",
   "manifest-living.json",
   "assets/icons/icon-192.png",
@@ -28,6 +29,7 @@ const PRECACHE = [
 const NETWORK_FIRST = [
   /\/living\.html$/,
   /\/assets\/living\.(css|js)$/,
+  /\/assets\/kr-holidays\.js$/,
   /\/assets\/math-engine\.js$/,
   /\/data\/board-data\.json$/,
   /\/manifest-living\.json$/,

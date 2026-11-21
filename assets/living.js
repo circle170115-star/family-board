@@ -65,16 +65,66 @@
     SNACKS = data.kindergartenSnacks || {};
     EVENING = data.eveningRoutine || null;
     PLACE = (data.family && data.family.location && data.family.location.name) || PLACE;
+    /* 유치원 휴원일(재량휴원일·방학 등) — 어느 키로 들어와도 읽습니다 */
+    CLOSED = closedDaysOf(data.closedDays || data.restDays || data.휴원일 || null);
+  }
+
+  /* ───────────── 검증용(부모님은 쓰지 않아요) ─────────────
+     주소에 debug=1 이 있을 때만 동작합니다.
+       · living.html?debug=1               → 창에 __livingDebug 를 열어 오늘 판별·체크리스트를 확인
+       · living.html?debug=1&now=2026-11-21T08:00:20  → 시계를 그 시각부터 흐르게 해
+         주말·공휴일 8:00 에 알람이 울리지 않는지, 평일 8:00 에는 울리는지 확인합니다. */
+  const QS = new URLSearchParams(location.search || "");
+  const DEBUG = QS.get("debug") === "1";
+  if (DEBUG) {
+    const fake = QS.get("now");
+    const at = fake ? Date.parse(fake) : NaN;
+    if (Number.isFinite(at)) {
+      const Real = Date;
+      const off = at - Real.now();
+      class FakeDate extends Real {
+        constructor(...a) { if (a.length) super(...a); else super(Real.now() + off); }
+        static now() { return Real.now() + off; }
+      }
+      window.Date = FakeDate;
+    }
   }
 
   /* ───────────── 날짜·요일 도우미 ───────────── */
   let todayStr = iso(new Date());
   const weekdayKey = (ds) => WDKEY[parseISO(ds).getDay()];
-  const isRestDay = (ds) => {
-    if (HOLIDAYS[ds]) return true;
+
+  /* 쉬는 날 판별 — ① board-data 의 휴원일·공휴일 ② 내장 2026~2028 법정공휴일·대체공휴일 표 ③ 토·일
+     (assets/kr-holidays.js → window.KRHolidays, 없으면 토·일만) */
+  const KR = (typeof window !== "undefined" && window.KRHolidays) || null;
+  let CLOSED = {};   /* board-data.json 의 휴원일(closedDays / restDays) */
+  function closedDaysOf(raw) {
+    const out = {};
+    if (Array.isArray(raw)) {
+      raw.forEach((x) => {
+        const ds = typeof x === "string" ? x : (x && (x.date || x.ds));
+        if (ds) out[String(ds).slice(0, 10)] = (x && x.name) || "휴원일";
+      });
+    } else if (raw && typeof raw === "object") {
+      Object.keys(raw).forEach((k) => { out[k] = (raw[k] && raw[k].name) || "휴원일"; });
+    }
+    return out;
+  }
+  function isRestDay(ds) {
+    if (!ds) return false;
+    if (CLOSED[ds] || HOLIDAYS[ds]) return true;
+    if (KR) return KR.isRestDay(ds);
     const w = parseISO(ds).getDay();
     return w === 0 || w === 6;
-  };
+  }
+  /* 쉬는 날 이름 — 휴원일 > board-data 공휴일 > 내장 공휴일 표 > '토요일/일요일' */
+  function restName(ds) {
+    if (CLOSED[ds]) return CLOSED[ds];
+    if (HOLIDAYS[ds] && HOLIDAYS[ds].name) return HOLIDAYS[ds].name;
+    if (KR && KR.nameOf(ds)) return KR.nameOf(ds);
+    const w = parseISO(ds).getDay();
+    return w === 0 ? "일요일" : w === 6 ? "토요일" : "";
+  }
 
   /* 평일(월~금)만 세어 격일로 도는 저녁 홈활동 — index.html 과 같은 계산식 */
   function weekdayIndexFromAnchor(ds) {
@@ -174,7 +224,14 @@
   const illImg = (name, cid) =>
     '<img src="' + ILL_DIR + name + (ILL_TONE[cid] || "") + ".png?v=" + ILL_VER + '" alt="" aria-hidden="true" draggable="false" decoding="async">';
 
+  /* 체크리스트 — 등원일(평일)과 쉬는 날(주말·공휴일)의 루틴이 다릅니다.
+     · 등원일 아침: 세수·양치 → 옷 → (다은)머리 → 아침 → 가방·물통 → (도서대여) → 출발
+     · 등원일 저녁: 손 씻기 → 가방 정리 → 오늘의 놀이 → 엘리하이 학습 → 정리 → 씻고 로션 → 옷 갈아입기 → 양치
+     · 쉬는 날 아침: 세수·양치 → 옷 → (다은)머리 → 아침 → 책상 정리 → 아침 책 읽기
+     · 쉬는 날 저녁: 손 씻기 → 가족 놀이 → 저녁 책 읽기 → 정리 → 씻고 로션 → 옷 갈아입기 → 양치 */
   function buildChecklists(cid, ds) {
+    const rest = isRestDay(ds);
+
     /* 아침 준비 — 머리 빗기·묶기는 다은이만 */
     const morning = [
       { id: "wash", ill: "tile-wash", t: "세수·양치하기" },
@@ -182,22 +239,32 @@
     ];
     if (cid === "daeun") morning.push({ id: "hair", ill: "tile-hair", t: "머리 빗기·묶기" });
     morning.push({ id: "meal", ill: "tile-meal", t: "아침 먹기" });
-    morning.push({ id: "bag", ill: "tile-bag", t: "가방·물통" });
-    if (bookForToday(cid, ds)) morning.push({ id: "book", ill: "tile-book", t: "도서대여 가방" });
-    morning.push({ id: "shoes", ill: "tile-shoes", t: "신발 신고 출발!" });
+    if (rest) {
+      /* 쉬는 날에는 가방·물통·도서대여·출발 대신 집안 루틴 */
+      morning.push({ id: "desk", ill: "tile-tidy", t: "책상 정리하기" });
+      morning.push({ id: "am-read", ill: "tile-fun-read", t: "아침 책 읽기" });
+    } else {
+      morning.push({ id: "bag", ill: "tile-bag", t: "가방·물통" });
+      if (bookForToday(cid, ds)) morning.push({ id: "book", ill: "tile-book", t: "도서대여 가방" });
+      morning.push({ id: "shoes", ill: "tile-shoes", t: "신발 신고 출발!" });
+    }
 
-    /* 저녁 루틴 — 두 아이 모두 8개 (엘리하이 학습·정리·씻기·옷 갈아입기 포함) */
-    const act = eveningActivity(ds);
-    const evening = [
-      { id: "hands", ill: "tile-hands", t: "손 씻기" },
-      { id: "unpack", ill: "tile-unpack", t: "가방 정리" },
-      act ? { id: "fun", ill: ILL_FUN[act.name] || "tile-fun-free", t: act.name + " 놀이!" } : { id: "fun", ill: "tile-fun-free", t: "자유놀이!" },
-      { id: "study", ill: "tile-study", t: "엘리하이 오늘의 학습" },
-      { id: "tidy", ill: "tile-tidy", t: "놀이한 거 정리하기" },
-      { id: "shower", ill: "tile-shower", t: "씻기" },
-      { id: "pajamas", ill: "tile-pajamas", t: "옷 갈아입기" },
-      { id: "brush", ill: "tile-brush", t: "양치하고 자기" },
-    ];
+    /* 저녁 루틴 */
+    const evening = [{ id: "hands", ill: "tile-hands", t: "손 씻기" }];
+    if (rest) {
+      /* 쉬는 날 — 학원·엘리하이 학습은 없고, 상의해서 정하는 가족 놀이와 책 읽기 */
+      evening.push({ id: "family", ill: "tile-fun-board", t: "가족 놀이!" });
+      evening.push({ id: "pm-read", ill: "tile-fun-read", t: "저녁 책 읽기" });
+    } else {
+      const act = eveningActivity(ds);
+      evening.push({ id: "unpack", ill: "tile-unpack", t: "가방 정리" });
+      evening.push(act ? { id: "fun", ill: ILL_FUN[act.name] || "tile-fun-free", t: act.name + " 놀이!" } : { id: "fun", ill: "tile-fun-free", t: "자유놀이!" });
+      evening.push({ id: "study", ill: "tile-study", t: "엘리하이 오늘의 학습" });
+    }
+    evening.push({ id: "tidy", ill: "tile-tidy", t: "놀이한 거 정리하기" });
+    evening.push({ id: "shower", ill: "tile-shower", t: "씻고 로션 바르기" });
+    evening.push({ id: "pajamas", ill: "tile-pajamas", t: "옷 갈아입기" });
+    evening.push({ id: "brush", ill: "tile-brush", t: "양치하고 자기" });
     return { morning: morning, evening: evening };
   }
   function progressOf(cid, part, lists) {
@@ -284,8 +351,10 @@
     const wk = weekdayKey(ds);
     const chips = [];
     const hol = HOLIDAYS[ds];
-    if (hol) chips.push({ cls: "warn", text: "🏖️ " + hol.name + " · 등원 없음" });
-    else if (isRestDay(ds)) chips.push({ cls: "warn", text: "🏖️ 주말 · 등원 없음" });
+    if (isRestDay(ds)) {
+      const nm = restName(ds);
+      chips.push({ cls: "warn", text: "🏖️ " + (hol && hol.name ? hol.name : nm) + " · 쉬는 날(등원 없음)" });
+    }
 
     EVENTS.forEach((e) => {
       if (e.date !== ds) return;
@@ -368,18 +437,22 @@
     const windowMin = Math.max(20, dep.min - PREP_START);
     let pct = left <= 0 ? 0 : Math.max(0, Math.min(100, (left / windowMin) * 100));
     fEl.style.width = pct.toFixed(1) + "%";
+    const icoEl = $(".cd-ico");
 
     if (isRestDay(todayStr)) {
+      /* 주말·공휴일 — 등원이 없으니 남은 시간·출발 압박 대신 쉬는 날 문구 */
       box.classList.add("is-done");
-      titleEl.textContent = "오늘은";
+      if (icoEl) icoEl.textContent = "🌴";
+      titleEl.textContent = "🌴 주말·공휴일";
       tEl.textContent = "쉬는 날";
-      uEl.textContent = "푹 쉬어요 🌴";
-      mEl.textContent = HOLIDAYS[todayStr] ? HOLIDAYS[todayStr].name + " · 등원 없음" : "주말 · 등원 없음";
+      uEl.textContent = "푹 쉬어요!";
+      mEl.textContent = (restName(todayStr) || "주말") + " · 등원 없음";
       fEl.style.width = "100%";
       pct = 100;
       if (track) track.setAttribute("aria-valuenow", "100");
       return;
     }
+    if (icoEl && icoEl.textContent !== "🚀") icoEl.textContent = "🚀";
 
     if (cur > dep.min + DAY_END) {
       box.classList.add("is-done");
@@ -494,7 +567,7 @@
         tabHTML("evening", "🌙 저녁 루틴", pe, part) +
       "</div>" +
       '<div class="kid-body" data-part="' + part + '">' +
-        (isRestDay(todayStr) && part === "morning" ? '<p class="kid-rest">🌴 오늘은 쉬는 날이에요 · 등원 준비는 없어요</p>' : "") +
+        (isRestDay(todayStr) && part === "morning" ? '<p class="kid-rest">🌴 쉬는 날 아침 루틴이에요 · 천천히 해도 좋아요</p>' : "") +
         tilesHTML(items, arr, c.id) +
       "</div>" +
       '<div class="kid-foot">' +
@@ -844,6 +917,8 @@
     store.checks = blankChecks();
     save();
     renderAll();
+    renderAlarmBtn();
+    if (isRestDay(todayStr)) hideAlarmBanner();   /* 어제 남은 알람 배너가 쉬는 날에 남지 않게 */
     toast("새로운 하루! 오늘 체크를 새로 시작해요 🌞");
     refreshData(false);
   }
@@ -861,13 +936,18 @@
      ② 08:20 경고 차임 — 두 번 반복되는 또렷한 딩동댕 (출발 20분 전)
      주말·공휴일에는 울리지 않고, 두 알람 모두 하루 한 번만 울립니다. */
   function alarmOn() { return store.alarm !== false; }
+  /* 오늘 등원 알람이 울리는 날인가 — 평일(등원일)만 */
+  function alarmDayToday() { return !isRestDay(todayStr); }
   function renderAlarmBtn() {
     const on = alarmOn();
+    const restDay = !alarmDayToday();
     const btn = $("#alarmBtn");
     if (btn) {
       btn.textContent = on ? "🔔" : "🔕";
       btn.classList.toggle("is-off", !on);
-      btn.title = on ? "등원 알람 켜짐 · 평일 8:00 / 8:20 (누르면 끄기)" : "등원 알람 꺼짐 (누르면 켜기)";
+      btn.title = restDay
+        ? "오늘은 쉬는 날(주말·공휴일) · 등원 알람이 울리지 않아요"
+        : on ? "등원 알람 켜짐 · 평일 8:00 / 8:20 (누르면 끄기)" : "등원 알람 꺼짐 (누르면 켜기)";
       btn.setAttribute("aria-label", on ? "등원 알람 끄기" : "등원 알람 켜기");
       btn.setAttribute("aria-pressed", String(on));
     }
@@ -878,7 +958,7 @@
       sw.setAttribute("aria-pressed", String(on));
     }
     const hint = $("#alarmHint");
-    if (hint) hint.textContent = on ? "평일 8:00 · 8:20" : "꺼짐";
+    if (hint) hint.textContent = !on ? "꺼짐" : restDay ? "오늘은 쉬는 날 · 알람 없음" : "평일 8:00 · 8:20";
   }
   function setAlarm(on) {
     store.alarm = !!on;
@@ -939,7 +1019,9 @@
     clearTimeout(showAlarmBanner.timer);
   }
   function checkAlarm(d) {
-    if (!alarmOn() || isRestDay(todayStr)) return;   /* 주말·공휴일은 등원이 없어요 */
+    /* 주말·공휴일(그리고 휴원일)에는 배너도 차임벨도 내지 않습니다 */
+    if (isRestDay(todayStr)) { hideAlarmBanner(); return; }
+    if (!alarmOn()) return;
     const cur = d.getHours() * 60 + d.getMinutes();
     ALARMS.forEach((a) => {
       if (cur < a.hm || cur >= a.hm + a.grace) return;
@@ -1182,6 +1264,19 @@
   renderAll();
   wire();
   tick();
+  /* 검증용 — 주소에 debug=1 이 있을 때만 열립니다 (보드 화면에는 영향 없음) */
+  if (DEBUG) {
+    window.__livingDebug = {
+      today: todayStr,
+      isRestDay: isRestDay,
+      restName: restName,
+      holiday: (ds) => (KR ? KR.nameOf(ds) : ""),
+      buildChecklists: buildChecklists,
+      alarmShowing: () => { const b = $("#alarmBanner"); return !!b && b.classList.contains("show"); },
+      alarmDone: () => JSON.parse(JSON.stringify(store.alarmDoneBySlot || {})),
+      departure: () => departureInfo(),
+    };
+  }
   setInterval(tick, 1000);
   setInterval(() => { if (iso(new Date()) !== todayStr) dayRollover(); }, 20000);
   setInterval(() => refreshData(false), 10 * 60 * 1000);

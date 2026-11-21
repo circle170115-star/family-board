@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>공휴일·쉬는 날 판별 테스트 · 거실 보드</title>
+<style>
+  body{margin:0;padding:20px;font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;background:#F7FAFF;color:#1D2B3C}
+  h1{font-size:19px;margin:0 0 6px}
+  p.lead{margin:0 0 16px;color:#5A6B80;font-size:13px}
+  #sum{padding:14px 18px;border-radius:14px;font-weight:800;font-size:16px;margin-bottom:16px}
+  #sum.ok{background:#E7F8EE;color:#1C7A44;border:2px solid #B7E7CC}
+  #sum.ng{background:#FDECEC;color:#A33131;border:2px solid #F3C0C0}
+  ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+  li{padding:8px 12px;border-radius:10px;background:#fff;border:1px solid #E3EBF6;font-size:13px;display:flex;gap:10px;justify-content:space-between}
+  li.bad{background:#FDECEC;border-color:#F3C0C0}
+  li b{font-weight:800;color:#2F63B0}
+  li .v{font-variant-numeric:tabular-nums;color:#5A6B80}
+  h2{font-size:14px;margin:18px 0 8px;color:#2F63B0}
+</style>
+</head>
+<body>
+<h1>🛖 거실 보드 — 공휴일·쉬는 날 판별 테스트</h1>
+<p class="lead">거실 보드가 실제로 쓰는 <code>assets/kr-holidays.js</code> 표를 그대로 불러와 검사합니다. 이 페이지는 보드 화면에서 쓰이지 않는 검증용 페이지예요.</p>
+<div id="sum">검사 중…</div>
+<div id="out"></div>
+<script src="../assets/kr-holidays.js"></script>
+<script>
+(function () {
+  "use strict";
+  var KR = window.KRHolidays;
+  var pass = 0, fails = [];
+  function ok(cond, msg) { if (cond) pass++; else fails.push(msg); }
+  function rest(ds, expect, msg) {
+    var got = KR.isRestDay(ds);
+    ok(got === expect, (msg || ds) + " → 기대 " + (expect ? "쉬는 날" : "등원일") + ", 실제 " + (got ? "쉬는 날" : "등원일"));
+  }
+  var groups = [];
+  function group(name, fn) { var start = pass, fstart = fails.length; fn(); groups.push({ name: name, pass: pass - start, fail: fails.length - fstart }); }
+
+  group("내장 표의 모든 공휴일", function () {
+    Object.keys(KR.table).forEach(function (ds) {
+      rest(ds, true, "공휴일 " + ds + " (" + KR.table[ds][0] + ")");
+      ok(KR.nameOf(ds).length > 0, ds + " 이름 없음");
+    });
+  });
+
+  group("연도별 공휴일 수 (2026=22 · 2027=24 · 2028=18)", function () {
+    var c = {};
+    Object.keys(KR.table).forEach(function (ds) { c[ds.slice(0, 4)] = (c[ds.slice(0, 4)] || 0) + 1; });
+    ok(c["2026"] === 22, "2026년 " + c["2026"] + "일 (기대 22)");
+    ok(c["2027"] === 24, "2027년 " + c["2027"] + "일 (기대 24)");
+    ok(c["2028"] === 18, "2028년 " + c["2028"] + "일 (기대 18)");
+  });
+
+  group("주말", function () {
+    rest("2026-11-21", true, "2026-11-21 토요일(오늘)");
+    rest("2026-11-22", true, "2026-11-22 일요일");
+    rest("2027-01-02", true, "2027-01-02 토요일");
+  });
+
+  group("평일 등원일", function () {
+    rest("2026-11-23", false, "2026-11-23 월요일");
+    rest("2026-11-20", false, "2026-11-20 금요일");
+    rest("2026-11-24", false, "2026-11-24 화요일");
+    rest("2026-12-24", false, "2026-12-24 목요일(성탄절 전날)");
+    rest("2027-03-02", false, "2027-03-02 화요일");
+    rest("2028-04-13", false, "2028-04-13 목요일");
+  });
+
+  group("대표 공휴일·대체공휴일·선거일", function () {
+    rest("2026-12-25", true, "2026-12-25 성탄절");
+    ok(KR.nameOf("2026-12-25") === "성탄절", "2026-12-25 이름 → " + KR.nameOf("2026-12-25"));
+    rest("2026-07-17", true, "2026-07-17 제헌절(2026년부터 공휴일)");
+    rest("2026-06-03", true, "2026-06-03 지방선거일");
+    rest("2026-05-05", true, "2026-05-05 어린이날");
+    rest("2026-09-25", true, "2026-09-25 추석");
+    rest("2027-12-27", true, "2027-12-27 대체공휴일(성탄절)");
+    rest("2028-10-03", true, "2028-10-03 추석·개천절");
+    rest("2028-10-05", true, "2028-10-05 대체공휴일(개천절·추석)");
+    rest("2028-04-12", true, "2028-04-12 국회의원선거일");
+  });
+
+  group("대체공휴일이 없는 날 (신정·현충일)", function () {
+    rest("2026-01-02", false, "2026-01-02 (신정은 대체 없음)");
+    rest("2026-06-08", false, "2026-06-08 (현충일은 대체 없음)");
+    rest("2027-06-07", false, "2027-06-07 (현충일은 대체 없음)");
+    rest("2028-01-03", false, "2028-01-03 (신정은 대체 없음)");
+  });
+
+  group("board-data 휴원일(closedDays)", function () {
+    ok(KR.isRestDay("2026-11-25", ["2026-11-25"]) === true, "배열 휴원일 인식 실패");
+    ok(KR.isRestDay("2026-11-25", { "2026-11-25": { name: "재량휴원일" } }) === true, "객체 휴원일 인식 실패");
+    ok(KR.isRestDay("2026-11-26", ["2026-11-25"]) === false, "휴원일 아닌 날을 쉬는 날로 판단");
+    ok(KR.isRestDay("2026-11-25", function (d) { return d === "2026-11-25"; }) === true, "함수형 휴원일 인식 실패");
+  });
+
+  group("잘못된 값", function () {
+    ok(KR.isRestDay("") === false, "빈 값");
+    ok(KR.isRestDay(null) === false, "null");
+    ok(KR.isRestDay("2026-13-99") === false, "없는 날짜");
+  });
+
+  group("달력 요일 일치", function () {
+    [["2026-11-21", 6], ["2026-11-23", 1], ["2026-12-25", 5], ["2028-10-05", 4], ["2027-02-09", 2]].forEach(function (x) {
+      ok(KR.parseISO(x[0]).getDay() === x[1], x[0] + " 요일 기대 " + x[1] + " → " + KR.parseISO(x[0]).getDay());
+    });
+  });
+
+  var sum = document.getElementById("sum");
+  sum.className = fails.length ? "ng" : "ok";
+  sum.textContent = (fails.length ? "❌ 실패 " + fails.length + "개" : "✅ 모두 통과") + " · 통과 " + pass + "개 / 실패 " + fails.length + "개";
+
+  var out = document.getElementById("out");
+  var h = document.createElement("ul");
+  groups.forEach(function (g) {
+    var li = document.createElement("li");
+    li.className = g.fail ? "bad" : "";
+    li.innerHTML = "<span>" + (g.fail ? "✗ " : "✓ ") + g.name + "</span><span class='v'>" + g.pass + " / " + (g.pass + g.fail) + "</span>";
+    h.appendChild(li);
+  });
+  out.appendChild(h);
+  if (fails.length) {
+    var h2 = document.createElement("h2"); h2.textContent = "실패한 검사"; out.appendChild(h2);
+    var ul = document.createElement("ul");
+    fails.forEach(function (f) { var li = document.createElement("li"); li.className = "bad"; li.textContent = f; ul.appendChild(li); });
+    out.appendChild(ul);
+  }
+  window.__testResult = { pass: pass, fail: fails.length, fails: fails };
+})();
+</script>
+</body>
+</html>

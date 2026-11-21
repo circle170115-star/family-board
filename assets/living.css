@@ -453,10 +453,10 @@ body.living::before{
   max-width:min(92vw,820px);padding:14px 24px;border-radius:22px;cursor:pointer;
   background:linear-gradient(135deg,#FFF8E1,#FFE9AE);border:2px solid #F0D68C;
   box-shadow:0 22px 44px -24px rgba(130,95,20,.85);
-  transform:translate(-50%,-22px);opacity:0;pointer-events:none;
-  transition:opacity .32s ease, transform .32s ease;
+  transform:translate(-50%,-22px);opacity:0;pointer-events:none;visibility:hidden;
+  transition:opacity .32s ease, transform .32s ease, visibility .32s;
 }
-.lv-alarm.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.lv-alarm.show{opacity:1;transform:translate(-50%,0);pointer-events:auto;visibility:visible}
 .lv-alarm .alarm-ico{font-size:clamp(24px,4vh,36px);line-height:1;flex:0 0 auto;animation:alarmRing 1.6s ease-in-out 3}
 .lv-alarm .alarm-title{display:block;font-size:clamp(17px,2.6vh,25px);font-weight:900;letter-spacing:-.03em;color:#8A6412}
 .lv-alarm .alarm-sub{display:block;margin-top:2px;font-size:clamp(12.5px,1.85vh,17px);font-weight:750;color:#A67C1E}
