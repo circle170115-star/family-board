@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#FFFBF3">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="assets/living.css?v=20261122c">
+<link rel="stylesheet" href="assets/living.css?v=20261121e">
 <link rel="manifest" href="manifest-living.json">
 <meta name="application-name" content="등원 보드">
 <meta name="mobile-web-app-capable" content="yes">
@@ -27,44 +27,109 @@
     <span class="alarm-sub">다은·승민 등원 준비 시작할 시간이에요 · 출발 08:40</span>
   </span>
 </div>
+<div class="lv-alarm is-tv" id="tvBanner" role="alert" aria-live="assertive" title="누르면 닫힙니다">
+  <span class="alarm-ico" aria-hidden="true">⏰</span>
+  <span class="alarm-body">
+    <b class="alarm-title">오늘 TV 30분 끝!</b>
+    <span class="alarm-sub">30분 다 봤어요 · 이제 눈 쉬자 👀</span>
+  </span>
+</div>
 <div class="lv-app">
 
-  <header class="lv-head">
-    <div class="lv-clock">
-      <div class="lv-time"><span id="clockHM">--:--</span><small id="clockSec">00</small></div>
-      <div class="lv-date" id="dateLine">날짜 불러오는 중</div>
-    </div>
-    <div class="lv-mid">
-      <div class="lv-wx" id="wxLine">☀️ 오늘 날씨 불러오는 중…</div>
-      <div class="lv-outfit" id="outfitLine">등원 옷차림을 확인하고 있어요</div>
-    </div>
-    <div class="lv-actions">
-      <button class="lv-play" id="playBtn" type="button" aria-label="더하기·빼기 놀이 열기" title="더하기·빼기 놀이 · 승민 덧셈구구·뺄셈구구(9까지) / 다은 두 자리 덧셈·뺄셈">
-        <span class="play-plus" aria-hidden="true">➕</span>
-        <span class="play-txt">더하기·빼기 놀이</span>
+  <!-- ◀ 상단 1/3 — 시계·날씨·출발 카운트다운 + 아이들이 바로 누르는 큰 카드(평일 2장 / 쉬는 날 3장) ▶ -->
+  <div class="lv-top">
+    <header class="lv-head">
+      <div class="lv-clock">
+        <div class="lv-time"><span id="clockHM">--:--</span><small id="clockSec">00</small></div>
+        <div class="lv-date" id="dateLine">날짜 불러오는 중</div>
+      </div>
+      <div class="lv-mid">
+        <div class="lv-wx" id="wxLine">☀️ 오늘 날씨 불러오는 중…</div>
+        <div class="lv-outfit" id="outfitLine">등원 옷차림을 확인하고 있어요</div>
+      </div>
+      <div class="lv-actions">
+        <button class="lv-icon-btn" id="alarmBtn" type="button" aria-label="등원 알람 켜기/끄기" aria-pressed="true" title="등원 알람 · 평일 8:00 / 8:20">🔔</button>
+        <button class="lv-icon-btn" id="soundBtn" type="button" aria-label="효과음 켜기/끄기" title="효과음">🔊</button>
+        <button class="lv-icon-btn" id="gearBtn" type="button" aria-label="부모님 설정" title="부모님 설정">⚙️</button>
+        <a class="lv-home" id="homeLink" href="index.html">🏠 전체 모아보드</a>
+      </div>
+    </header>
+
+    <div class="lv-topmid">
+      <div class="lv-topinfo">
+        <section class="lv-count" id="countdown" aria-label="출발까지 남은 시간">
+          <div class="cd-left"><span class="cd-ico">🚀</span><span id="cdTitle">출발까지</span></div>
+          <div class="cd-time"><b id="cdTime">—</b><span id="cdUnit">남았어요!</span></div>
+          <div class="cd-track" id="cdTrack" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="출발까지 남은 시간">
+            <div class="cd-fill" id="cdFill"></div>
+          </div>
+          <div class="cd-meta" id="cdMeta">목표 출발 08:40</div>
+        </section>
+
+        <div class="lv-chips" id="chipRow" aria-label="오늘 유치원 소식"></div>
+      </div>
+
+      <!-- 🔢 수놀이 — 승민 덧셈구구·뺄셈구구(9까지) / 다은 받아올림·내림 없는 두 자리 -->
+      <button class="lv-act is-math" id="playBtn" type="button"
+              aria-label="수놀이 · 더하기 빼기 놀이 열기"
+              title="수놀이 · 승민 덧셈구구·뺄셈구구(9까지) / 다은 두 자리 덧셈·뺄셈">
+        <span class="act-ico" aria-hidden="true">🔢</span>
+        <span class="act-body">
+          <span class="act-t">수놀이</span>
+          <span class="act-sub">승민 덧셈·뺄셈 / 다은 두 자리</span>
+        </span>
+        <span class="act-go" aria-hidden="true">▶</span>
       </button>
-      <button class="lv-icon-btn" id="alarmBtn" type="button" aria-label="등원 알람 켜기/끄기" aria-pressed="true" title="등원 알람 · 평일 8:00 / 8:20">🔔</button>
-      <button class="lv-icon-btn" id="soundBtn" type="button" aria-label="효과음 켜기/끄기" title="효과음">🔊</button>
-      <button class="lv-icon-btn" id="gearBtn" type="button" aria-label="부모님 설정" title="부모님 설정">⚙️</button>
-      <a class="lv-home" id="homeLink" href="index.html">🏠 전체 모아보드</a>
+
+      <!-- 📖 오늘의 읽을거리 — 누르면 오늘의 포스터가 화면 가득 열립니다 -->
+      <button class="lv-act is-read" id="readBtn" type="button"
+              aria-label="오늘의 읽을거리 열기"
+              title="오늘의 읽을거리 · 오늘의 포스터를 화면 가득 보기">
+        <span class="act-ico" aria-hidden="true">📖</span>
+        <span class="act-body">
+          <span class="act-t">오늘의 읽을거리</span>
+          <span class="act-sub" id="readSub">오늘의 포스터 보기</span>
+        </span>
+        <span class="act-go" aria-hidden="true">▶</span>
+      </button>
+
+      <!-- 📺 주말 TV 30분 타이머 — 주말·공휴일에만 보입니다 -->
+      <div class="lv-act is-tv" id="tvCard" hidden aria-label="주말 TV 30분 타이머">
+        <div class="tv-head">
+          <span class="act-ico" aria-hidden="true">📺</span>
+          <span class="act-body">
+            <span class="act-t">주말 TV 30분</span>
+            <span class="act-sub" id="tvStatus">30분 타이머</span>
+          </span>
+        </div>
+        <b class="tv-time" id="tvTime">30:00</b>
+        <div class="tv-bar" id="tvBar" role="progressbar" aria-valuemin="0" aria-valuemax="1800" aria-valuenow="1800" aria-label="남은 TV 시간"><i id="tvFill"></i></div>
+        <div class="tv-btns">
+          <button class="tv-btn is-primary" id="tvToggle" type="button">▶ 시작</button>
+          <button class="tv-btn" id="tvDoneBtn" type="button">오늘 다 봄</button>
+          <button class="tv-btn is-icon" id="tvResetBtn" type="button" aria-label="타이머 처음부터(30분)">↺</button>
+        </div>
+      </div>
     </div>
-  </header>
+  </div>
 
-  <section class="lv-count" id="countdown" aria-label="출발까지 남은 시간">
-    <div class="cd-left"><span class="cd-ico">🚀</span><span id="cdTitle">출발까지</span></div>
-    <div class="cd-time"><b id="cdTime">—</b><span id="cdUnit">남았어요!</span></div>
-    <div class="cd-track" id="cdTrack" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="출발까지 남은 시간">
-      <div class="cd-fill" id="cdFill"></div>
-    </div>
-    <div class="cd-meta" id="cdMeta">목표 출발 08:40</div>
-  </section>
-
-  <div class="lv-chips" id="chipRow" aria-label="오늘 유치원 소식"></div>
-
+  <!-- ▼ 하단 2/3 — 다은·승민 루틴 타일 + 별 스티커판 ▶ -->
   <main class="lv-grid" id="childGrid" aria-label="아이별 등원 준비">
     <div class="lv-error">오늘 준비를 불러오는 중…</div>
   </main>
 
+</div>
+
+<!-- 📖 오늘의 읽을거리 — 전체화면 포스터 -->
+<div class="lv-reading" id="readingPanel" hidden>
+  <div class="rd-wrap" role="dialog" aria-modal="true" aria-labelledby="rdTitle">
+    <header class="rd-head">
+      <h2 class="rd-title" id="rdTitle"><span aria-hidden="true">📖</span> <span id="rdTitleText">오늘의 읽을거리</span></h2>
+      <span class="rd-sub" id="rdSub"></span>
+      <button class="rd-close" id="rdClose" type="button" aria-label="읽을거리를 닫고 보드로 돌아가기"><span aria-hidden="true">✕</span> 닫기</button>
+    </header>
+    <div class="rd-stage" id="rdStage"></div>
+  </div>
 </div>
 
 <div class="celebrate" id="celebrate" role="status" aria-live="polite"><b></b><span></span></div>
@@ -153,6 +218,6 @@
 <noscript><p style="text-align:center;padding:24px">이 보드는 JavaScript가 필요해요.</p></noscript>
 <script src="assets/kr-holidays.js?v=20261122a"></script>
 <script src="assets/math-engine.js?v=20261121a"></script>
-<script src="assets/living.js?v=20261122c"></script>
+<script src="assets/living.js?v=20261121e"></script>
 </body>
 </html>

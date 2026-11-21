@@ -443,7 +443,7 @@
       /* 주말·공휴일 — 등원이 없으니 남은 시간·출발 압박 대신 쉬는 날 문구 */
       box.classList.add("is-done");
       if (icoEl) icoEl.textContent = "🌴";
-      titleEl.textContent = "🌴 주말·공휴일";
+      titleEl.textContent = "주말·공휴일";
       tEl.textContent = "쉬는 날";
       uEl.textContent = "";
       mEl.textContent = (restName(todayStr) || "주말") + " · 등원 없이 푹 쉬어요";
@@ -779,6 +779,246 @@
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && gp.open) gpClose(); });
   }
 
+  /* ───────────── 📖 오늘의 읽을거리 (전체화면 포스터) ─────────────
+     data/board-data.json 의
+       "readingPoster": { "date": "2026-11-21", "title": "...", "subtitle": "...", "image": "assets/reading/2026-11-21.png" }
+     를 읽어 상단 카드 부제와 전체화면 포스터를 채웁니다.
+     아직 포스터가 없으면 assets/reading-poster.png 를 한 번 시도하고,
+     그것도 없으면 깔끔한 안내 카드를 띄웁니다.
+     → 확정된 포스터 PNG 를 assets/reading-poster.png 로 올리거나 board-data.json 의
+       readingPoster.image 에 경로를 적으면 다음 새로고침부터 바로 뜹니다. */
+  const READING_FALLBACK = "assets/reading-poster.png";
+  const rd = { open: false };
+
+  function readingPoster() {
+    const rp = (data && data.readingPoster) || null;
+    if (!rp) return { img: "", title: "", sub: "", date: "", stale: false };
+    if (typeof rp === "string") return { img: rp, title: "", sub: "", date: "", stale: false };
+    const date = rp.date ? String(rp.date).slice(0, 10) : "";
+    return {
+      img: rp.image || rp.src || rp.url || "",
+      title: rp.title || "",
+      sub: rp.subtitle || rp.sub || "",
+      date: date,
+      stale: !!date && date !== todayStr,
+    };
+  }
+  function renderReadingCard() {
+    const p = readingPoster();
+    const sub = $("#readSub"), btn = $("#readBtn");
+    if (sub) sub.textContent = p.title || "오늘의 포스터 보기";
+    if (btn) btn.title = "오늘의 읽을거리 · " + (p.title || "오늘의 포스터") + " 화면 가득 보기";
+  }
+  function readingEmptyHTML() {
+    return (
+      '<div class="rd-empty">' +
+        '<div class="rd-empty-ico" aria-hidden="true">📖</div>' +
+        '<h3>오늘의 읽을거리를 준비하고 있어요</h3>' +
+        '<p>매일 아침 새 읽을거리 포스터가 이 자리에 <b>화면 가득</b> 떠요.<br>속담 4컷 만화 · 그림 영단어 · 자연·과학 호기심</p>' +
+        '<span class="rd-empty-tip">🌱 포스터가 확정되면 바로 여기에 나타나요</span>' +
+      "</div>"
+    );
+  }
+  function renderReadingStage() {
+    const stage = $("#rdStage");
+    if (!stage) return;
+    const p = readingPoster();
+    const src = p.img || READING_FALLBACK;
+    stage.innerHTML = '<img class="rd-img" id="rdImg" src="' + esc(src) + '" alt="' + esc(p.title || "오늘의 읽을거리 포스터") + '">';
+    const img = $("#rdImg");
+    if (!img) return;
+    img.addEventListener("error", () => { stage.innerHTML = readingEmptyHTML(); }, { once: true });
+  }
+  function openReading() {
+    const panel = $("#readingPanel");
+    if (!panel) return;
+    const p = readingPoster();
+    const sEl = $("#rdSub");
+    if (sEl) {
+      sEl.textContent = p.stale ? "지난 읽을거리 · " + p.date : (p.sub || "");
+      sEl.classList.toggle("is-stale", !!p.stale);
+    }
+    renderReadingStage();
+    panel.hidden = false;
+    rd.open = true;
+    document.body.classList.add("is-reading");
+    primeAudio();
+    const c = $("#rdClose");
+    if (c) c.focus({ preventScroll: true });
+  }
+  function closeReading() {
+    const panel = $("#readingPanel");
+    if (!panel || !rd.open) return;
+    panel.hidden = true;
+    rd.open = false;
+    document.body.classList.remove("is-reading");
+    const btn = $("#readBtn");
+    if (btn) btn.focus({ preventScroll: true });
+  }
+  function initReading() {
+    const btn = $("#readBtn"), panel = $("#readingPanel");
+    if (!btn || !panel) return;
+    btn.addEventListener("click", openReading);
+    const close = $("#rdClose");
+    if (close) close.addEventListener("click", closeReading);
+    /* 포스터 바깥 여백을 눌러도 닫힙니다 */
+    panel.addEventListener("click", (e) => {
+      if (e.target === panel || e.target.classList.contains("rd-stage")) closeReading();
+    });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && rd.open) closeReading(); });
+  }
+
+  /* ───────────── 📺 주말 TV 30분 타이머 (쉬는 날에만) ─────────────
+     주말·공휴일(isRestDay)에만 상단 1/3 에 세 번째 카드로 뜹니다.
+     30분(1800초) 카운트다운 · ▶ 시작/⏸ 멈춤 토글 · 오늘 다 봄(바로 잠금) · ↺ 초기화(30분 복구).
+     남은 시간은 날짜와 함께 localStorage 에 저장해 새로고침·화면 꺼짐에도 이어지고,
+     00:00 이 되면 차임벨 + 종료 배너("⏰ 오늘 TV 30분 끝! 이제 눈 쉬자")를 띄웁니다. */
+  const TV_KEY = "familyTv.v1";
+  const TV_TOTAL = 30 * 60;              /* 30분 = 1800초 */
+  const tv = { left: TV_TOTAL, running: false, done: false, endAt: 0, notified: false, saveT: 0, endedAway: false };
+
+  function tvSave() {
+    try {
+      localStorage.setItem(TV_KEY, JSON.stringify({
+        date: todayStr, total: TV_TOTAL, left: tv.left,
+        running: tv.running, done: tv.done, endAt: tv.endAt, notified: tv.notified,
+      }));
+    } catch (e) { /* 저장이 안 돼도 화면은 동작 */ }
+  }
+  function tvLoad() {
+    let s = null;
+    try { s = JSON.parse(localStorage.getItem(TV_KEY) || "null"); } catch (e) { s = null; }
+    /* 다른 날이거나 타이머 길이가 바뀌었으면 오늘 30분으로 새로 시작 */
+    if (!s || s.date !== todayStr || Number(s.total) !== TV_TOTAL) {
+      tv.left = TV_TOTAL; tv.running = false; tv.done = false; tv.endAt = 0; tv.notified = false; tv.endedAway = false;
+      return;
+    }
+    tv.done = !!s.done;
+    tv.notified = !!s.notified;
+    tv.running = !!s.running && !tv.done;
+    tv.endAt = Number(s.endAt) || 0;
+    tv.left = Math.max(0, Math.min(TV_TOTAL, Number(s.left) || 0));
+    tv.endedAway = false;
+    if (tv.running) {
+      if (!tv.endAt) { tv.running = false; tv.left = TV_TOTAL; }
+      else tv.left = Math.max(0, Math.ceil((tv.endAt - Date.now()) / 1000));
+    }
+    if (tv.left <= 0 && (tv.running || tv.done)) {
+      /* 화면이 궴 있던 사이에 30분이 다 지났으면 돌아왔 때 한 번 알려 줍니다 */
+      tv.endedAway = !tv.done && !tv.notified;
+      tv.left = 0; tv.running = false; tv.done = true;
+    }
+  }
+  function tvRemain() {
+    if (tv.done) return 0;
+    if (tv.running && tv.endAt) return Math.max(0, Math.ceil((tv.endAt - Date.now()) / 1000));
+    return tv.left;
+  }
+  function tvPaint() {
+    const card = $("#tvCard");
+    if (!card) return;
+    const left = tvRemain();
+    const tEl = $("#tvTime"), sEl = $("#tvStatus"), fEl = $("#tvFill"), bar = $("#tvBar");
+    const tg = $("#tvToggle"), dn = $("#tvDoneBtn");
+    if (tEl) tEl.textContent = pad(Math.floor(left / 60)) + ":" + pad(left % 60);
+    if (fEl) fEl.style.width = Math.max(0, Math.min(100, (left / TV_TOTAL) * 100)).toFixed(2) + "%";
+    if (bar) bar.setAttribute("aria-valuenow", String(left));
+    card.classList.toggle("is-running", tv.running && !tv.done);
+    card.classList.toggle("is-done", tv.done);
+    if (sEl) {
+      if (tv.done) sEl.textContent = "오늘은 다 봤어요 · 내일 또!";
+      else if (tv.running) sEl.textContent = "보는 중… 남은 시간";
+      else if (left < TV_TOTAL) sEl.textContent = "잠깐 멈춤";
+      else sEl.textContent = "30분 타이머";
+    }
+    if (tg) {
+      tg.textContent = tv.done ? "다 봤어요" : tv.running ? "⏸ 멈춤" : left < TV_TOTAL ? "▶ 이어서" : "▶ 시작";
+      tg.disabled = !!tv.done;
+    }
+    if (dn) dn.disabled = !!tv.done;
+  }
+  function showTvBanner() {
+    const b = $("#tvBanner");
+    if (!b) return;
+    b.classList.remove("show");
+    void b.offsetWidth;
+    b.classList.add("show");
+    clearTimeout(showTvBanner.timer);
+    showTvBanner.timer = setTimeout(() => b.classList.remove("show"), 15000);
+  }
+  function hideTvBanner() {
+    const b = $("#tvBanner");
+    if (b) b.classList.remove("show");
+    clearTimeout(showTvBanner.timer);
+  }
+  function tvStart() {
+    if (tv.done) return;
+    if (tv.left <= 0) tv.left = TV_TOTAL;
+    tv.running = true;
+    tv.endAt = Date.now() + tv.left * 1000;
+    tvSave(); tvPaint(); primeAudio();
+  }
+  function tvPause() {
+    tv.left = tvRemain();
+    tv.running = false; tv.endAt = 0;
+    tvSave(); tvPaint();
+  }
+  function tvFinish(byTimer) {
+    tv.left = 0; tv.running = false; tv.endAt = 0; tv.done = true;
+    if (byTimer) tv.notified = true;
+    tvSave(); tvPaint();
+    if (byTimer) {
+      const rang = chimeWarn();   /* 8:20 경고와 같은 또렷한 딩동댕 두 번 */
+      showTvBanner();
+      if (!rang) toast("⏰ 오늘 TV 30분 끝! 이제 눈 쉬자 👀");
+    }
+  }
+  function tvTick() {
+    if (!tv.running) return;
+    const left = tvRemain();
+    if (left <= 0) { tvFinish(true); return; }
+    tv.left = left;
+    tvPaint();
+    if (!tv.saveT || Date.now() - tv.saveT > 10000) { tv.saveT = Date.now(); tvSave(); }
+  }
+  function renderTV() {
+    const card = $("#tvCard");
+    if (!card) return;
+    /* 주말·공휴일(쉬는 날)에만 보이고, 평일에는 2장으로 돌아갑니다 */
+    const rest = isRestDay(todayStr);
+    card.hidden = !rest;
+    const mid = card.closest ? card.closest(".lv-topmid") : null;
+    if (mid) mid.classList.toggle("has-tv", rest);
+    tvPaint();
+  }
+  function initTV() {
+    const card = $("#tvCard");
+    if (!card) return;
+    tvLoad();
+    const tg = $("#tvToggle"), dn = $("#tvDoneBtn"), rs = $("#tvResetBtn");
+    if (tg) tg.addEventListener("click", () => { if (tv.running) tvPause(); else tvStart(); });
+    if (dn) dn.addEventListener("click", () => {
+      if (tv.done) return;
+      tvFinish(false);
+      toast("오늘 TV 30분은 여기까지! 이제 눈 쉬자 👀");
+    });
+    if (rs) rs.addEventListener("click", () => {
+      tv.left = TV_TOTAL; tv.running = false; tv.done = false; tv.endAt = 0; tv.notified = false;
+      tvSave(); tvPaint();
+      toast("TV 타이머를 30분으로 되돌렸어요 ↺");
+    });
+    const banner = $("#tvBanner");
+    if (banner) banner.addEventListener("click", hideTvBanner);
+    renderTV();
+    if (tv.endedAway) {
+      tv.endedAway = false;
+      tv.notified = true;
+      tvSave();
+      showTvBanner();
+      chimeWarn();
+    }
+  }
+
   /* ───────────── 축하 · 폭죽 · 토스트 ───────────── */
   let celebrateT = null, toastT = null;
   function toast(msg) {
@@ -895,6 +1135,8 @@
   function renderAll() {
     renderHead();
     renderChips();
+    renderReadingCard();
+    renderTV();
     renderKids();
     renderPanel();
     renderCountdown();
@@ -916,6 +1158,7 @@
     store.date = todayStr;
     store.checks = blankChecks();
     save();
+    tvLoad();          /* 날짜가 바뀌면 TV 타이머도 오늘 30:00 으로 */
     renderAll();
     renderAlarmBtn();
     if (isRestDay(todayStr)) hideAlarmBanner();   /* 어제 남은 알람 배너가 쉬는 날에 남지 않게 */
@@ -929,6 +1172,7 @@
     if (iso(d) !== todayStr) { dayRollover(); return; }
     checkAlarm(d);
     renderCountdown();
+    tvTick();
   }
 
   /* ───────────── ⏰ 등원 준비 알람 (평일 08:00 · 08:20) ─────────────
@@ -1249,6 +1493,8 @@
   /* ───────────── 시작 ───────────── */
   /* 놀이 화면은 보드 데이터와 상관없이 한 번에 열 수 있게 먼저 연결합니다 */
   initGame();
+  initReading();
+  initTV();
   try {
     data = await fetchData();
   } catch (e) {
