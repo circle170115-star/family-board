@@ -782,7 +782,7 @@
   /* ───────────── 📖 오늘의 읽을거리 (전체화면 모달 · 속담/영단어 2탭) ─────────────
      data/board-data.json 의 readingPoster 를 읽어 두 탭을 그립니다.
        "readingPoster": {
-         "date": "2026-11-21",
+         "date": "2026-11-22",
          "proverb": { badge, title, subtitle, summary,
                       panels:[{num,speech,caption,image}], meaning, promise },
          "word":    { badge, word, meaning, bannerImage, audio,
@@ -790,7 +790,7 @@
        }
      · 속담 탭 — 제목·뜻·4컷 만화·오늘의 약속 (기본 탭)
      · 영단어 탭 — 큰 단어/예문을 터치하면 원어민 발음 MP3 재생 + 반짝임,
-       🔊 전체 듣기 = grow → 예문1 → 2 → 3 (0.7초 간격, ⏹ 멈춤 토글)
+       🔊 전체 듣기 = 단어 → 예문1 → 2 → 3 (0.7초 간격, ⏹ 멈춤 토글)
      · MP3 가 없거나 재생에 실패하면 window.speechSynthesis(en-US, rate 0.9) 로 자동 대체
      proverb·word 가 모두 비어 있으면 안내 카드를 띄웁니다. */
   const RD_ICO = "assets/reading/ico/";

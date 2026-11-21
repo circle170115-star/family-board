@@ -10,7 +10,7 @@
 
 "use strict";
 
-const CACHE = "family-living-v8-20261121g";
+const CACHE = "family-living-v8-20261122a";
 
 /* 설치할 때 미리 받아 둘 것 — 하나가 실패해도 설치 자체는 계속한다 */
 const PRECACHE = [
@@ -23,7 +23,7 @@ const PRECACHE = [
   "assets/icons/icon-192.png",
   "assets/icons/icon-512.png",
   "assets/icons/icon-maskable-512.png",
-  "assets/reading/audio/grow.mp3",
+  "assets/reading/audio/share.mp3",
   "assets/reading/audio/ex1.mp3",
   "assets/reading/audio/ex2.mp3",
   "assets/reading/audio/ex3.mp3",
