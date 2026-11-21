@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#EFF6FF">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="assets/style.css?v=20261119b">
+<link rel="stylesheet" href="assets/style.css?v=20261121a">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
 <script>
 /* 등원 집중 모드 — 평일 07:30~(평일 기본 출발 08:40 + 15분 = 08:55, 오늘 출발을 더 늦게 잡았으면 그 15분 뒤까지)에
@@ -154,8 +154,8 @@
         <span class="src" id="mathLevel"></span>
       </div>
       <div class="math-tabs" id="mathTabs">
-        <button class="math-tab is-on" data-mode="seungmin" type="button">승민 <small>5세 · 한 자리 덧셈</small></button>
-        <button class="math-tab" data-mode="daeun" type="button">다은 <small>7세 · 두 자리 덧셈·뺄셈</small></button>
+        <button class="math-tab is-on" data-mode="seungmin" type="button">승민 <small>5세 · 덧셈·뺄셈(9까지)</small></button>
+        <button class="math-tab" data-mode="daeun" type="button">다은 <small>7세 · 받아올림·내림 없는 두 자리</small></button>
       </div>
       <div id="mathBody"></div>
     </section>
@@ -184,6 +184,7 @@
 </div>
 
 <noscript><p style="text-align:center;padding:24px">이 보드는 JavaScript가 필요합니다.</p></noscript>
-<script src="assets/app.js?v=20261118c"></script>
+<script src="assets/math-engine.js?v=20261121a"></script>
+<script src="assets/app.js?v=20261121a"></script>
 </body>
 </html>

@@ -784,30 +784,20 @@
       '<div class="res-foot">🎟️ 예약 오픈 시간·요금은 기관 사정으로 바뀔 수 있어요 — 링크에서 최신 공지를 확인하세요 · 2026.11.18 기준 확인</div>';
   }
 
-  /* ───────────────────────── 수학 놀이터 ───────────────────────── */
-  const math = { answer: null, score: { right: 0, total: 0 } };
+  /* ───────────────────────── 수학 놀이터 ─────────────────────────
+     문제 출제 규칙은 거실 보드(living.html)와 **같은 엔진** assets/math-engine.js 한 곳에 있습니다.
+     (승민 5세 → 덧셈구구 합 9까지 · 뺄셈구구 9 이내 / 다은 7세 → 받아올림·내림 없는 두 자리)
+     여기서는 엔진이 만든 문제를 화면에 그리고 채점만 합니다. */
+  const math = { answer: null, lastKey: "", score: { right: 0, total: 0 } };
   function mathGen() {
-    let a, b, op, ans, level;
-    if (state.mathMode === "seungmin") {
-      a = 1 + Math.floor(Math.random() * 9);
-      b = 1 + Math.floor(Math.random() * 9);
-      op = "+";
-      ans = a + b;
-      level = "승민(5세) · 한 자리 덧셈";
-    } else {
-      a = 10 + Math.floor(Math.random() * 80);
-      b = 10 + Math.floor(Math.random() * 80);
-      if (Math.random() < 0.5) { op = "+"; ans = a + b; }
-      else { if (b > a) { const t = a; a = b; b = t; } op = "−"; ans = a - b; }
-      level = "다은(7세) · 두 자리 덧셈·뺄셈";
-    }
-    math.answer = ans;
-    const opts = new Set([ans]);
-    while (opts.size < 4) {
-      let d = ans + (Math.floor(Math.random() * 19) - 9);
-      if (d >= 0 && d !== ans) opts.add(d);
-    }
-    const arr = [...opts].sort(() => Math.random() - 0.5);
+    const eng = window.FamilyMathEngine;
+    if (!eng) { console.error("수학 문제 엔진(assets/math-engine.js)을 불러오지 못했어요"); return; }
+    const q = eng.generateQuestion(state.mathMode, math.lastKey);
+    math.lastKey = q.key;
+    math.answer = q.answer;
+    const a = q.a, b = q.b, op = q.op;
+    const level = q.level;
+    const arr = q.options;
     $("mathLevel").textContent = level;
     $("mathBody").innerHTML =
       '<div class="q-box" id="qBox"><span class="spark-burst" id="burst">🎉</span>' +

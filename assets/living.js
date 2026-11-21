@@ -587,7 +587,8 @@
        · 덧셈: 1 + 0 … 9 + 0  (a = 1~9, b = 0~(9−a), 답 1~9)
        · 뺄셈: 1 − 1 … 9 − 9  (a = 1~9, b = 1~a, 답 0~8)
        · 덧셈·뺄셈을 반반 섞고, 바로 앞 문제와 같은 식은 다시 내지 않습니다.
-     다은(7세)은 두 자리 덧셈·뺄셈 그대로입니다.
+     다은(7세)은 **받아올림 없는 두 자릿수 덧셈**과 **받아내림 없는 두 자릿수 뺄셈**입니다.
+     두 단계 모두 규칙은 모아보드와 함께 쓰는 공통 엔진(assets/math-engine.js → LEVEL_CONFIG)에 있습니다.
      보기 4개 중 정답 고르기, 맞히면 1.1초·틀리면 1.9초 뒤 다음 문제.
      거실 태블릿에서 승민이가 직접 누를 수 있게 숫자·보기를 화면 크기에 맞춰 크게 띄웁니다.
      보드 데이터를 못 불러와도 놀이는 열리도록 데이터 요청 전에 먼저 연결합니다. */
@@ -606,39 +607,17 @@
   }
   function gpNew() {
     clearTimeout(gp.timer);
-    let a, b, op, ans, key = "", tries = 0;
-    if (gp.mode === "seungmin") {
-      /* 덧셈구구(합 9까지) · 뺄셈구구(9 이내)를 반반 섞고, 직전 식은 건너뜁니다 */
-      do {
-        if (Math.random() < 0.5) {
-          a = 1 + Math.floor(Math.random() * 9);          /* 1~9 */
-          b = Math.floor(Math.random() * (10 - a));       /* 0~(9-a) */
-          op = "+";
-          ans = a + b;                                     /* 1~9 */
-        } else {
-          a = 1 + Math.floor(Math.random() * 9);          /* 1~9 */
-          b = 1 + Math.floor(Math.random() * a);          /* 1~a */
-          op = "−";
-          ans = a - b;                                     /* 0~8 */
-        }
-        key = a + op + b;
-      } while (key === gp.last && ++tries < 12);
-      gp.last = key;
-    } else {
-      a = 10 + Math.floor(Math.random() * 80);
-      b = 10 + Math.floor(Math.random() * 80);
-      if (Math.random() < 0.5) { op = "+"; ans = a + b; }
-      else { if (b > a) { const t = a; a = b; b = t; } op = "−"; ans = a - b; }
-    }
-    gp.answer = ans;
+    /* 문제 규칙은 모아보드와 **같은 엔진** assets/math-engine.js 한 곳에 있습니다.
+       (승민 5세 → 덧셈구구 합 9까지 · 뺄셈구구 9 이내 / 다은 7세 → 받아올림·내림 없는 두 자리)
+       여기서는 엔진이 만든 문제를 화면에 그리고 채점만 합니다. */
+    const eng = window.FamilyMathEngine;
+    if (!eng) { toast("수학 문제를 불러오지 못했어요 — 새로고침해 주세요"); return; }
+    const q = eng.generateQuestion(gp.mode, gp.last);
+    gp.last = q.key;
+    gp.answer = q.answer;
     gp.busy = false;
-    const opts = new Set([ans]);
-    while (opts.size < 4) {
-      if (gp.mode === "seungmin") { opts.add(Math.floor(Math.random() * 10)); continue; }  /* 보기 0~9 */
-      const d = ans + (Math.floor(Math.random() * 19) - 9);
-      if (d >= 0 && d !== ans) opts.add(d);
-    }
-    const arr = [...opts].sort(() => Math.random() - 0.5);
+    const a = q.a, b = q.b, op = q.op;
+    const arr = q.options;
     const body = $("#gpBody");
     if (!body) return;
     body.innerHTML =
