@@ -917,7 +917,7 @@
             (wd.meaning ? '<span class="wd-mean">' + esc(wd.meaning) + "</span>" : "") +
             '<span class="wd-hint">👆 눌러서 들어 봐요</span>' +
           "</div>" +
-          (wd.bannerImage ? '<div class="wd-banner"><img src="' + esc(wd.bannerImage) + '" alt="' + esc(word + " 그림: 씨앗이 물과 햇빛을 받아 나무로 자라는 모습") + '" decoding="async"></div>' : "") +
+          (wd.bannerImage ? '<div class="wd-banner"><img src="' + esc(wd.bannerImage) + '" alt="' + esc(word + (wd.meaning ? " 그림: " + wd.meaning : " 낱말 그림")) + '" decoding="async"></div>' : "") +
           (wd.tip ? '<div class="wd-tip"><img src="' + RD_ICO + 'bulb.png" alt=""><div><b>기억 쏙 한마디</b><p>' + rdHighlight(wd.tip, [word]) + "</p></div></div>" : "") +
         "</div>" +
         '<div class="wd-right">' +
