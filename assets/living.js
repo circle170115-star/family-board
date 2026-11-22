@@ -1219,6 +1219,12 @@
   const TH_GAP = 380;   /* 장과 장 사이 숨 쉬는 시간(ms) */
   const TH_MIN = { cover: 3200, panel: 2200, meaning: 3000, word: 3000, banner: 3200, ex: 2800, tip: 3000 };
 
+  /* 문장들을 한 줄로 — 이미 있는 마침표·느낌표를 살리고 끝에만 한 번 붙입니다 */
+  const rdSentence = (arr) => {
+    const parts = arr.filter(Boolean).map((s) => String(s).trim().replace(/[.。!?！?]+$/, ""));
+    return parts.length ? parts.join(". ") + "." : "";
+  };
+
   /* 한 장 안에서 소리 조각(한국어 설명 → 원어민 영어)을 이어 붙일 때 씁니다 */
   const thPart = (audio, text, lang) => ({ audio: audio || "", text: text || "", lang: lang || "ko-KR" });
   const thParts = (s) => (Array.isArray(s.parts) && s.parts.length ? s.parts : [thPart(s.audio, s.text, s.lang)]);
@@ -1230,7 +1236,7 @@
     out.push({
       kind: "cover", lang: "ko-KR",
       audio: pv.audio || "",
-      text: [title, pv.subtitle, pv.summary].filter(Boolean).join(". ") + ".",
+      text: rdSentence([title, pv.subtitle, pv.summary]),
       html: () =>
         '<div class="th-cover">' +
           '<span class="th-badge">' + esc(pv.badge || "오늘의 속담") + "</span>" +
@@ -1262,7 +1268,7 @@
       out.push({
         kind: "meaning", lang: "ko-KR",
         audio: pv.meaningAudio || "",
-        text: [pv.meaning, pv.promise].filter(Boolean).join(" "),
+        text: rdSentence([pv.meaning, pv.promise]),
         html: () =>
           '<div class="th-mean">' +
             (pv.meaning ? '<div class="th-card a"><b>📖 이런 뜻이에요</b><p>' + esc(pv.meaning) + "</p></div>" : "") +
@@ -1397,12 +1403,16 @@
   function thSay(s, done) {
     const gen = th.gen;
     let fired = false;
+    let guard = 0;
     const finish = () => {
       if (fired || gen !== th.gen) return;
       fired = true;
+      clearTimeout(guard);
       thStopAudio();
       if (done) done();
     };
+    /* 소리가 시작되지 않거나 끝났다는 신호가 오지 않아도 화면이 멈춰 있지 않게 */
+    guard = setTimeout(finish, 26000);
     thStopAudio();
     const say = () => thSpeak(s, finish);
     if (!s.audio) { say(); return; }
@@ -1492,12 +1502,14 @@
     };
     /* 한 장 안의 소리 조각들을 순서대로 — 한국어 설명이 끝나면 바로 원어민 발음 */
     const parts = thParts(s);
+    /* 소리가 둘 이상 번갈아 나오는 장면(영단어)만 아래 자막 줄을 씁니다 */
+    const showSub = parts.length > 1;
     let idx = 0;
     const next = () => {
       if (gen !== th.gen) return;
       if (idx >= parts.length) { thSetSub(null); go(); return; }
       const p = parts[idx++];
-      thSetSub(p);
+      thSetSub(showSub ? p : null);
       thSay(p, next);
     };
     next();
