@@ -15,7 +15,7 @@
 - **📖 오늘의 읽을거리 카드 (상단 1/3 오른쪽)**: 하늘·라벤더 파스텔 큰 카드(`📖 오늘의 읽을거리` + 오늘 속담 제목). 누르면 **전체화면 읽을거리 모달**이 열립니다(`✕ 닫기` · 바깥 여백 · `Esc`). 모달 위쪽의 큰 탭 **`📖 오늘의 속담` | `🌱 오늘의 영단어`** 로 바로 바뀌고(기본 = 오늘의 속담), 두 화면 모두 **1280×800 가로 화면에서 스크롤 없이** 한눈에 들어옵니다.
   - **📖 오늘의 속담 탭**: `오늘의 속담` 배지 · 큰 제목 · 한 줄 뜻 · **4컷 만화**(그림 + 번호 + 말풍선 + 컷 설명) · `이런 뜻이에요` · `오늘의 약속`. 왼쪽은 크림·라벤더 파스텔 카드, 오른쪽은 2×2 만화.
   - **🌱 오늘의 영단어 탭**: 큰 단어(`grow` — 글자마다 다른 파스텔색) · 뜻 칩 · 그림 배너 · 예문 3개 · `기억 쏙 한마디`. **큰 단어나 예문 카드를 터치하면 그 영어가 바로 재생**되고(카드가 초록으로 반짝이며 테두리·🔊 아이콘이 맥동), **`🔊 전체 듣기`** 는 단어 → 예문 1 → 2 → 3 을 **0.7초 간격**으로 순서대로 들려줍니다(**`⏹ 멈춤`** 토글, 다른 카드를 누르거나 탭을 바꾸면 자동 정지).
-  - **발음 소리**: 미리 만들어 둔 원어민 MP3(`assets/reading/audio/grow.mp3` · `ex1~ex3.mp3`, `en-US` 신경망 음성)를 먼저 재생하고, **MP3 가 없거나 로드·재생에 실패하면 자동으로 `speechSynthesis`(`en-US`, `rate 0.9`)로 대체**합니다. 기기 음량·효과음 설정과 무관하게 항상 들리며, 서비스 워커가 MP3 를 미리 받아 두어 인터넷이 느려도 바로 납니다.
+  - **발음 소리**: 미리 만들어 둔 원어민 MP3(`assets/reading/audio/{word}.mp3` · `{word}-ex1~ex3.mp3`, `en-US` 신경망 음성 — 날마다 파일명을 단어명으로 바꿔 캐시가 어제 소리를 돌려주지 않게 합니다)를 먼저 재생하고, **MP3 가 없거나 로드·재생에 실패하면 자동으로 `speechSynthesis`(`en-US`, `rate 0.9`)로 대체**합니다. 기기 음량·효과음 설정과 무관하게 항상 들리며, 서비스 워커가 MP3 를 미리 받아 두어 인터넷이 느려도 바로 납니다.
 - **📺 주말 TV 30분 타이머 (쉬는 날에만)**: 주말·공휴일(`isRestDay`)에만 `🔢 수놀이`·`📖 오늘의 읽을거리` 옆에 **세 번째 카드**로 나타나고(평일에는 숨겨져 2장), `30:00` 카운트다운이 기본입니다. 버튼은 `▶ 시작`/`⏸ 멈춤` 토글, `오늘 다 봄`(남은 시간을 기다리지 않고 바로 `00:00` 잠금), `↺`(30분으로 복구). 남은 시간은 날짜와 함께 브라우저 localStorage(`familyTv.v1`)에 저장되어 **새로고침·화면 꺼짐에도 이어지고**, 00:00 이 되면 **차임벨(딩동댕 두 번) + `⏰ 오늘 TV 30분 끝! 이제 눈 쉬자` 배너**가 뜨며 카드가 주황색 '오늘은 다 봤어요' 상태로 바뀝니다. 날짜가 바뀌면 자동으로 30:00 으로 돌아갑니다.
 - **출발까지 남은 시간 프로그레스 바**: 평일 기본 출발 08:40(준비 시작 07:30 기준). 가정통신문에 `등원 시간 10시부터로 조정` 같은 내용이 있으면 **등원 15분 전 출발**로 자동 계산(예: 수능일 09:45). 20분 이내 주황, 10분 이내 빨강. (2026-11-20 기본값을 09:00 → 08:40으로 변경, 기기에 예전 기본값 09:00이 저장돼 있으면 한 번만 자동으로 옮깁니다)
 - **좌우 2분할 큰 그림 타일**: 다은(7세·열매반) / 승민(5세·새싹반) — 각자 **전용 캐릭터 일러스트 아바타**. 타일은 **등원일과 쉬는 날(주말·공휴일)에 따라 루틴이 바뀝니다**.
@@ -75,7 +75,7 @@
   "weather": { ... 날씨 스냅샷 (폴백용) ... },
   "growth": [ { "child": "daeun", "records": [ { "date": "2026-11-17", "height": 121, "weight": 22 } ] } ],
   "holidays": { "2026-12-25": { "name": "성탄절", "type": "공휴일" }, ... },
-  "readingPoster": { "date": "2026-11-21", "proverb": { "badge": "오늘의 속담 1", "title": "백지장도 맞들면 낫다", "subtitle": "...", "summary": "...", "panels": [ { "num": 1, "speech": "으쌰… 무거워!", "caption": "혼자서는 낑낑", "image": "assets/reading/panel1-crop.png" }, ... 4컷 ], "meaning": "...", "promise": "..." }, "word": { "badge": "오늘의 영단어 1", "word": "grow", "meaning": "자라다 · 크다", "audio": "assets/reading/audio/grow.mp3", "bannerImage": "assets/reading/word-banner.png", "examples": [ { "num": 1, "en": "Seeds grow.", "ko": "씨앗이 자라요.", "highlight": ["grow"], "audio": "assets/reading/audio/ex1.mp3" }, ... 3개 ], "tip": "..." } }   ← 📖 오늘의 읽을거리 (속담·영단어 2탭)
+  "readingPoster": { "date": "2026-11-21", "proverb": { "badge": "오늘의 속담 1", "title": "백지장도 맞들면 낫다", "subtitle": "...", "summary": "...", "panels": [ { "num": 1, "speech": "으쌰… 무거워!", "caption": "혼자서는 낑낑", "image": "assets/reading/panel1-crop.png" }, ... 4컷 ], "meaning": "...", "promise": "..." }, "word": { "badge": "오늘의 영단어 1", "word": "share", "meaning": "함께 나누다 · 공유하다", "audio": "assets/reading/audio/share.mp3", "bannerImage": "assets/reading/word-banner.png", "examples": [ { "num": 1, "en": "Let's share.", "ko": "함께 나누자.", "highlight": ["share"], "audio": "assets/reading/audio/share-ex1.mp3" }, ... 3개 ], "tip": "..." } }   ← 📖 오늘의 읽을거리 (속담·영단어 2탭)
 }
 ```
 
@@ -87,7 +87,7 @@
 ## 기술
 
 - 일러스트: `assets/illustrations/` — `{daeun,seungmin}-avatar.png`(아이 캐릭터)와 `tile-*.png`(루틴 타일, 저녁 홈활동 5과목 포함) 모두 **배경 투명 PNG**, 파스텔 플랫 2D 동화풍으로 통일. 같은 이름으로 파일을 바꿔 넣으면 화면에 그대로 반영됩니다.
-- 읽을거리 자산: `assets/reading/` — `panel1~4-crop.png`(속담 4컷), `word-banner.png`(영단어 그림), `ico/*.png`(배지·불빛·새싹 등 작은 아이콘), `audio/*.mp3`(원어민 발음). 속담·영단어 화면은 시안과 같은 **주아(Jua)체**를 `assets/fonts/Jua-Regular.ttf` 로 직접 올려 씁니다(외부 CDN 없음, 첫 로드 뒤 서비스 워커가 캐시).
+- 읽을거리 자산: `assets/reading/` — `panel1~4-crop.png`(속담 4컷), `word-banner.png`(영단어 그림), `ico/*.png`(배지·불빛·새싹 등 작은 아이콘), `audio/*.mp3`(원어민 발음 — 예문 파일명은 `{word}-ex1~3.mp3` 처럼 단어명을 넣어 매일 고유하게 하고, `sw.js` 는 이 MP3 를 **네트워크 우선**으로 받아 옵니다). 속담·영단어 화면은 시안과 같은 **주아(Jua)체**를 `assets/fonts/Jua-Regular.ttf` 로 직접 올려 씁니다(외부 CDN 없음, 첫 로드 뒤 서비스 워커가 캐시).
 - 정적 사이트(HTML/CSS/JS) + Pretendard 웹폰트, GitHub Pages 호스팅
 - **수학 문제는 한 곳에서**: `assets/math-engine.js`(`window.FamilyMathEngine`)의 `LEVEL_CONFIG` 한 곳만 고치면 모아보드(`assets/app.js`)와 거실 보드(`assets/living.js`)가 동시에 바뀝니다. 단계를 올릴 때도 이 파일만 수정하면 됩니다(스크립트는 app.js·living.js보다 먼저 불러옵니다).
 - 데이터 소스: [NEIS Open API](https://open.neis.go.kr/) (급식), [Open-Meteo](https://open-meteo.com/) (날씨), [AirKorea](https://www.airkorea.or.kr/) (미세먼지)

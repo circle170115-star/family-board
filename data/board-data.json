@@ -2002,7 +2002,7 @@
           "num": 1,
           "en": "Let's share.",
           "ko": "함께 나누자.",
-          "audio": "assets/reading/audio/ex1.mp3",
+          "audio": "assets/reading/audio/share-ex1.mp3",
           "highlight": [
             "share"
           ]
@@ -2011,7 +2011,7 @@
           "num": 2,
           "en": "We share toys.",
           "ko": "우리는 장난감을 나눠 써요.",
-          "audio": "assets/reading/audio/ex2.mp3",
+          "audio": "assets/reading/audio/share-ex2.mp3",
           "highlight": [
             "share",
             "toys"
@@ -2021,7 +2021,7 @@
           "num": 3,
           "en": "I share with you!",
           "ko": "내가 너랑 나눌게!",
-          "audio": "assets/reading/audio/ex3.mp3",
+          "audio": "assets/reading/audio/share-ex3.mp3",
           "highlight": [
             "share",
             "you"

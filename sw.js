@@ -4,13 +4,15 @@
  *  - living.html · assets/living.css · assets/living.js · data/board-data.json · manifest 는
  *    **항상 네트워크 우선**. 아침 06:00 브리핑이 갱신한 내용이 캐시에 가려지지 않게 한다.
  *    (네트워크가 죽었을 때만 마지막으로 받아 둔 사본을 쓴다)
+ *  - 읽을거리 발음 MP3 도 **항상 네트워크 우선**. 날마다 예문이 바뀌는데 같은 파일명을
+ *    쓰면 캐시에 남은 어제 음성이 들리므로, 오디오는 캐시보다 네트워크를 먼저 본다.
  *  - 그림·아이콘은 캐시 우선 + 뒤에서 조용히 갱신(용량이 크고 거의 안 바뀐다).
  *  - 그 밖의 요청(모아보드 index.html 등)은 손대지 않고 브라우저에 그대로 맡긴다.
  */
 
 "use strict";
 
-const CACHE = "family-living-v8-20261122b";
+const CACHE = "family-living-v8-20261122c";
 
 /* 설치할 때 미리 받아 둘 것 — 하나가 실패해도 설치 자체는 계속한다 */
 const PRECACHE = [
@@ -24,9 +26,9 @@ const PRECACHE = [
   "assets/icons/icon-512.png",
   "assets/icons/icon-maskable-512.png",
   "assets/reading/audio/share.mp3",
-  "assets/reading/audio/ex1.mp3",
-  "assets/reading/audio/ex2.mp3",
-  "assets/reading/audio/ex3.mp3",
+  "assets/reading/audio/share-ex1.mp3",
+  "assets/reading/audio/share-ex2.mp3",
+  "assets/reading/audio/share-ex3.mp3",
 ];
 
 /* 네트워크 우선 대상 (정규식, 경로 기준) */
@@ -37,9 +39,10 @@ const NETWORK_FIRST = [
   /\/assets\/math-engine\.js$/,
   /\/data\/board-data\.json$/,
   /\/manifest-living\.json$/,
+  /\/assets\/reading\/audio\/.*\.mp3$/,
 ];
 
-const CACHE_FIRST = /\.(png|jpe?g|webp|gif|svg|ico|woff2?|ttf|otf|mp3)$/i;
+const CACHE_FIRST = /\.(png|jpe?g|webp|gif|svg|ico|woff2?|ttf|otf)$/i;
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
