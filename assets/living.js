@@ -298,8 +298,85 @@
       .join(" · ");
   }
 
-  /* ───────────── 날씨 · 옷차림 ───────────── */
-  function outfitTip(minC, pop) {
+  /* ───────────── 날씨 · 옷차림 ─────────────
+     기온은 아침 6시에 구운 board-data.json 값에 멈추지 않고,
+     Open-Meteo 에서 우장산동 실시간 값을 직접 받아 15분마다 새로 그립니다.
+     (미세먼지·옷차림 기준 등 보조 정보는 board-data.json 값을 그대로 씁니다) */
+  const WX_EVERY = 15 * 60 * 1000;      /* 자동 갱신 주기 15분 */
+  const WX_WAKE_GAP = 5 * 60 * 1000;    /* 화면을 다시 켰을 때, 마지막 조회가 5분 넘었으면 바로 재조회 */
+  const WX_FRESH = 3 * 60 * 60 * 1000;  /* 이보다 오래된 실시간 값은 쓰지 않고 아침 데이터로 표시 */
+  const WX_URL = "https://api.open-meteo.com/v1/forecast";
+  /* Open-Meteo(WMO) 날씨 코드 → [그림, 우리말] */
+  const WMO = {
+    0: ["☀️", "맑음"], 1: ["🌤️", "대체로 맑음"], 2: ["⛅", "구름 조금"], 3: ["☁️", "흐림"],
+    45: ["🌫️", "안개"], 48: ["🌫️", "서리 안개"],
+    51: ["🌦️", "약한 이슬비"], 53: ["🌦️", "이슬비"], 55: ["🌧️", "굵은 이슬비"],
+    56: ["🌧️", "어는 이슬비"], 57: ["🌧️", "어는 이슬비"],
+    61: ["🌧️", "약한 비"], 63: ["🌧️", "비"], 65: ["🌧️", "강한 비"],
+    66: ["🌧️", "어는 비"], 67: ["🌧️", "어는 비"],
+    71: ["🌨️", "약한 눈"], 73: ["❄️", "눈"], 75: ["❄️", "많은 눈"], 77: ["🌨️", "눈 날림"],
+    80: ["🌦️", "약한 소나기"], 81: ["🌧️", "소나기"], 82: ["⛈️", "강한 소나기"],
+    85: ["🌨️", "눈 소나기"], 86: ["❄️", "강한 눈 소나기"],
+    95: ["⛈️", "뇌우"], 96: ["⛈️", "우박 동반 뇌우"], 99: ["⛈️", "우박 동반 뇌우"],
+  };
+  let liveWx = null;      /* 마지막으로 받아 둔 실시간 날씨 */
+  let liveWxAt = 0;       /* 마지막 조회 시각(성공·실패 모두) */
+
+  const wmoOf = (code) => WMO[Number(code)] || ["🌡️", "날씨"];
+  /* 숫자로 쓸 수 있는 값만 숫자로 (null·빈칸을 0° 로 읽지 않게) */
+  const num = (v) => (v === null || v === undefined || v === "" ? null : Number.isFinite(Number(v)) ? Number(v) : null);
+  const liveOk = () => !!liveWx && Date.now() - liveWx.at < WX_FRESH;
+
+  /* 우장산동(보드 데이터의 위치) 기준 실시간 날씨 주소 */
+  function liveWeatherUrl() {
+    const loc = (data && data.family && data.family.location) || {};
+    const lat = Number.isFinite(Number(loc.lat)) ? Number(loc.lat) : 37.549;
+    const lon = Number.isFinite(Number(loc.lon)) ? Number(loc.lon) : 126.836;
+    return WX_URL + "?latitude=" + lat + "&longitude=" + lon +
+      "&current=temperature_2m,apparent_temperature,weather_code,precipitation" +
+      "&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code" +
+      "&timezone=Asia%2FSeoul&forecast_days=1";
+  }
+
+  /* 실시간 날씨 받기 — 실패하면 아무것도 바꾸지 않고 board-data.json 값이 그대로 남습니다 */
+  async function fetchLiveWx() {
+    liveWxAt = Date.now();
+    let timer = null;
+    try {
+      const opt = { cache: "no-store" };
+      if (typeof AbortController === "function") {
+        const ctl = new AbortController();
+        timer = setTimeout(() => ctl.abort(), 8000);
+        opt.signal = ctl.signal;
+      }
+      const res = await fetch(liveWeatherUrl(), opt);
+      if (!res || !res.ok) throw new Error("HTTP " + (res ? res.status : "?"));
+      const j = await res.json();
+      const cur = (j && j.current) || {};
+      const dd = (j && j.daily) || {};
+      const temp = Number(cur.temperature_2m);
+      if (!Number.isFinite(temp)) throw new Error("no temperature");
+      const first = (arr) => (Array.isArray(arr) && Number.isFinite(Number(arr[0])) ? Number(arr[0]) : null);
+      liveWx = {
+        at: Date.now(),
+        temp: temp,
+        feels: Number.isFinite(Number(cur.apparent_temperature)) ? Number(cur.apparent_temperature) : null,
+        code: Number(cur.weather_code),
+        high: first(dd.temperature_2m_max),
+        low: first(dd.temperature_2m_min),
+        pop: first(dd.precipitation_probability_max),
+        dayCode: Array.isArray(dd.weather_code) && dd.weather_code.length ? Number(dd.weather_code[0]) : null,
+      };
+      return true;
+    } catch (e) {
+      return false;
+    } finally {
+      if (timer) clearTimeout(timer);
+      if (data) renderHead();   /* 성공이든 실패든 기준 시각을 다시 찍습니다 */
+    }
+  }
+
+  function outfitTip(minC, pop, nowC) {
     if (!Number.isFinite(minC)) return "날씨 정보를 확인해 주세요";
     let tip;
     if (minC >= 20) tip = "반팔로도 시원해요";
@@ -309,16 +386,45 @@
     else tip = "패딩·장갑·목도리까지 꼼꼼히! 새벽이 더 추워요";
     if (pop >= 60) tip += " · 우산 필수! ☂️";
     else if (pop >= 30) tip += " · 우산 하나쯤은 챙겨요";
+    /* 아침 최저 기준 안내라, 지금이 그보다 훨씬 포근하면 그만큼 보정합니다 */
+    if (Number.isFinite(nowC) && nowC >= 2 && nowC - minC >= 6) tip += " · 지금은 겉옷 벗어도 좋아요";
     return tip;
   }
+
+  /* 보드에 그릴 오늘 날씨 — 실시간 값이 있으면 그것으로, 없으면 아침 데이터로 */
   function todayWeather() {
     const w = data.weather || {};
+    if (liveOk()) {
+      const lw = liveWx;
+      const nc = wmoOf(lw.code);
+      const dc = lw.dayCode == null ? nc : wmoOf(lw.dayCode);
+      const t = new Date(lw.at);
+      return {
+        live: true,
+        stamp: pad(t.getHours()) + ":" + pad(t.getMinutes()),
+        now: { temp: lw.temp, feels: lw.feels, condition: nc[1] },
+        nc: nc,
+        day: {
+          date: todayStr,
+          high: lw.high,
+          low: lw.low,
+          precip: lw.pop,
+          condition: dc[1],
+        },
+        dc: dc,
+        air: w.air || {},
+      };
+    }
     const n = w.now || {};
     const days = w.days || [];
     const dd = days.find((x) => x.date === todayStr) || days[0] || {};
     const nc = COND[n.condition] || ["🌡️", n.condition || ""];
     const dc = COND[dd.condition] || ["🌡️", dd.condition || ""];
-    return { now: n, nc: nc, day: dd, dc: dc, air: w.air || {} };
+    /* 아침 데이터로 보여 줄 때는 그 데이터의 관측 시각을 기준으로 적습니다 */
+    let stamp = "";
+    const at = Date.parse(w.obsTime || "");
+    if (Number.isFinite(at)) { const t = new Date(at); stamp = pad(t.getHours()) + ":" + pad(t.getMinutes()); }
+    return { live: false, stamp: stamp, now: n, nc: nc, day: dd, dc: dc, air: w.air || {} };
   }
   function renderHead() {
     const d = new Date();
@@ -326,16 +432,23 @@
 
     const w = todayWeather();
     const n = w.now, dd = w.day;
-    const temp = Number(n.temp);
-    let wx = w.nc[0] + ' <em>' + (Number.isFinite(temp) ? Math.round(temp) + "°" : "—") + "</em> " + esc(w.nc[1]);
-    if (Number.isFinite(Number(n.feels))) wx += " (체감 " + Math.round(Number(n.feels)) + "°)";
-    if (Number.isFinite(Number(dd.high)) && Number.isFinite(Number(dd.low))) {
-      wx += " · 최고 " + Math.round(dd.high) + "° / 최저 " + Math.round(dd.low) + "°";
+    const temp = num(n.temp);
+    let wx = w.nc[0] + ' <em>' + (temp != null ? Math.round(temp) + "°" : "—") + "</em> " + esc(w.nc[1]);
+    if (num(n.feels) != null) wx += " (체감 " + Math.round(num(n.feels)) + "°)";
+    if (num(dd.high) != null && num(dd.low) != null) {
+      wx += " · 최고 " + Math.round(num(dd.high)) + "° / 최저 " + Math.round(num(dd.low)) + "°";
     }
-    if (Number.isFinite(Number(dd.precip))) wx += " · 강수 " + dd.precip + "%";
-    if (dd.condition) wx += " · " + w.dc[0] + " " + esc(w.dc[1]);
-    $("#wxLine").innerHTML = wx;
-    $("#outfitLine").innerHTML = "🎒 등원 옷차림 · <b>" + esc(outfitTip(Number(dd.low), Number(dd.precip))) + "</b>";
+    if (num(dd.precip) != null) wx += " · 강수 " + num(dd.precip) + "%";
+    /* 지금 날씨와 오늘 전체 날씨가 다를 때만 한 번 더 (같으면 같은 말이 두 번 나옵니다) */
+    if (dd.condition && dd.condition !== n.condition) wx += " · " + w.dc[0] + " " + esc(dd.condition);
+    const tip = w.live
+      ? "실시간 날씨 · Open-Meteo · " + WX_EVERY / 60000 + "분마다 새로 받아요"
+      : "실시간 날씨를 받지 못해 아침 데이터로 표시하고 있어요";
+    const stamp = w.stamp
+      ? '<span class="wx-stamp" title="' + esc(tip) + '">' + esc(w.stamp) + " 기준</span>"
+      : "";
+    $("#wxLine").innerHTML = '<span class="wx-main">' + wx + "</span>" + stamp;
+    $("#outfitLine").innerHTML = "🎒 등원 옷차림 · <b>" + esc(outfitTip(num(dd.low), num(dd.precip), temp)) + "</b>";
   }
 
   /* ───────────── 오늘 유치원 소식 칩 ───────────── */
@@ -1955,6 +2068,7 @@
     if (isRestDay(todayStr)) hideAlarmBanner();   /* 어제 남은 알람 배너가 쉬는 날에 남지 않게 */
     toast("새로운 하루! 오늘 체크를 새로 시작해요 🌞");
     refreshData(false);
+    fetchLiveWx();   /* 날짜가 바뀌면 최고·최저도 새 날짜로 */
   }
   function tick() {
     const d = new Date();
@@ -2302,6 +2416,7 @@
   renderAll();
   wire();
   tick();
+  fetchLiveWx();   /* 페이지를 열면 바로 우장산동 실시간 날씨로 덮어쓰고, 15분마다 새로 받습니다 */
   /* 검증용 — 주소에 debug=1 이 있을 때만 열립니다 (보드 화면에는 영향 없음) */
   if (DEBUG) {
     window.__livingDebug = {
@@ -2313,14 +2428,20 @@
       alarmShowing: () => { const b = $("#alarmBanner"); return !!b && b.classList.contains("show"); },
       alarmDone: () => JSON.parse(JSON.stringify(store.alarmDoneBySlot || {})),
       departure: () => departureInfo(),
+      weather: () => todayWeather(),
+      liveWx: () => (liveWx ? JSON.parse(JSON.stringify(liveWx)) : null),
+      refreshWeather: () => fetchLiveWx(),
     };
   }
   setInterval(tick, 1000);
   setInterval(() => { if (iso(new Date()) !== todayStr) dayRollover(); }, 20000);
   setInterval(() => refreshData(false), 10 * 60 * 1000);
+  setInterval(() => fetchLiveWx(), WX_EVERY);
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) return;
     if (iso(new Date()) !== todayStr) dayRollover();
     else refreshData(false);
+    /* 화면을 다시 켰을 때, 마지막 날씨 조회가 5분 넘었으면 바로 새로 받습니다 */
+    if (Date.now() - liveWxAt >= WX_WAKE_GAP) fetchLiveWx();
   });
 })();

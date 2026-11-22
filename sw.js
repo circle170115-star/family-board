@@ -8,11 +8,13 @@
  *    쓰면 캐시에 남은 어제 음성이 들리므로, 오디오는 캐시보다 네트워크를 먼저 본다.
  *  - 그림·아이콘은 캐시 우선 + 뒤에서 조용히 갱신(용량이 크고 거의 안 바뀐다).
  *  - 그 밖의 요청(모아보드 index.html 등)은 손대지 않고 브라우저에 그대로 맡긴다.
+ *  - api.open-meteo.com(실시간 날씨)은 **절대 캐시하지 않는다**. 보드가 어제 기온을
+ *    보여 주면 안 되므로, 외부 주소는 아래 fetch 처리에서 그대로 네트워크로 보낸다.
  */
 
 "use strict";
 
-const CACHE = "family-living-v8-20261122g";
+const CACHE = "family-living-v9-20261122h";
 
 /* 설치할 때 미리 받아 둘 것 — 하나가 실패해도 설치 자체는 계속한다 */
 const PRECACHE = [
@@ -89,7 +91,7 @@ self.addEventListener("fetch", (event) => {
   } catch (e) {
     return;
   }
-  if (url.origin !== self.location.origin) return; // Pretendard CDN 등은 그대로
+  if (url.origin !== self.location.origin) return; // Pretendard CDN · api.open-meteo.com(실시간 날씨) 등은 캐시 없이 그대로
 
   const path = url.pathname;
   const key = url.origin + path; // 쿼리(?v=20261119k)는 무시하고 경로로 저장

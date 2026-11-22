@@ -85,8 +85,10 @@ body.living::before{
 .lv-time small{font-size:.4em;font-weight:800;color:var(--muted);letter-spacing:-.01em}
 .lv-date{margin-top:6px;font-size:clamp(11.5px,1.8vh,15px);font-weight:750;color:var(--ink2);white-space:nowrap}
 .lv-mid{flex:1;min-width:0}
-.lv-wx{font-size:clamp(13.5px,2.1vh,20px);font-weight:800;letter-spacing:-.025em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lv-wx{display:flex;align-items:baseline;gap:7px;font-size:clamp(13.5px,2.1vh,20px);font-weight:800;letter-spacing:-.025em;white-space:nowrap;overflow:hidden}
 .lv-wx em{font-style:normal;color:#2C6BC0}
+.lv-wx .wx-main{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lv-wx .wx-stamp{flex:none;font-size:.68em;font-weight:700;color:var(--muted);letter-spacing:-.01em}
 .lv-outfit{margin-top:3px;font-size:clamp(11px,1.7vh,15px);font-weight:650;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lv-outfit b{color:#C4621D;font-weight:800}
 .lv-actions{flex:none;display:flex;align-items:center;gap:8px}
@@ -491,6 +493,8 @@ body.living::before{
   .lv-clock{min-width:0;padding-right:0;border-right:0}
   .lv-mid{order:3;flex-basis:100%}
   .lv-wx,.lv-outfit,.lv-date{white-space:normal}
+  .lv-wx{display:block}
+  .lv-wx .wx-stamp{margin-left:6px}
   .lv-top{gap:10px}
   .lv-topmid{display:flex;flex-direction:column;gap:10px}
   .lv-act{min-height:86px;border-radius:20px}
