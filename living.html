@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#FFFBF3">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="assets/living.css?v=20261122b">
+<link rel="stylesheet" href="assets/living.css?v=20261122c">
 <link rel="manifest" href="manifest-living.json">
 <meta name="application-name" content="등원 보드">
 <meta name="mobile-web-app-capable" content="yes">
@@ -130,9 +130,26 @@
         <button class="rd-tab" id="rdTabWord" type="button" role="tab" aria-selected="false" aria-controls="rdStage" data-tab="word" tabindex="-1"><span aria-hidden="true">🌱</span> 오늘의 영단어</button>
       </div>
       <span class="rd-sub" id="rdSub"></span>
+      <button class="rd-video" id="rdVideoBtn" type="button" aria-label="오늘의 읽을거리를 영상처럼 소리와 함께 자동 재생으로 보기"><span class="rd-video-ico" aria-hidden="true">🎬</span> 영상으로 보기</button>
       <button class="rd-close" id="rdClose" type="button" aria-label="읽을거리를 닫고 보드로 돌아가기"><span aria-hidden="true">✕</span> 닫기</button>
     </header>
     <div class="rd-stage" id="rdStage" role="tabpanel" aria-labelledby="rdTabProverb"></div>
+
+    <!-- 🎬 영상으로 보기 — 집중 극장(자동 재생). 속담 영상 → 영단어 영상이 이어서 재생됩니다 -->
+    <div class="rd-theater" id="rdTheater" hidden>
+      <div class="th-bar">
+        <span class="th-now" id="thNow">속담 영상</span>
+        <div class="th-dots" id="thDots" aria-label="영상 장면"></div>
+        <button class="th-exit" id="thExit" type="button" aria-label="영상을 그만 보고 읽을거리로 돌아가기"><span aria-hidden="true">✕</span> 그만 보기</button>
+      </div>
+      <div class="th-screen" id="thScreen" role="region" aria-live="polite" aria-label="오늘의 읽을거리 영상"></div>
+      <div class="th-ctrl">
+        <button class="th-btn is-stop" id="thStop" type="button"><span aria-hidden="true">⏹</span> 멈추기</button>
+        <button class="th-btn" id="thReplay" type="button"><span aria-hidden="true">🔊</span> 다시 듣기</button>
+        <button class="th-btn" id="thRestart" type="button"><span aria-hidden="true">↺</span> 다시 보기</button>
+        <button class="th-btn is-next" id="thNext" type="button" data-go="word"><span aria-hidden="true">▶</span> <span id="thNextTxt">다음: 영단어 보기</span></button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -222,6 +239,6 @@
 <noscript><p style="text-align:center;padding:24px">이 보드는 JavaScript가 필요해요.</p></noscript>
 <script src="assets/kr-holidays.js?v=20261122a"></script>
 <script src="assets/math-engine.js?v=20261121a"></script>
-<script src="assets/living.js?v=20261122b"></script>
+<script src="assets/living.js?v=20261122c"></script>
 </body>
 </html>

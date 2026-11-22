@@ -888,6 +888,260 @@ body.is-reading{overflow:hidden}
 .wd-tip .hl{color:#96751A;background:linear-gradient(180deg,rgba(255,255,255,0) 74%,#FFE9A8 74%);padding:0 2px}
 .wd-nw{white-space:nowrap}
 
+/* ── 5세도 혼자 누르는 그림 카드 — 누르면 그 장면 한국어 이야기가 나옵니다 ── */
+.pv-panel.is-tappable,.pv-mini.a.is-tappable{
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:transform .12s,box-shadow .18s,border-color .18s;
+}
+.pv-panel.is-tappable:active{transform:scale(.988)}
+.pv-panel.is-saying{border-color:#B49BEA;box-shadow:0 0 0 3px rgba(180,155,234,.45),0 10px 20px -14px rgba(90,70,150,.8)}
+.pv-spk{
+  position:absolute;right:6px;bottom:6px;width:1.95em;height:1.95em;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.92);font-size:clamp(9px,1.5vh,14px);
+  box-shadow:0 3px 8px -4px rgba(70,50,120,.55);
+}
+.pv-panel.is-saying .pv-spk{background:#8E7CC3;animation:wdSpkPulse .75s ease-in-out infinite}
+.pv-mini.a.is-saying{box-shadow:0 0 0 3px rgba(180,155,234,.45)}
+.pv-tap-hint{display:block;text-align:center;font-weight:800;font-size:clamp(9.5px,1.5vh,13.5px);color:#8E7CC3}
+
+/* ── 🎬 영상으로 보기 — 모달 상단의 큰 버튼 ── */
+.rd-video{
+  flex:none;display:inline-flex;align-items:center;gap:clamp(5px,.6vw,9px);cursor:pointer;
+  font-family:JuaBoard;font-weight:400;letter-spacing:0;white-space:nowrap;
+  font-size:clamp(14px,2.55vh,25px);line-height:1.1;
+  padding:clamp(6px,1.25vh,12px) clamp(13px,1.9vw,28px);
+  border-radius:999px;border:3px solid #F2B25E;color:#7B3D00;
+  background:linear-gradient(180deg,#FFEFD2,#FFD391);
+  -webkit-tap-highlight-color:transparent;
+  animation:rdVideoGlow 2.6s ease-in-out infinite;
+  transition:transform .12s,filter .15s;
+}
+.rd-video:hover{filter:brightness(1.03)}
+.rd-video:active{transform:scale(.98)}
+.rd-video-ico{font-size:1.12em;line-height:1}
+@keyframes rdVideoGlow{
+  0%,100%{box-shadow:0 14px 28px -20px rgba(170,90,10,.95),0 0 0 0 rgba(255,190,110,.55)}
+  50%{box-shadow:0 16px 30px -18px rgba(170,90,10,.95),0 0 0 7px rgba(255,200,130,0)}
+}
+
+/* ── 🎬 극장(자동 재생) 뷰 ──
+   읽을거리 모달 위를 덮는 영상 화면. 제목 카드 → 1~4컷(Ken Burns) → 뜻/약속,
+   영단어는 큰 단어 → 배너 → 예문 1·2·3 순서로 소리와 함께 저절로 넘어갑니다. */
+body.is-theater .lv-reading{background-color:#120C26}
+.rd-theater{
+  position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;
+  gap:clamp(6px,1vh,12px);
+  padding:clamp(6px,1.1vh,11px) clamp(7px,1.2vw,16px) clamp(7px,1.2vh,12px);
+  border-radius:clamp(16px,2.2vh,26px);
+  background:radial-gradient(130% 100% at 50% -12%,#3E2E6B 0%,#241A44 46%,#120C26 100%);
+  box-shadow:0 34px 90px -46px rgba(10,4,30,.95),inset 0 0 0 2px rgba(255,255,255,.07);
+  animation:thIn .28s ease-out both;
+}
+.rd-theater[hidden]{display:none}
+@keyframes thIn{from{opacity:0;transform:scale(.986)}to{opacity:1;transform:none}}
+
+.th-bar{flex:none;display:flex;align-items:center;gap:clamp(8px,1vw,16px);min-width:0}
+.th-now{
+  flex:none;font-family:JuaBoard;font-size:clamp(12px,1.9vh,18px);color:#FFDDA6;white-space:nowrap;
+  background:rgba(255,214,150,.12);border:1.5px solid rgba(255,214,150,.34);border-radius:999px;padding:3px 14px;
+}
+.th-dots{flex:1;display:flex;align-items:center;justify-content:center;gap:clamp(4px,.6vw,8px);min-width:0}
+.th-dot{
+  width:clamp(9px,1.25vh,13px);height:clamp(9px,1.25vh,13px);border-radius:999px;padding:0;
+  background:rgba(255,255,255,.22);border:0;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:width .25s,background .2s,transform .15s;
+}
+.th-dot.is-done{background:rgba(255,214,150,.45)}
+.th-dot.is-on{width:clamp(22px,3vh,34px);background:#FFD58A}
+.th-exit{
+  flex:none;display:inline-flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap;
+  font-family:JuaBoard;font-size:clamp(12px,1.9vh,18px);color:#E9DEFF;
+  background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.24);border-radius:999px;
+  padding:4px 14px;-webkit-tap-highlight-color:transparent;
+}
+.th-exit:active{transform:scale(.97)}
+
+.th-screen{
+  position:relative;flex:1;min-height:0;overflow:hidden;
+  border-radius:clamp(12px,1.9vh,22px);background:#0B0718;
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.09),0 18px 40px -30px #000;
+}
+.th-slide{position:absolute;inset:0;animation:thFade .42s ease-out both}
+@keyframes thFade{from{opacity:0}to{opacity:1}}
+@keyframes thRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* 제목·뜻·끝 카드 */
+.th-cover{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:clamp(5px,1.4vh,16px);padding:clamp(12px,3vh,40px) clamp(14px,3.4vw,60px);text-align:center;
+  background:radial-gradient(90% 78% at 50% 4%,#5B3E9E 0%,#2C1D50 54%,#150E2C 100%);
+}
+.th-cover.is-word{background:radial-gradient(90% 78% at 50% 4%,#1F5E45 0%,#173F35 54%,#0B1F1B 100%)}
+.th-cover.is-bridge{background:radial-gradient(90% 78% at 50% 4%,#6A4A2E 0%,#3B2740 56%,#150E2C 100%)}
+.th-cover.is-bye{background:radial-gradient(90% 78% at 50% 4%,#4A3C86 0%,#251A48 56%,#120C26 100%)}
+.th-badge{
+  font-family:JuaBoard;font-size:clamp(11px,1.85vh,19px);color:#FFE6BA;white-space:nowrap;
+  background:rgba(255,255,255,.1);border:1.5px solid rgba(255,230,185,.4);border-radius:999px;padding:4px 16px;
+}
+.th-badge.is-word{color:#C8F5DC;border-color:rgba(180,240,210,.42);background:rgba(120,220,175,.12)}
+.th-title{
+  margin:0;font-family:JuaBoard;font-weight:400;letter-spacing:-.01em;word-break:keep-all;
+  font-size:clamp(26px,7vh,76px);line-height:1.16;color:#fff;
+  text-shadow:0 6px 26px rgba(0,0,0,.45);animation:thRise .6s cubic-bezier(.2,.9,.3,1.1) both;
+}
+.th-title em{font-style:normal;color:#FFE1A8}
+.th-title .th-en{color:#C8F5DC}
+.th-sub{margin:0;font-weight:900;font-size:clamp(15px,3vh,32px);color:#D9C8FF;word-break:keep-all}
+.th-sum{margin:0;max-width:44em;font-weight:750;font-size:clamp(13px,2.5vh,26px);line-height:1.42;color:#EFE7FF;word-break:keep-all}
+.th-cue{font-weight:800;font-size:clamp(10px,1.7vh,15px);color:#B7A6E0;letter-spacing:0}
+.th-mean-pill{
+  margin:0;font-family:JuaBoard;font-size:clamp(16px,3.2vh,36px);color:#FFF1D8;word-break:keep-all;
+  background:rgba(255,255,255,.1);border:2px solid rgba(255,230,185,.36);border-radius:999px;
+  padding:clamp(4px,1vh,12px) clamp(14px,2.4vw,38px);
+}
+/* 큰 영단어 — 글자가 하나씩 통통 튀어 오릅니다 */
+.th-word{
+  display:flex;align-items:baseline;justify-content:center;
+  font-family:JuaBoard;line-height:.98;letter-spacing:-.02em;font-size:clamp(54px,16vh,170px);
+}
+.th-word i{font-style:normal;display:inline-block;animation:thBounce .85s cubic-bezier(.2,.9,.3,1.5) both}
+.th-word .w1{color:#7BE0AE}
+.th-word .w2{color:#8FC4FF}
+.th-word .w3{color:#FFC27A}
+.th-word .w4{color:#D3A8FF}
+@keyframes thBounce{
+  0%{opacity:0;transform:translateY(34%) scale(.72)}
+  62%{opacity:1;transform:translateY(-7%) scale(1.07)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+/* 4컷 — 그림이 천천히 확대·이동하고 아래에 큰 자막이 깔립니다 */
+.th-shot{position:absolute;inset:0;margin:0;overflow:hidden;background:#0B0718}
+.th-shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 44%;will-change:transform}
+.th-shot.kb1 img{animation:kbA 15s ease-out both}
+.th-shot.kb2 img{animation:kbB 15s ease-out both}
+.th-shot.kb3 img{animation:kbC 15s ease-out both}
+.th-shot.kb4 img{animation:kbD 15s ease-out both}
+@keyframes kbA{from{transform:scale(1.03) translate3d(0,0,0)}to{transform:scale(1.17) translate3d(-1.6%,-1.4%,0)}}
+@keyframes kbB{from{transform:scale(1.16) translate3d(1.5%,1.1%,0)}to{transform:scale(1.02) translate3d(0,0,0)}}
+@keyframes kbC{from{transform:scale(1.04) translate3d(1.4%,-1%,0)}to{transform:scale(1.18) translate3d(-1.2%,1%,0)}}
+@keyframes kbD{from{transform:scale(1.15) translate3d(-1.4%,1.2%,0)}to{transform:scale(1.03) translate3d(0,0,0)}}
+.th-num{
+  position:absolute;left:clamp(8px,1.4vw,20px);top:clamp(8px,1.4vh,18px);
+  width:clamp(28px,4.4vh,48px);height:clamp(28px,4.4vh,48px);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.92);color:#5B4690;font-family:JuaBoard;font-size:clamp(13px,2.2vh,24px);
+  box-shadow:0 6px 16px -8px rgba(0,0,0,.65);
+}
+.th-cap{
+  position:absolute;left:0;right:0;bottom:0;text-align:center;
+  padding:clamp(10px,2vh,26px) clamp(12px,2.4vw,40px) clamp(12px,2.2vh,28px);
+  background:linear-gradient(180deg,rgba(11,6,28,0) 0%,rgba(11,6,28,.55) 44%,rgba(9,5,24,.92) 100%);
+}
+.th-speech{
+  display:block;font-family:JuaBoard;font-weight:400;font-size:clamp(20px,4.6vh,52px);line-height:1.16;
+  color:#fff;text-shadow:0 3px 12px rgba(0,0,0,.6);word-break:keep-all;
+}
+.th-caption{display:inline-block;margin-top:clamp(4px,.9vh,10px);font-weight:900;font-size:clamp(12px,2.3vh,24px);color:#FFDCA0;text-shadow:0 2px 10px rgba(0,0,0,.7)}
+/* 뜻·오늘의 약속 카드 */
+.th-mean{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:clamp(8px,2vh,22px);padding:clamp(12px,3vh,38px) clamp(14px,3.4vw,56px);text-align:center;
+  background:radial-gradient(90% 80% at 50% 0%,#3E2E6B 0%,#211741 58%,#120C26 100%);
+}
+.th-card{
+  width:min(100%,1000px);border-radius:clamp(14px,2.2vh,26px);
+  padding:clamp(9px,1.9vh,22px) clamp(14px,2.6vw,36px);text-align:left;
+  box-shadow:0 18px 40px -30px #000;animation:thRise .55s ease-out both;
+}
+.th-card:nth-child(2){animation-delay:.14s}
+.th-card b{display:block;font-family:JuaBoard;font-weight:400;font-size:clamp(12px,2.1vh,22px);margin-bottom:clamp(2px,.5vh,6px)}
+.th-card p{margin:0;font-weight:750;font-size:clamp(14px,2.9vh,32px);line-height:1.38;word-break:keep-all}
+.th-card.a{background:linear-gradient(180deg,#FFF8EC,#FFE9CC);border:2.5px solid #F3D9A6;color:#6A4A12}
+.th-card.a b{color:#9A6A16}
+.th-card.b{background:linear-gradient(180deg,#EFFBF4,#DCF3E7);border:2.5px solid #A9D8C1;color:#205B42}
+.th-card.b b{color:#2C7A58}
+/* 배너 그림 — 천천히 다가갑니다 */
+.th-banner{position:absolute;inset:0;display:grid;place-items:center;padding:clamp(6px,1.4vh,16px);background:#0F241F}
+.th-banner img{
+  max-width:100%;max-height:100%;width:auto;height:auto;border-radius:clamp(10px,1.6vh,20px);
+  box-shadow:0 26px 60px -34px #000;animation:thZoom 3.2s ease-out both;
+}
+@keyframes thZoom{from{transform:scale(1)}to{transform:scale(1.1)}}
+.th-banner-word{
+  position:absolute;left:50%;bottom:clamp(8px,2.2vh,24px);transform:translateX(-50%);
+  font-family:JuaBoard;font-size:clamp(20px,4.4vh,52px);color:#fff;white-space:nowrap;
+  background:rgba(12,40,32,.55);border-radius:999px;padding:0 clamp(14px,2vw,26px);
+  text-shadow:0 4px 16px rgba(0,0,0,.6);
+}
+/* 예문 카드 */
+.th-ex{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:clamp(6px,1.6vh,18px);padding:clamp(14px,3vh,40px) clamp(14px,3.4vw,56px);text-align:center;
+  background:radial-gradient(90% 80% at 50% 6%,#1F5E45 0%,#153A31 56%,#0A1A17 100%);
+}
+.th-ex-n{
+  width:clamp(34px,5.6vh,64px);height:clamp(34px,5.6vh,64px);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:#57A884;border:2.5px solid rgba(255,255,255,.6);color:#fff;
+  font-family:JuaBoard;font-size:clamp(16px,2.8vh,30px);
+}
+.th-ex-en{
+  margin:0;font-weight:900;font-size:clamp(26px,6.6vh,74px);line-height:1.12;color:#fff;
+  letter-spacing:-.01em;word-break:keep-all;animation:thRise .5s ease-out both;
+}
+.th-ex-ko{margin:0;font-weight:800;font-size:clamp(14px,3vh,34px);color:#CBEFDA;word-break:keep-all}
+.th-ex .hl{
+  color:#FFE28A;background:linear-gradient(180deg,rgba(255,255,255,0) 72%,rgba(255,214,110,.42) 72%);
+  padding:0 3px;border-radius:3px;
+}
+/* 속담 → 영단어 1.5초 다리 카드 */
+.th-count{
+  width:min(64%,520px);height:clamp(6px,1.1vh,12px);border-radius:999px;
+  background:rgba(255,255,255,.16);overflow:hidden;margin-top:clamp(4px,1vh,10px);
+}
+.th-count i{display:block;height:100%;width:100%;border-radius:999px;background:linear-gradient(90deg,#FFD98A,#FFB071);transform-origin:left center;animation:thCount 1.5s linear forwards}
+@keyframes thCount{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* 큰 조작 버튼 — 5세도 한 번에 누르는 크기 */
+.th-ctrl{flex:none;display:flex;align-items:stretch;gap:clamp(5px,.9vw,13px)}
+.th-btn{
+  flex:1;min-height:clamp(44px,8.2vh,84px);display:inline-flex;align-items:center;justify-content:center;
+  gap:clamp(4px,.6vw,9px);cursor:pointer;white-space:nowrap;
+  font-family:JuaBoard;font-weight:400;font-size:clamp(13px,2.35vh,25px);line-height:1.1;
+  border-radius:clamp(12px,1.9vh,22px);border:2.5px solid rgba(255,255,255,.24);
+  background:rgba(255,255,255,.1);color:#F1E9FF;
+  box-shadow:0 16px 34px -28px #000;-webkit-tap-highlight-color:transparent;
+  transition:transform .12s,background .15s,filter .15s;
+}
+.th-btn:active{transform:scale(.985)}
+.th-btn:hover{background:rgba(255,255,255,.16)}
+.th-btn.is-stop{background:rgba(255,120,120,.16);border-color:rgba(255,150,150,.46);color:#FFD7D7}
+.th-btn.is-next{
+  flex:1.55;background:linear-gradient(180deg,#FFE7BE,#FFC97C);border-color:#E9AC5C;color:#6E3700;
+  box-shadow:0 18px 34px -26px rgba(255,180,90,.9);
+}
+
+/* 세로 화면에서는 그림이 잘리지 않게 다 보여 줍니다 */
+@media (max-aspect-ratio:1/1){
+  .th-shot img{object-fit:contain}
+}
+@media (max-width:900px),(max-height:560px){
+  .rd-video{font-size:14px;padding:7px 13px;border-width:2.5px}
+  .th-now{display:none}
+  .th-title{font-size:clamp(22px,5.6vh,40px)}
+  .th-speech{font-size:18px}
+  .th-ex-en{font-size:clamp(22px,5.6vh,44px)}
+  .th-card p{font-size:14px}
+  .th-btn{font-size:14px;min-height:52px;border-radius:14px}
+  .th-word{font-size:clamp(46px,13vh,110px)}
+}
+@media (prefers-reduced-motion:reduce){
+  .rd-video{animation:none}
+  .th-shot img,.th-word i,.th-title,.th-ex-en,.th-count i,.th-card{animation:none}
+  .th-dot{transition:none}
+}
+
 .wd-right{gap:clamp(5px,.95vh,10px)}
 .wd-tools{flex:none;display:flex;align-items:center;gap:clamp(6px,.8vw,12px);min-width:0}
 .wd-all{

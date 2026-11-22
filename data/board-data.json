@@ -1,8 +1,8 @@
 {
   "meta": {
     "version": 1,
-    "updatedAt": "2026-11-22T06:04:50+09:00",
-    "updatedBy": "아침 브리핑 자동 갱신",
+    "updatedAt": "2026-11-22T10:20:00+09:00",
+    "updatedBy": "포근이 · 영상(자동재생) 모드 + 속담 한국어 음성 추가",
     "schemaNote": "일정·급식·날씨·건강 데이터는 이 파일만 고치면 보드에 반영됩니다. 자세한 구조는 README.md 참고."
   },
   "family": {
@@ -1962,34 +1962,40 @@
       "title": "가는 말이 고와야 오는 말이 곱다",
       "subtitle": "예쁜 말 한마디, 다정한 대답이 돌아와요",
       "summary": "내가 먼저 웃으며 예쁘게 말하면, 상대방도 기분 좋게 대답해 줘요!",
+      "audio": "assets/reading/audio/proverb-20261122-title.mp3",
       "panels": [
         {
           "num": 1,
           "speech": "\"이거 내 거야, 만지지 마!\"",
           "caption": "퉁명스러운 한마디",
-          "image": "assets/reading/panel1-crop.png"
+          "image": "assets/reading/panel1-crop.png",
+          "audio": "assets/reading/audio/proverb-20261122-p1.mp3"
         },
         {
           "num": 2,
           "speech": "\"흥, 나도 안 빌려줄 거야!\"",
           "caption": "마음이 상했어요",
-          "image": "assets/reading/panel2-crop.png"
+          "image": "assets/reading/panel2-crop.png",
+          "audio": "assets/reading/audio/proverb-20261122-p2.mp3"
         },
         {
           "num": 3,
           "speech": "\"누나, 우리 같이 갖고 놀자!\"",
           "caption": "먼저 건넨 고운 말",
-          "image": "assets/reading/panel3-crop.png"
+          "image": "assets/reading/panel3-crop.png",
+          "audio": "assets/reading/audio/proverb-20261122-p3.mp3"
         },
         {
           "num": 4,
           "speech": "\"고마워! 너부터 먼저 해!\"",
           "caption": "다정한 대답이 쏙",
-          "image": "assets/reading/panel4-crop.png"
+          "image": "assets/reading/panel4-crop.png",
+          "audio": "assets/reading/audio/proverb-20261122-p4.mp3"
         }
       ],
       "meaning": "내가 먼저 고운 말로 대하면 상대방도 예쁘고 다정한 말로 돌아온다는 뜻이에요.",
-      "promise": "오늘 가족에게 \"고마워\", \"사랑해\" 먼저 말해 볼까요?"
+      "promise": "오늘 가족에게 \"고마워\", \"사랑해\" 먼저 말해 볼까요?",
+      "meaningAudio": "assets/reading/audio/proverb-20261122-meaning.mp3"
     },
     "word": {
       "badge": "오늘의 영단어 2",
