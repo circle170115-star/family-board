@@ -890,11 +890,11 @@ body.is-reading{overflow:hidden}
 .wd-nw{white-space:nowrap}
 
 /* ── 5세도 혼자 누르는 그림 카드 — 누르면 그 장면 한국어 이야기가 나옵니다 ── */
-.pv-panel.is-tappable,.pv-mini.a.is-tappable{
+.pv-panel.is-tappable,.pv-mini.a.is-tappable,.pv-mini.b.is-tappable{
   cursor:pointer;-webkit-tap-highlight-color:transparent;
   transition:transform .12s,box-shadow .18s,border-color .18s;
 }
-.pv-panel.is-tappable:active{transform:scale(.988)}
+.pv-panel.is-tappable:active,.pv-mini.b.is-tappable:active{transform:scale(.988)}
 .pv-panel.is-saying{border-color:#B49BEA;box-shadow:0 0 0 3px rgba(180,155,234,.45),0 10px 20px -14px rgba(90,70,150,.8)}
 .pv-spk{
   position:absolute;right:6px;bottom:6px;width:1.95em;height:1.95em;border-radius:50%;
@@ -904,6 +904,37 @@ body.is-reading{overflow:hidden}
 }
 .pv-panel.is-saying .pv-spk{background:#8E7CC3;animation:wdSpkPulse .75s ease-in-out infinite}
 .pv-mini.a.is-saying{box-shadow:0 0 0 3px rgba(180,155,234,.45)}
+
+/* ── 왼쪽 영역도 누르면 한국어 음성 — 속담 제목·요약 / 영단어 그림·뜻·한마디 ── */
+.pv-left.is-tappable{
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:box-shadow .2s,border-color .2s,transform .12s;
+}
+.pv-left.is-tappable:active{transform:scale(.994)}
+.pv-left.is-saying{
+  border-style:solid;border-color:#B49BEA;
+  box-shadow:0 0 0 3px rgba(180,155,234,.4),0 12px 26px -18px rgba(90,70,150,.85);
+}
+.pv-mini.b.is-saying{border-color:#E2C264;box-shadow:0 0 0 3px rgba(230,200,110,.5)}
+.wd-mean.is-tappable,.wd-banner.is-tappable,.wd-tip.is-tappable{
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:box-shadow .18s,border-color .18s,transform .12s;
+}
+.wd-mean.is-tappable:active,.wd-banner.is-tappable:active,.wd-tip.is-tappable:active{transform:scale(.99)}
+.wd-mean.is-saying{border-color:#E9A46C;box-shadow:0 0 0 3px rgba(246,211,184,.85)}
+.wd-banner.is-tappable{position:relative}
+.wd-banner.is-saying{border-color:#7ECBA4;box-shadow:0 0 0 3px rgba(126,203,164,.5),0 12px 24px -16px rgba(60,140,100,.8)}
+.wd-tip.is-tappable{position:relative;padding-right:clamp(30px,3.2vw,48px)}
+.wd-tip.is-saying{border-style:solid;border-color:#E2C264;box-shadow:0 0 0 3px rgba(240,220,160,.7)}
+.wd-banner.is-tappable::after,.wd-tip.is-tappable::after{
+  content:"🔊";position:absolute;right:7px;bottom:7px;
+  width:1.95em;height:1.95em;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.92);font-size:clamp(9px,1.5vh,14px);
+  box-shadow:0 3px 8px -4px rgba(70,50,120,.55);pointer-events:none;
+}
+.wd-tip.is-tappable::after{top:50%;bottom:auto;transform:translateY(-50%)}
+.wd-banner.is-saying::after,.wd-tip.is-saying::after{background:#EAF7EF;animation:wdSpkPulse .75s ease-in-out infinite}
 .pv-tap-hint{display:block;text-align:center;font-weight:800;font-size:clamp(9.5px,1.5vh,13.5px);color:#8E7CC3}
 
 /* ── 🎬 영상으로 듣기 — 각 탭 본문 안에 있는 작은 재생 버튼 ── */

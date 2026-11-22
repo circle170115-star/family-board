@@ -853,7 +853,10 @@
   }
 
   function rdProverbHTML(pv) {
-    /* 컷마다 한국어 이야기 MP3(proverb-YYYYMMDD-pN.mp3)를 붙여, 그림을 눌러도 들을 수 있게 합니다 */
+    /* 컷마다 한국어 이야기 MP3(proverb-YYYYMMDD-pN.mp3)를 붙여, 그림을 눌러도 들을 수 있게 합니다.
+       왼쪽 영역(배지·제목·한 줄 요약)을 누르면 속담 제목 음성(pv.audio),
+       뜻 카드는 pv.meaningAudio, 약속 카드는 약속 글을 한국어 음성으로 읽어 줍니다. */
+    const pvTitleText = [pv.title, pv.subtitle, pv.summary].filter(Boolean).join(". ");
     const panels = (Array.isArray(pv.panels) ? pv.panels : []).slice(0, 4).map((p, i) => {
       const n = p.num != null ? p.num : i + 1;
       const koText = [p.speech, p.caption].filter(Boolean).join(" ");
@@ -873,17 +876,19 @@
     }).join("");
     const minis =
       (pv.meaning ? '<div class="pv-mini a is-tappable" role="button" tabindex="0" data-rd-ko-audio="' + esc(pv.meaningAudio || "") + '" data-rd-ko-text="' + esc(pv.meaning) + '" aria-label="속담 뜻풀이 듣기"><h4><img src="' + RD_ICO + 'speech.png" alt="">이런 뜻이에요</h4><p>' + esc(pv.meaning) + "</p></div>" : "") +
-      (pv.promise ? '<div class="pv-mini b"><h4><img src="' + RD_ICO + 'star.png" alt="">오늘의 약속</h4><p>' + esc(pv.promise) + "</p></div>" : "");
+      (pv.promise ? '<div class="pv-mini b is-tappable" role="button" tabindex="0" data-rd-ko-text="' + esc(pv.promise) + '" aria-label="오늘의 약속 듣기"><h4><img src="' + RD_ICO + 'star.png" alt="">오늘의 약속</h4><p>' + esc(pv.promise) + "</p></div>" : "");
     return (
       '<section class="rd-poster is-proverb" aria-label="오늘의 속담">' +
-        '<div class="pv-left">' +
+        '<div class="pv-left is-tappable" role="button" tabindex="0"' +
+          ' data-rd-ko-audio="' + esc(pv.audio || "") + '" data-rd-ko-text="' + esc(pvTitleText) + '"' +
+          ' aria-label="' + esc("속담 제목과 뜻 듣기 · " + pvTitleText) + '">' +
           '<div class="pv-spark" aria-hidden="true"><img src="' + RD_ICO + 'sparkle.png" alt=""><img src="' + RD_ICO + 'star.png" alt=""><img src="' + RD_ICO + 'sparkle.png" alt=""></div>' +
           '<span class="rd-badge"><img src="' + RD_ICO + 'book.png" alt="">' + esc(pv.badge || "오늘의 속담") + "</span>" +
           '<h3 class="pv-title"><em>' + esc(pv.title || "") + "</em></h3>" +
           (pv.subtitle ? '<p class="pv-sub">' + esc(pv.subtitle) + "</p>" : "") +
           (pv.summary ? '<div class="pv-summary"><img src="' + RD_ICO + 'speech.png" alt=""><span>' + esc(pv.summary) + "</span></div>" : "") +
           (minis ? '<div class="pv-minis">' + minis + "</div>" : "") +
-          '<span class="pv-tap-hint" aria-hidden="true">👆 그림을 누르면 이야기를 들려줘요</span>' +
+          '<span class="pv-tap-hint" aria-hidden="true">👆 그림도, 제목도 누르면 이야기를 들려줘요</span>' +
         "</div>" +
         '<div class="pv-right">' +
           '<div class="rd-sec"><img src="' + RD_ICO + 'palette.png" alt=""><b>4컷 만화로 배워요</b><span class="line"></span>' +
@@ -897,6 +902,11 @@
 
   function rdWordHTML(wd) {
     const word = String(wd.word || "");
+    /* 왼쪽 영역(그림 배너·뜻 칩·기억 쏙 한마디)을 누르면 한국어 설명 음성을 읽어 줍니다.
+       큰 영어 단어와 예문 카드는 지금처럼 원어민 영어 발음이 먼저입니다. */
+    const koIntroAudio = wd.koIntroAudio || "";
+    const koIntroText = wd.koIntroText || ("오늘의 영단어는 " + word + (wd.meaning ? ", " + wd.meaning : "") + "예요. 그림을 보면서 같이 연습해 볼까요?");
+    const koTipText = wd.koTipText || wd.tip || "";
     const letters = word.split("").map((ch, i) => '<i class="w' + ((i % 4) + 1) + '">' + esc(ch) + "</i>").join("");
     const examples = (Array.isArray(wd.examples) ? wd.examples : []).map((e, i) => {
       const n = e.num != null ? e.num : i + 1;
@@ -913,7 +923,7 @@
     }).join("");
     return (
       '<section class="rd-poster is-word" aria-label="오늘의 영단어">' +
-        '<div class="wd-left">' +
+        '<div class="wd-left" data-rd-ko-audio="' + esc(koIntroAudio) + '" data-rd-ko-text="' + esc(koIntroText) + '">' +
           '<span class="rd-badge"><img src="' + RD_ICO + 'sprout.png" alt="">' + esc(wd.badge || "오늘의 영단어") + "</span>" +
           '<button class="wd-hero" type="button"' +
             ' data-rd-audio="' + esc(wd.audio || "") + '" data-rd-text="' + esc(word) + '"' +
@@ -923,18 +933,26 @@
             '<img src="' + RD_ICO + 'sun.png" alt="">' +
           "</button>" +
           '<div class="wd-mean-row">' +
-            (wd.meaning ? '<span class="wd-mean">' + esc(wd.meaning) + "</span>" : "") +
-            '<span class="wd-hint">👆 눌러서 들어 봐요</span>' +
+            (wd.meaning ? '<span class="wd-mean is-tappable" role="button" tabindex="0"' +
+              ' data-rd-ko-audio="' + esc(koIntroAudio) + '" data-rd-ko-text="' + esc(koIntroText) + '"' +
+              ' aria-label="' + esc(wd.meaning + " 한국어 설명 듣기") + '">' + esc(wd.meaning) + "</span>" : "") +
+            '<span class="wd-hint">👆 단어는 영어로, 그림은 한국어로 들려줘요</span>' +
           "</div>" +
-          (wd.bannerImage ? '<div class="wd-banner"><img src="' + esc(wd.bannerImage) + '" alt="' + esc(word + (wd.meaning ? " 그림: " + wd.meaning : " 낱말 그림")) + '" decoding="async"></div>' : "") +
-          (wd.tip ? '<div class="wd-tip"><img src="' + RD_ICO + 'bulb.png" alt=""><div><b>기억 쏙 한마디</b><p>' + rdHighlight(wd.tip, [word]) + "</p></div></div>" : "") +
+          (wd.bannerImage ? '<div class="wd-banner is-tappable" role="button" tabindex="0"' +
+            ' data-rd-ko-audio="' + esc(koIntroAudio) + '" data-rd-ko-text="' + esc(koIntroText) + '"' +
+            ' aria-label="' + esc("그림으로 듣는 한국어 설명 · " + (wd.meaning || word)) + '">' +
+            '<img src="' + esc(wd.bannerImage) + '" alt="' + esc(word + (wd.meaning ? " 그림: " + wd.meaning : " 낱말 그림")) + '" decoding="async"></div>' : "") +
+          (wd.tip ? '<div class="wd-tip is-tappable" role="button" tabindex="0"' +
+            ' data-rd-ko-audio="' + esc(wd.koTipAudio || "") + '" data-rd-ko-text="' + esc(koTipText) + '"' +
+            ' aria-label="' + esc("기억 쏙 한마디 한국어 설명 듣기 · " + koTipText) + '">' +
+            '<img src="' + RD_ICO + 'bulb.png" alt=""><div><b>기억 쏙 한마디</b><p>' + rdHighlight(wd.tip, [word]) + "</p></div></div>" : "") +
         "</div>" +
         '<div class="wd-right">' +
           '<div class="rd-sec"><img src="' + RD_ICO + 'book.png" alt=""><b>따라 읽어 봐요</b><span class="line"></span></div>' +
           '<div class="wd-tools">' +
             '<button class="wd-all" id="rdListenAll" type="button" aria-pressed="false" aria-label="영어만 듣기 — 단어와 예문 3개를 원어민 발음으로 이어서 듣기"><span aria-hidden="true">🔊</span> 영어만 듣기</button>' +
             '<button class="rd-play is-word" type="button" data-rd-play="word" aria-label="오늘의 영단어를 한국어 설명과 원어민 발음이 함께 나오는 영상으로 듣기"><span aria-hidden="true">🎬</span> 영상으로 듣기</button>' +
-            '<span class="wd-tools-note">단어나 예문을 누르면 원어민 발음이 나와요</span>' +
+            '<span class="wd-tools-note">단어·예문은 원어민 발음, 그림·뜻·한마디는 한국어 설명이 나와요</span>' +
           "</div>" +
           '<div class="wd-cards">' + examples + "</div>" +
         "</div>" +
@@ -1171,11 +1189,14 @@
         }
         tapKo(e.target);
       });
+      /* 키보드(Enter·Space)로도 같은 소리가 나게 — 그림·왼쪽 영역·뜻·약속 카드 */
       stage.addEventListener("keydown", (e) => {
         if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
-        if (!e.target.closest || !e.target.closest(".pv-panel, .pv-mini")) return;
+        const t = e.target.closest ? e.target.closest("[data-rd-ko-audio],[data-rd-ko-text]") : null;
+        if (!t) return;
+        if (t.getAttribute("role") !== "button" && String(t.tagName || "").toLowerCase() !== "button") return;
         e.preventDefault();
-        tapKo(e.target);
+        tapKo(t);
       });
       stage.addEventListener("click", (e) => {
         if (e.target.closest("#rdListenAll")) { rdPlayAll(); return; }
