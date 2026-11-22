@@ -321,6 +321,7 @@
   };
   let liveWx = null;      /* 마지막으로 받아 둔 실시간 날씨 */
   let liveWxAt = 0;       /* 마지막 조회 시각(성공·실패 모두) */
+  let wxBusy = false;     /* 지금 받아 오는 중인가 */
 
   const wmoOf = (code) => WMO[Number(code)] || ["🌡️", "날씨"];
   /* 숫자로 쓸 수 있는 값만 숫자로 (null·빈칸을 0° 로 읽지 않게) */
@@ -340,6 +341,8 @@
 
   /* 실시간 날씨 받기 — 실패하면 아무것도 바꾸지 않고 board-data.json 값이 그대로 남습니다 */
   async function fetchLiveWx() {
+    if (wxBusy) return false;
+    wxBusy = true;
     liveWxAt = Date.now();
     let timer = null;
     try {
@@ -371,6 +374,7 @@
     } catch (e) {
       return false;
     } finally {
+      wxBusy = false;
       if (timer) clearTimeout(timer);
       if (data) renderHead();   /* 성공이든 실패든 기준 시각을 다시 찍습니다 */
     }
@@ -2078,6 +2082,9 @@
     checkAlarm(d);
     renderCountdown();
     tvTick();
+    /* 태블릿이 잠들었다 깨 15분 예약이 밀렸을 때를 대비한 안전장치 —
+       화면이 보이는 상태에서 16분이 넘었으면 여기서 바로 날씨를 새로 받습니다 (실패해도 16분 뒤에 다시) */
+    if (!document.hidden && Date.now() - liveWxAt > WX_EVERY + 60 * 1000 && !wxBusy) fetchLiveWx();
   }
 
   /* ───────────── ⏰ 등원 준비 알람 (평일 08:00 · 08:20) ─────────────
