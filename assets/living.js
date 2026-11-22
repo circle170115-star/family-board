@@ -386,8 +386,8 @@
     else tip = "패딩·장갑·목도리까지 꼼꼼히! 새벽이 더 추워요";
     if (pop >= 60) tip += " · 우산 필수! ☂️";
     else if (pop >= 30) tip += " · 우산 하나쯤은 챙겨요";
-    /* 아침 최저 기준 안내라, 지금이 그보다 훨씬 포근하면 그만큼 보정합니다 */
-    if (Number.isFinite(nowC) && nowC >= 2 && nowC - minC >= 6) tip += " · 지금은 겉옷 벗어도 좋아요";
+    /* 아침 최저 기준 안내라, 지금이 제법 따뜻해졌으면 그만큼 보정합니다 (3° 정도로는 겉옷을 벗으라고 하지 않음) */
+    if (Number.isFinite(nowC) && nowC >= 12 && nowC - minC >= 5) tip += " · 지금은 겉옷 벗어도 좋아요";
     return tip;
   }
 
