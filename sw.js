@@ -12,7 +12,7 @@
 
 "use strict";
 
-const CACHE = "family-living-v8-20261122d";
+const CACHE = "family-living-v8-20261122e";
 
 /* 설치할 때 미리 받아 둘 것 — 하나가 실패해도 설치 자체는 계속한다 */
 const PRECACHE = [
@@ -35,6 +35,11 @@ const PRECACHE = [
   "assets/reading/audio/proverb-20261122-p3.mp3",
   "assets/reading/audio/proverb-20261122-p4.mp3",
   "assets/reading/audio/proverb-20261122-meaning.mp3",
+  "assets/reading/audio/share-ko-intro.mp3",
+  "assets/reading/audio/share-ko-ex1.mp3",
+  "assets/reading/audio/share-ko-ex2.mp3",
+  "assets/reading/audio/share-ko-ex3.mp3",
+  "assets/reading/audio/share-ko-tip.mp3",
 ];
 
 /* 네트워크 우선 대상 (정규식, 경로 기준) */

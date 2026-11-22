@@ -790,7 +790,8 @@
        }
      · 속담 탭 — 제목·뜻·4컷 만화·오늘의 약속 (기본 탭)
      · 영단어 탭 — 큰 단어/예문을 터치하면 원어민 발음 MP3 재생 + 반짝임,
-       🔊 전체 듣기 = 단어 → 예문1 → 2 → 3 (0.7초 간격, ⏹ 멈춤 토글)
+       🔊 영어만 듣기 = 단어 → 예문1 → 2 → 3 (0.7초 간격, ⏹ 멈춤 토글)
+       🎬 영상으로 듣기 = 한국어 설명 + 원어민 영어 (탭 안에서 재생, 끝나면 그림 화면 복귀)
      · MP3 가 없거나 재생에 실패하면 window.speechSynthesis(en-US, rate 0.9) 로 자동 대체
      proverb·word 가 모두 비어 있으면 안내 카드를 띄웁니다. */
   const RD_ICO = "assets/reading/ico/";
@@ -885,7 +886,9 @@
           '<span class="pv-tap-hint" aria-hidden="true">👆 그림을 누르면 이야기를 들려줘요</span>' +
         "</div>" +
         '<div class="pv-right">' +
-          '<div class="rd-sec"><img src="' + RD_ICO + 'palette.png" alt=""><b>4컷 만화로 배워요</b><span class="line"></span></div>' +
+          '<div class="rd-sec"><img src="' + RD_ICO + 'palette.png" alt=""><b>4컷 만화로 배워요</b><span class="line"></span>' +
+            '<button class="rd-play" type="button" data-rd-play="proverb" aria-label="속담 4컷을 영상처럼 크게 보면서 한국어 이야기 듣기"><span aria-hidden="true">🎬</span> 영상으로 듣기</button>' +
+          "</div>" +
           '<div class="pv-comic">' + panels + "</div>" +
         "</div>" +
       "</section>"
@@ -929,7 +932,8 @@
         '<div class="wd-right">' +
           '<div class="rd-sec"><img src="' + RD_ICO + 'book.png" alt=""><b>따라 읽어 봐요</b><span class="line"></span></div>' +
           '<div class="wd-tools">' +
-            '<button class="wd-all" id="rdListenAll" type="button" aria-pressed="false"><span aria-hidden="true">🔊</span> 전체 듣기</button>' +
+            '<button class="wd-all" id="rdListenAll" type="button" aria-pressed="false" aria-label="영어만 듣기 — 단어와 예문 3개를 원어민 발음으로 이어서 듣기"><span aria-hidden="true">🔊</span> 영어만 듣기</button>' +
+            '<button class="rd-play is-word" type="button" data-rd-play="word" aria-label="오늘의 영단어를 한국어 설명과 원어민 발음이 함께 나오는 영상으로 듣기"><span aria-hidden="true">🎬</span> 영상으로 듣기</button>' +
             '<span class="wd-tools-note">단어나 예문을 누르면 원어민 발음이 나와요</span>' +
           "</div>" +
           '<div class="wd-cards">' + examples + "</div>" +
@@ -961,6 +965,8 @@
   function setReadingTab(tab) {
     const panel = $("#readingPanel");
     if (!panel) return;
+    /* 탭을 직접 고르면 재생 중인 영상을 멈추고 그 탭의 그림 화면으로 돌아갑니다 */
+    if (th.open) thClose(true);
     const hasPv = !!$("#rdStage .rd-poster.is-proverb");
     const hasWd = !!$("#rdStage .rd-poster.is-word");
     let next = tab === "word" ? "word" : "proverb";
@@ -1012,7 +1018,7 @@
     if (!b) return;
     b.classList.toggle("is-playing", !!playing);
     b.setAttribute("aria-pressed", playing ? "true" : "false");
-    b.innerHTML = playing ? '<span aria-hidden="true">⏹</span> 멈춤' : '<span aria-hidden="true">🔊</span> 전체 듣기';
+    b.innerHTML = playing ? '<span aria-hidden="true">⏹</span> 멈춤' : '<span aria-hidden="true">🔊</span> 영어만 듣기';
   }
   /* 완전 정지 — 닫기·탭 전환·⏹ 멈춤 */
   function rdHardStop() {
@@ -1094,6 +1100,7 @@
   function openReading() {
     const panel = $("#readingPanel");
     if (!panel) return;
+    if (th.open) thClose(true);
     const p = readingData();
     const sEl = $("#rdSub");
     if (sEl) {
@@ -1117,7 +1124,7 @@
   function closeReading() {
     const panel = $("#readingPanel");
     if (!panel || !rd.open) return;
-    if (th.open) thClose();
+    if (th.open) thClose(true);
     rdHardStop();
     panel.hidden = true;
     rd.open = false;
@@ -1137,9 +1144,7 @@
     /* 포스터 바깥 여백을 눌러도 닫힙니다 */
     panel.addEventListener("click", (e) => { if (e.target === panel) closeReading(); });
 
-    /* 🎬 영상으로 보기 — 속담 탭에서는 속담부터, 영단어 탭에서는 영단어부터 */
-    const vBtn = $("#rdVideoBtn");
-    if (vBtn) vBtn.addEventListener("click", () => thOpen(rd.tab === "word" ? "word" : "proverb"));
+    /* 🎬 탭 안의 '영상으로 듣기' — 누른 탭의 영상이 그 탭 자리에서 시작됩니다 */
     wireTheater();
 
     const stage = $("#rdStage");
@@ -1173,7 +1178,9 @@
         tapKo(e.target);
       });
       stage.addEventListener("click", (e) => {
-        if (e.target.closest("#rdListenAll")) rdPlayAll();
+        if (e.target.closest("#rdListenAll")) { rdPlayAll(); return; }
+        const pb = e.target.closest("[data-rd-play]");
+        if (pb) thOpen(pb.dataset.rdPlay === "word" ? "word" : "proverb");
       });
     }
     document.addEventListener("keydown", (e) => {
@@ -1195,21 +1202,26 @@
     });
   }
 
-  /* ───────────── 🎬 영상으로 보기 — 집중 극장(자동 재생) 모드 ─────────────
-     글을 다 읽지 못하는 5세 승민이도 버튼 한 번으로 속담 4컷과 영단어를
-     '영상처럼' 보고 들을 수 있게 하는 화면입니다.
+  /* ───────────── 🎬 탭 안 영상 모드(자동 재생) ─────────────
+     탭 옆 버튼이 아니라, 각 탭 본문 안의 '🎬 영상으로 듣기' 버튼으로 시작합니다.
+     영상은 모달 전체를 덮지 않고 읽을거리 본문(탭 아래 무대) 자리에서만 재생되며,
+     끝나거나 멈추면 그 탭의 기본 그림 화면으로 돌아갑니다.
 
        · 속담 영상: 제목 카드 → 1~4컷(Ken Burns 줌·팬 + 하단 큰 자막) → 뜻·오늘의 약속
-       · 영단어 영상: 큰 단어(글자별 통통 튀기)+뜻 → 배너 그림 줌인 → 예문 1·2·3
-       · 소리: MP3(proverb-YYYYMMDD-*.mp3 · {word}.mp3 · {word}-exN.mp3)
-               → 재생이 안 되면 speechSynthesis(속담 ko-KR · 영단어 en-US)
-       · 한 장이 끝나면 0.42초 쉬고 저절로 다음 장으로 넘어갑니다.
-       · 속담 영상이 끝나면 1.5초 뒤 영단어 영상이 이어서 시작합니다.
-       · 큰 컬: ⏹ 멈추기 · 🔊 다시 듣기 · ↺ 다시 보기 · ▶ 다음(영단어/속담)
-     data/board-data.json 의 audio·meaningAudio 만 있으면 새 읽을거리도 그대로 동작합니다. */
+       · 영단어 영상: 큰 단어+뜻 → 배너 그림+예문1 → 예문2 → 예문3 → 기억 쏙 한마디
+         (한국어 설명 ko-KR → 원어민 영어 en-US 를 번갈아 재생, 화면 아래 자막으로 표시)
+       · 소리: MP3(proverb-YYYYMMDD-*.mp3 · {word}.mp3 · {word}-exN.mp3 · {word}-ko-*.mp3)
+               → 재생이 안 되면 speechSynthesis(한국어 ko-KR · 영어 en-US)
+       · 한 장이 끝나면 0.38초 쉬고 저절로 다음 장으로 넘어갑니다.
+       · 큰 컬: ⏹ 멈추기 · 🔊 이 장면 다시 듣기 · ↺ 처음부터 · ✕ 이미지로 돌아가기
+     data/board-data.json 의 audio·meaningAudio·ko*Audio 만 있으면 새 읽을거리도 그대로 동작합니다. */
   const th = { open: false, mode: "", i: 0, gen: 0, timer: 0, at: 0, audio: null, slides: [], dotEls: [] };
-  const TH_GAP = 420;   /* 장과 장 사이 숨 쉬는 시간(ms) */
-  const TH_MIN = { cover: 3400, panel: 2400, meaning: 3200, word: 3000, banner: 2800, ex: 3600 };
+  const TH_GAP = 380;   /* 장과 장 사이 숨 쉬는 시간(ms) */
+  const TH_MIN = { cover: 3200, panel: 2200, meaning: 3000, word: 3000, banner: 3200, ex: 2800, tip: 3000 };
+
+  /* 한 장 안에서 소리 조각(한국어 설명 → 원어민 영어)을 이어 붙일 때 씁니다 */
+  const thPart = (audio, text, lang) => ({ audio: audio || "", text: text || "", lang: lang || "ko-KR" });
+  const thParts = (s) => (Array.isArray(s.parts) && s.parts.length ? s.parts : [thPart(s.audio, s.text, s.lang)]);
 
   function thProverbSlides(pv) {
     const out = [];
@@ -1261,49 +1273,74 @@
     return out;
   }
 
+  /* 영단어 영상 — 한국어 설명(ko-KR)과 원어민 영어(en-US)가 번갈아 나옵니다.
+       큰 단어 + 뜻 → [한국어로 소개] → [share]
+       배너 그림 + 예문 1 → [그림 설명·첫 번째 문장] → [Let's share.]
+       예문 2 → [두 번째 문장 설명] → [We share toys.]  … 마지막 기억 쏙 한마디
+     한국어 음성은 data 의 koIntroAudio · examples[].koAudio · koTipAudio 를 쓰고,
+     없으면 koIntroText/koScript/화면 글자로 말합니다. */
   function thWordSlides(wd) {
     const out = [];
     if (!wd) return out;
     const word = String(wd.word || "");
+    const meaning1 = wd.meaning ? String(wd.meaning).split("·")[0].trim() : "";
     const letters = () =>
       word.split("").map((ch, i) =>
         '<i class="w' + ((i % 4) + 1) + '" style="animation-delay:' + (i * 0.09).toFixed(2) + 's">' + esc(ch) + "</i>"
       ).join("");
+    const introText = wd.koIntroText ||
+      ("오늘의 영단어는 " + word + (meaning1 ? ", " + meaning1 + "라는 뜻이에요." : "예요.") + " 따라 해 볼까요?");
     out.push({
-      kind: "word", lang: "en-US",
-      audio: wd.audio || "", text: word,
+      kind: "word",
+      parts: [thPart(wd.koIntroAudio, introText, "ko-KR"), thPart(wd.audio, word, "en-US")],
       html: () =>
         '<div class="th-cover is-word">' +
           '<span class="th-badge is-word">' + esc(wd.badge || "오늘의 영단어") + "</span>" +
           '<div class="th-word">' + letters() + "</div>" +
           (wd.meaning ? '<p class="th-mean-pill">' + esc(wd.meaning) + "</p>" : "") +
-          '<span class="th-cue" aria-hidden="true">🔊 따라 말해 봐요</span>' +
+          '<span class="th-cue" aria-hidden="true">🇰🇷 설명 듣고 🔊 따라 말해 봐요</span>' +
         "</div>",
     });
-    if (wd.bannerImage) {
-      out.push({
-        kind: "banner", lang: "en-US", audio: "", text: "",
-        html: () =>
-          '<div class="th-banner">' +
-            '<img src="' + esc(wd.bannerImage) + '" alt="' + esc(word + (wd.meaning ? " 그림: " + wd.meaning : " 낱말 그림")) + '" decoding="async">' +
-            '<span class="th-banner-word">' + esc(word) + "</span>" +
-          "</div>",
-      });
-    }
     (Array.isArray(wd.examples) ? wd.examples : []).forEach((e, i) => {
       const n = e.num != null ? e.num : i + 1;
       const hl = (Array.isArray(e.highlight) && e.highlight.length ? e.highlight : [word]);
+      const koText = e.koScript || (n + "번째 문장! " + (e.ko || ""));
+      const parts = [thPart(e.koAudio, koText, "ko-KR"), thPart(e.audio, e.en || "", "en-US")];
+      const enHTML =
+        '<p class="th-ex-en">' + rdHighlight(e.en || "", hl) + "</p>" +
+        (e.ko ? '<p class="th-ex-ko">' + esc(e.ko) + "</p>" : "");
+      if (i === 0 && wd.bannerImage) {
+        /* 첫 예문은 배너 그림 위에 크게 얹어, 그림을 보며 문장을 듣게 합니다 */
+        out.push({
+          kind: "banner", parts: parts,
+          html: () =>
+            '<div class="th-banner is-ex">' +
+              '<img src="' + esc(wd.bannerImage) + '" alt="' + esc(word + (wd.meaning ? " 그림: " + wd.meaning : " 낱말 그림")) + '" decoding="async">' +
+              '<div class="th-bex-card"><span class="th-ex-n">' + esc(n) + '</span><div class="th-bex-txt">' + enHTML + '</div></div>' +
+            "</div>",
+        });
+        return;
+      }
       out.push({
-        kind: "ex", lang: "en-US",
-        audio: e.audio || "", text: e.en || "",
+        kind: "ex", parts: parts,
         html: () =>
           '<div class="th-ex">' +
             '<span class="th-ex-n">' + esc(n) + "</span>" +
-            '<p class="th-ex-en">' + rdHighlight(e.en || "", hl) + "</p>" +
-            (e.ko ? '<p class="th-ex-ko">' + esc(e.ko) + "</p>" : "") +
+            enHTML +
           "</div>",
       });
     });
+    if (wd.tip) {
+      const tipText = wd.koTipText || ("기억 쏙 한마디! " + String(wd.tip));
+      out.push({
+        kind: "tip",
+        parts: [thPart(wd.koTipAudio, tipText, "ko-KR")],
+        html: () =>
+          '<div class="th-mean">' +
+            '<div class="th-card b"><b>💡 기억 쏙 한마디</b><p>' + rdHighlight(wd.tip, [word]) + "</p></div>" +
+          "</div>",
+      });
+    }
     return out;
   }
 
@@ -1413,21 +1450,26 @@
   function thSetNow() {
     const el = $("#thNow");
     if (!el) return;
-    const name = th.mode === "word" ? "영단어 영상" : "속담 영상";
+    const name = th.mode === "word" ? "🌱 영단어 영상" : "📖 속담 영상";
     const i = Math.min(th.i + 1, th.slides.length);
     el.textContent = th.slides.length ? name + " · " + i + "/" + th.slides.length : name;
   }
-  function thSetBar() {
-    const b = $("#thNext"), t = $("#thNextTxt");
-    if (!b || !t) return;
-    const p = readingData();
-    if (th.mode === "word") {
-      t.textContent = p.proverb ? "속담부터 다시" : "처음부터";
-      b.dataset.go = p.proverb ? "proverb" : "word";
-    } else {
-      t.textContent = p.word ? "다음: 영단어 보기" : "처음부터";
-      b.dataset.go = p.word ? "word" : "proverb";
+  /* 지금 나오는 소리가 한국어 설명인지 원어민 영어인지 화면 아래에 알려 줍니다 */
+  function thSetSub(p) {
+    const el = $("#thSub");
+    if (!el) return;
+    if (!p || !p.text) {
+      el.hidden = true;
+      el.innerHTML = "";
+      el.dataset.lang = "";
+      return;
     }
+    const ko = String(p.lang || "").toLowerCase().indexOf("ko") === 0;
+    el.hidden = false;
+    el.dataset.lang = ko ? "ko" : "en";
+    el.innerHTML =
+      '<span class="th-lang">' + (ko ? "한국어 설명" : "English") + "</span>" +
+      '<span class="th-txt">' + esc(p.text) + "</span>";
   }
 
   function thStep(k) {
@@ -1448,8 +1490,17 @@
         thStep(k + 1);
       }, left + TH_GAP);
     };
-    if (s.audio || s.text) thSay(s, go);
-    else go();
+    /* 한 장 안의 소리 조각들을 순서대로 — 한국어 설명이 끝나면 바로 원어민 발음 */
+    const parts = thParts(s);
+    let idx = 0;
+    const next = () => {
+      if (gen !== th.gen) return;
+      if (idx >= parts.length) { thSetSub(null); go(); return; }
+      const p = parts[idx++];
+      thSetSub(p);
+      thSay(p, next);
+    };
+    next();
   }
 
   function thPlay(mode) {
@@ -1467,7 +1518,6 @@
     th.mode = mode;
     th.slides = slides;
     th.i = 0;
-    thSetBar();
     thDots(0);
     thStep(0);
   }
@@ -1486,70 +1536,66 @@
     thSetNow();
   }
 
-  /* 영상이 끝났을 때 — 속담이면 1.5초 뒤 영단어로 이어지고, 영단어면 끝 카드 */
+  /* 영상이 끝났을 때 — 다 봤어요 카드를 잠깐 보여 주고 그 탭의 그림 화면으로 돌아갑니다 */
   function thFinish() {
     const gen = th.gen;
     thStopAudio();
+    thSetSub(null);
     const p = readingData();
     const screen = $("#thScreen");
     if (!screen) return;
-    if (th.mode === "proverb" && p.word) {
-      thDots(th.slides.length);
-      thSetNow();
-      const nxt = p.word.word ? String(p.word.word) : "영단어";
-      screen.dataset.kind = "bridge";
-      screen.innerHTML =
-        '<div class="th-cover is-bridge">' +
-          '<span class="th-badge">이야기 끝!</span>' +
-          '<h3 class="th-title"><em>이제 영단어 <span class="th-en">' + esc(nxt) + "</span> 볼까요?</em></h3>" +
-          '<p class="th-sum">잠깐! 영단어 영상이 바로 이어서 시작해요.</p>' +
-          '<div class="th-count" aria-hidden="true"><i></i></div>' +
-        "</div>";
-      th.timer = setTimeout(() => {
-        if (gen !== th.gen || !th.open) return;
-        thPlay("word");
-      }, 1500);
-      return;
-    }
     thDots(th.slides.length);
     thSetNow();
+    const isWord = th.mode === "word";
+    const title = isWord ? (p.word ? String(p.word.word || "") : "") : (p.proverb ? String(p.proverb.title || "") : "");
     screen.dataset.kind = "bye";
     screen.innerHTML =
       '<div class="th-cover is-bye">' +
         '<span class="th-badge">🎉 다 봤어요</span>' +
-        '<h3 class="th-title"><em>' + esc(p.word ? String(p.word.word || "") : "오늘의 읽을거리") + "</em></h3>" +
-        (p.word && p.word.meaning ? '<p class="th-sum">' + esc(p.word.meaning) + "</p>" : "") +
-        '<span class="th-cue">↺ 다시 보기 · ⏹ 멈추기 로 돌아가요</span>' +
+        '<h3 class="th-title"><em>' + esc(title) + "</em></h3>" +
+        (isWord && p.word && p.word.meaning ? '<p class="th-sum">' + esc(p.word.meaning) + "</p>" : "") +
+        '<span class="th-cue">잠깐 뒤에 그림 화면으로 돌아가요</span>' +
       "</div>";
+    th.timer = setTimeout(() => {
+      if (gen !== th.gen || !th.open) return;
+      thClose();
+    }, 2400);
   }
 
+  /* 영상은 모달 전체를 덮지 않고, 읽을거리 본문(탭 아래 무대) 자리에서만 재생됩니다. */
   function thOpen(mode) {
-    const theater = $("#rdTheater");
-    if (!theater) return;
+    const theater = $("#rdTheater"), stage = $("#rdStage");
+    if (!theater || !stage) return;
     const p = readingData();
     let m = mode === "word" ? "word" : "proverb";
     if (m === "word" && !p.word) m = p.proverb ? "proverb" : "word";
     if (m === "proverb" && !p.proverb && p.word) m = "word";
     rdHardStop();
+    setReadingTab(m);   /* 재생되는 영상과 탭 표시를 맞춥니다 */
     th.open = true;
+    stage.hidden = true;
     theater.hidden = false;
-    document.body.classList.add("is-theater");
+    theater.dataset.mode = m;
     primeAudio();
     const exit = $("#thExit");
     if (exit) exit.focus({ preventScroll: true });
     thPlay(m);
   }
-  function thClose() {
-    const theater = $("#rdTheater");
+  function thClose(silent) {
+    const theater = $("#rdTheater"), stage = $("#rdStage");
     if (!theater) return;
     thStopAll();
+    thSetSub(null);
     th.open = false;
     theater.hidden = true;
-    document.body.classList.remove("is-theater");
+    if (stage) stage.hidden = false;
     const screen = $("#thScreen");
     if (screen) screen.innerHTML = "";
-    const btn = $("#rdVideoBtn");
-    if (btn) btn.focus({ preventScroll: true });
+    if (silent) return;
+    const pbs = document.querySelectorAll("#rdStage [data-rd-play]");
+    let pb = null;
+    Array.prototype.forEach.call(pbs, (b) => { if (!pb && b.offsetParent) pb = b; });
+    if (pb) pb.focus({ preventScroll: true });
   }
 
   function wireTheater() {
@@ -1567,11 +1613,6 @@
     if (restart) restart.addEventListener("click", () => {
       if (!th.open) return;
       thPlay(th.mode === "word" ? "word" : "proverb");
-    });
-    const next = byId("thNext");
-    if (next) next.addEventListener("click", () => {
-      if (!th.open) return;
-      thPlay(next.dataset.go === "word" ? "word" : "proverb");
     });
     const dots = byId("thDots");
     if (dots) dots.addEventListener("click", (e) => {

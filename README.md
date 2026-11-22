@@ -79,7 +79,7 @@
 }
 ```
 
-- 📖 **읽을거리 교체는 `readingPoster` 만 고치면 됩니다.** 오늘의 속담은 `proverb` 안의 `title`·`subtitle`·`summary`·`panels`(4컷: `speech` 말풍선, `caption` 컷 설명, `image` 그림)·`meaning`·`promise` 를, 오늘의 영단어는 `word` 안의 `word`·`meaning`·`bannerImage`·`examples`(3개: `en`·`ko`·`audio`·`highlight` 낱말)·`tip` 을 바꿉니다. 그림은 `assets/reading/` 에, 발음 MP3 는 `assets/reading/audio/` 에 넣고 경로를 적으면 그대로 재생됩니다(`audio` 를 비워도 Web Speech `en-US` 로 읽어 줍니다). `proverb`·`word` 를 모두 비우면 "오늘의 읽을거리를 준비하고 있어요" 안내 카드가 뜨고, 예전처럼 **한 장짜리 포스터 PNG** 를 쓰고 싶으면 `readingPoster.image` 에 경로를 넣으면 그 그림이 그대로 뜹니다(없는 파일을 찾던 404 는 없앴습니다).
+- 📖 **읽을거리 교체는 `readingPoster` 만 고치면 됩니다.** 오늘의 속담은 `proverb` 안의 `title`·`subtitle`·`summary`·`panels`(4컷: `speech` 말풍선, `caption` 컷 설명, `image` 그림)·`meaning`·`promise` 를, 오늘의 영단어는 `word` 안의 `word`·`meaning`·`bannerImage`·`examples`(3개: `en`·`ko`·`audio`·`highlight` 낱말)·`tip` 을 바꿉니다. 그림은 `assets/reading/` 에, 발음 MP3 는 `assets/reading/audio/` 에 넣고 경로를 적으면 그대로 재생됩니다(`audio` 를 비워도 Web Speech `en-US` 로 읽어 줍니다). 각 탭 본문의 **🎬 영상으로 듣기** 버튼은 그 탭 자리에서 영상을 재생하고 끝나면 그림 화면으로 돌아옵니다 — 영단어 영상의 한국어 설명은 `word.koIntroAudio`·`koIntroText`, `examples[].koAudio`·`koScript`, `koTipAudio`·`koTipText` 에 넣으면 되고(비우면 화면 글자로 대신 읽어 줍니다), 속담 영상은 `panels[].audio` 와 `meaningAudio` 를 씁니다. `proverb`·`word` 를 모두 비우면 "오늘의 읽을거리를 준비하고 있어요" 안내 카드가 뜨고, 예전처럼 **한 장짜리 포스터 PNG** 를 쓰고 싶으면 `readingPoster.image` 에 경로를 넣으면 그 그림이 그대로 뜹니다(없는 파일을 찾던 404 는 없앴습니다).
 
 - 매일 아침 브리핑(06:00)에서는 이 파일의 `meals`·`weather`·`meta.updatedAt`를 그날 값으로 갱신해 커밋하면 됩니다. 클라이언트는 열 때마다 NEIS(당월 급식)와 Open-Meteo(날씨)를 실시간으로 조회하고, **실패하면 이 파일의 스냅샷으로 폴백**합니다.
 - 공휴일이 바뀌거나 임시공휴일이 지정되면 `holidays`에 한 줄만 추가하면 일정·차시 계산이 전부 자동으로 다시 반영됩니다.
