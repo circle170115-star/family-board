@@ -1,8 +1,8 @@
 {
   "meta": {
     "version": 1,
-    "updatedAt": "2026-11-22T10:45:00+09:00",
-    "updatedBy": "포근이 · 영상 모드 탭 안 재생 + 영단어 한영 설명 음성 추가",
+    "updatedAt": "2026-11-23T04:00:00+09:00",
+    "updatedBy": "포근이 · 읽을거리 3호 (티끌 모아 태산 / smile)",
     "schemaNote": "일정·급식·날씨·건강 데이터는 이 파일만 고치면 보드에 반영됩니다. 자세한 구조는 README.md 참고."
   },
   "family": {
@@ -1954,97 +1954,95 @@
   },
   "holidayNote": "관공서의 공휴일에 관한 규정 · 2026/2027년 월력요항 기준. 공휴일에는 모든 수업·등원이 자동 제외됩니다.",
   "readingPoster": {
-    "date": "2026-11-22",
-    "title": "가는 말이 고와야 오는 말이 곱다",
+    "date": "2026-11-23",
+    "title": "티끌 모아 태산",
     "subtitle": "오늘의 속담 + 오늘의 영단어",
     "proverb": {
-      "badge": "오늘의 속담 2",
-      "title": "가는 말이 고와야 오는 말이 곱다",
-      "subtitle": "예쁜 말 한마디, 다정한 대답이 돌아와요",
-      "summary": "내가 먼저 웃으며 예쁘게 말하면, 상대방도 기분 좋게 대답해 줘요!",
-      "audio": "assets/reading/audio/proverb-20261122-title.mp3",
+      "badge": "오늘의 속담 · 3호",
+      "title": "티끌 모아 태산",
+      "subtitle": "작은 동전 하나가 모여 큰 산이 돼요",
+      "summary": "작은 동전도 하나씩 모으면 동전 산이, 정리도 하나씩 하면 방이 반짝반짝!",
+      "audio": "assets/reading/audio/proverb-20261123-title.mp3",
       "panels": [
         {
           "num": 1,
-          "speech": "\"이거 내 거야, 만지지 마!\"",
-          "caption": "퉁명스러운 한마디",
+          "speech": "동전 하나, 아껴 둘래!",
+          "caption": "동전 하나가 아까워요",
           "image": "assets/reading/panel1-crop.png",
-          "audio": "assets/reading/audio/proverb-20261122-p1.mp3"
+          "audio": "assets/reading/audio/proverb-20261123-p1.mp3"
         },
         {
           "num": 2,
-          "speech": "\"흥, 나도 안 빌려줄 거야!\"",
-          "caption": "마음이 상했어요",
+          "speech": "하나, 둘, 셋! 차곡차곡.",
+          "caption": "하나씩 모으는 재미",
           "image": "assets/reading/panel2-crop.png",
-          "audio": "assets/reading/audio/proverb-20261122-p2.mp3"
+          "audio": "assets/reading/audio/proverb-20261123-p2.mp3"
         },
         {
           "num": 3,
-          "speech": "\"누나, 우리 같이 갖고 놀자!\"",
-          "caption": "먼저 건넨 고운 말",
+          "speech": "장난감 정리도 하나씩!",
+          "caption": "작은 정리도 힘이 돼요",
           "image": "assets/reading/panel3-crop.png",
-          "audio": "assets/reading/audio/proverb-20261122-p3.mp3"
+          "audio": "assets/reading/audio/proverb-20261123-p3.mp3"
         },
         {
           "num": 4,
-          "speech": "\"고마워! 너부터 먼저 해!\"",
-          "caption": "다정한 대답이 쏙",
+          "speech": "와! 동전이 산처럼 쌓였어!",
+          "caption": "티끌이 태산이 됐어요",
           "image": "assets/reading/panel4-crop.png",
-          "audio": "assets/reading/audio/proverb-20261122-p4.mp3"
+          "audio": "assets/reading/audio/proverb-20261123-p4.mp3"
         }
       ],
-      "meaning": "내가 먼저 고운 말로 대하면 상대방도 예쁘고 다정한 말로 돌아온다는 뜻이에요.",
-      "promise": "오늘 가족에게 \"고마워\", \"사랑해\" 먼저 말해 볼까요?",
-      "meaningAudio": "assets/reading/audio/proverb-20261122-meaning.mp3"
+      "meaning": "작은 동전 하나, 장난감 하나를 정리하는 일도 매일매일 모으면 큰 산처럼 커진다는 뜻이에요.",
+      "promise": "오늘 저금통에 동전 하나 넣기, 장난감 하나 정리하기, 꼭 해 볼까요?",
+      "meaningAudio": "assets/reading/audio/proverb-20261123-meaning.mp3"
     },
     "word": {
-      "badge": "오늘의 영단어 2",
-      "word": "share",
-      "meaning": "함께 나누다 · 공유하다",
-      "audio": "assets/reading/audio/share.mp3",
+      "badge": "오늘의 영단어 · 3호",
+      "word": "smile",
+      "meaning": "미소 짓다 · 활짝 웃다",
+      "audio": "assets/reading/audio/smile.mp3",
       "bannerImage": "assets/reading/word-banner.png",
       "examples": [
         {
           "num": 1,
-          "en": "Let's share.",
-          "ko": "함께 나누자.",
-          "audio": "assets/reading/audio/share-ex1.mp3",
+          "en": "I smile at you.",
+          "ko": "나는 너에게 활짝 웃어요.",
+          "audio": "assets/reading/audio/smile-ex1.mp3",
           "highlight": [
-            "share"
+            "smile"
           ],
-          "koAudio": "assets/reading/audio/share-ko-ex1.mp3",
-          "koScript": "그림을 보세요. 친구와 사이좋게 과자를 나누고 있어요. 첫 번째 문장! 함께 나누자, 라는 뜻이에요."
+          "koAudio": "assets/reading/audio/smile-ko-ex1.mp3",
+          "koScript": "그림을 보세요. 다은이가 친구에게 활짝 웃어 주고 있어요. 첫 번째 문장! 나는 너에게 활짝 웃어요, 라는 뜻이에요."
         },
         {
           "num": 2,
-          "en": "We share toys.",
-          "ko": "우리는 장난감을 나눠 써요.",
-          "audio": "assets/reading/audio/share-ex2.mp3",
+          "en": "We smile together.",
+          "ko": "우리는 함께 웃어요.",
+          "audio": "assets/reading/audio/smile-ex2.mp3",
           "highlight": [
-            "share",
-            "toys"
+            "smile"
           ],
-          "koAudio": "assets/reading/audio/share-ko-ex2.mp3",
-          "koScript": "두 번째 문장! 우리는 장난감을 나눠 써요. 우리는 함께 쓴다는 말이에요."
+          "koAudio": "assets/reading/audio/smile-ko-ex2.mp3",
+          "koScript": "두 번째 문장! 우리는 함께 웃어요. 다 같이 웃으니 기분이 좋아져요."
         },
         {
           "num": 3,
-          "en": "I share with you!",
-          "ko": "내가 너랑 나눌게!",
-          "audio": "assets/reading/audio/share-ex3.mp3",
+          "en": "A big smile helps.",
+          "ko": "큰 미소가 힘을 줘요.",
+          "audio": "assets/reading/audio/smile-ex3.mp3",
           "highlight": [
-            "share",
-            "you"
+            "smile"
           ],
-          "koAudio": "assets/reading/audio/share-ko-ex3.mp3",
-          "koScript": "세 번째 문장! 내가 너랑 나눌게. 내 것을 너에게 줄게, 라는 뜻이에요."
+          "koAudio": "assets/reading/audio/smile-ko-ex3.mp3",
+          "koScript": "세 번째 문장! 큰 미소가 힘을 줘요. 웃는 얼굴 하나가 모두에게 힘이 된대요."
         }
       ],
-      "tip": "내 것만 챙기지 않고 친구·가족과 사이좋게 나누는 마음이 바로 share예요!",
-      "koIntroAudio": "assets/reading/audio/share-ko-intro.mp3",
-      "koIntroText": "오늘의 영단어는 share. 함께 나누다, 같이 쓰다는 뜻이에요. 그림을 보면서 같이 연습해 볼까요?",
-      "koTipAudio": "assets/reading/audio/share-ko-tip.mp3",
-      "koTipText": "기억 쏙 한마디! 내 것만 챙기지 않고 친구와 가족과 사이좋게 나누는 마음, 그게 바로 share 예요."
+      "tip": "입꼬리를 살짝 올려 웃는 것, 그게 바로 smile이에요. 오늘 가족에게 먼저 smile 해 볼까요?",
+      "koIntroAudio": "assets/reading/audio/smile-ko-intro.mp3",
+      "koIntroText": "오늘의 영단어는 smile. 미소 짓다, 활짝 웃다는 뜻이에요. 그림을 보면서 같이 연습해 볼까요?",
+      "koTipAudio": "assets/reading/audio/smile-ko-tip.mp3",
+      "koTipText": "기억 쏙 한마디! 입꼬리를 살짝 올려 웃는 것, 그게 바로 smile 예요."
     },
     "note": "거실 보드 '📖 오늘의 읽을거리' 전체화면 모달. proverb(속담 4컷) · word(터치 발음 영단어) 두 탭을 이 객체만 고쳐 바꿉니다. 이미지는 assets/reading/ 아래에 두고 audio 는 MP3 경로(없으면 Web Speech en-US 로 자동 대체)를 적습니다. proverb·word 가 모두 비면 안내 카드가 보입니다."
   }
