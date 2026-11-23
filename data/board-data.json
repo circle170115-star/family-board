@@ -1961,6 +1961,8 @@
       "subtitle": "어릴 때 들인 좋은 습관은 평생 쭉 이어져요",
       "summary": "양치도, 정리도, 인사도 매일 조금씩! 어릴 때 들인 버릇은 어른이 되어도 반짝반짝!",
       "audio": "assets/reading/audio/proverb-20261124-title.mp3",
+      "bgmAudio": "assets/reading/audio/bgm-gentle-story.mp3",
+      "bgmVolume": 0.16,
       "panels": [
         {
           "num": 1,

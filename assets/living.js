@@ -1353,7 +1353,7 @@
        · 한 장이 끝나면 0.38초 쉬고 저절로 다음 장으로 넘어갑니다.
        · 큰 컬: ⏹ 멈추기 · 🔊 이 장면 다시 듣기 · ↺ 처음부터 · ✕ 이미지로 돌아가기
      data/board-data.json 의 audio·meaningAudio·ko*Audio 만 있으면 새 읽을거리도 그대로 동작합니다. */
-  const th = { open: false, mode: "", i: 0, gen: 0, timer: 0, at: 0, audio: null, slides: [], dotEls: [] };
+  const th = { open: false, mode: "", i: 0, gen: 0, timer: 0, at: 0, audio: null, slides: [], dotEls: [], bgm: null, bgmT: 0, bgmOn: false, bgmV: 0.16, bgmTarget: 0 };
   const TH_GAP = 380;   /* 장과 장 사이 숨 쉬는 시간(ms) */
   const TH_MIN = { cover: 3200, panel: 2200, meaning: 3000, word: 3000, banner: 3200, ex: 2800, tip: 3000 };
 
@@ -1488,6 +1488,74 @@
     return out;
   }
 
+  /* ── 🎵 배경음악 ── readingPoster.proverb.bgmAudio 가 있으면 '영상으로 듣기' 재생 동안
+     잔잔하게(기본 볼륨 0.16) 루프로 흐르고, 대사가 나오는 동안만 살짝 낮춥니다.
+     영상을 멈추거나 닫으면 음악도 함께 멈춥니다. (⚙️ 효과음이 꺼져 있으면 음악도 켜지 않음) */
+  function thBgmVolume(v, instant) {
+    if (!th.bgm) return;
+    th.bgmTarget = Math.max(0, Math.min(1, v));
+    if (instant) {
+      try { th.bgm.volume = th.bgmTarget; } catch (e) { /* noop */ }
+      return;
+    }
+    if (th.bgmT) return;
+    th.bgmT = setInterval(() => {
+      if (!th.bgm) { clearInterval(th.bgmT); th.bgmT = 0; return; }
+      const d = th.bgmTarget - th.bgm.volume;
+      if (Math.abs(d) < 0.008) {
+        try { th.bgm.volume = th.bgmTarget; } catch (e) { /* noop */ }
+        clearInterval(th.bgmT); th.bgmT = 0;
+        return;
+      }
+      try { th.bgm.volume = Math.max(0, Math.min(1, th.bgm.volume + d * 0.32)); } catch (e) { /* noop */ }
+    }, 90);
+  }
+  function thBgmDuck(on) {
+    if (!th.bgm || !th.bgmOn) return;
+    thBgmVolume(on ? th.bgmV * 0.5 : th.bgmV);
+  }
+  function thBgmStart() {
+    const p = readingData();
+    const pv = p.proverb || null;
+    const src = (pv && pv.bgmAudio ? String(pv.bgmAudio) : "") || "";
+    thBgmStop();
+    if (!src || th.mode === "word") return;
+    if (store && store.sound === false) return;   /* ⚙️ 효과음 꺼짐 = 읽을거리 음악도 끔 */
+    const want = Number(pv.bgmVolume);
+    th.bgmV = isFinite(want) && want > 0.02 ? Math.max(0.05, Math.min(0.35, want)) : 0.16;
+    if (!th.bgm) {
+      th.bgm = new Audio();
+      th.bgm.loop = true;
+      th.bgm.preload = "auto";
+    }
+    const a = th.bgm;
+    if (a.dataset.src !== src) {
+      a.dataset.src = src;
+      try { a.src = src; } catch (e) { return; }
+    }
+    try { a.volume = 0; } catch (e) { /* noop */ }
+    th.bgmOn = true;
+    let pr = null;
+    try { pr = a.play(); } catch (e) { th.bgmOn = false; return; }
+    if (pr && typeof pr.catch === "function") {
+      pr.catch(() => { th.bgmOn = false; /* 자동재생이 막히면 조용히 넘어갑니다 */ });
+    }
+    thBgmVolume(th.bgmV * 0.55);
+    setTimeout(() => { if (th.open && th.bgmOn) thBgmVolume(th.bgmV); }, 700);
+  }
+  function thBgmStop(fadeOnly) {
+    th.bgmOn = false;
+    if (th.bgmT) { clearInterval(th.bgmT); th.bgmT = 0; }
+    const a = th.bgm;
+    if (!a) return;
+    try {
+      if (fadeOnly) { a.volume = 0; }
+      a.pause();
+      a.currentTime = 0;
+    } catch (e) { /* noop */ }
+    try { a.volume = 0; } catch (e) { /* noop */ }
+  }
+
   function thStopAudio() {
     if (th.audio) {
       try {
@@ -1547,11 +1615,13 @@
       fired = true;
       clearTimeout(guard);
       thStopAudio();
+      thBgmDuck(false);
       if (done) done();
     };
     /* 소리가 시작되지 않거나 끝났다는 신호가 오지 않아도 화면이 멈춰 있지 않게 */
     guard = setTimeout(finish, 26000);
     thStopAudio();
+    thBgmDuck(true);   /* 대사가 나오는 동안 배경음악은 살짝만 */
     const say = () => thSpeak(s, finish);
     if (!s.audio) { say(); return; }
     if (!th.audio) {
@@ -1576,7 +1646,9 @@
     const screen = $("#thScreen");
     if (!screen) return;
     screen.dataset.kind = s.kind;
-    screen.innerHTML = '<div class="th-slide is-' + s.kind + '">' + s.html() + "</div>";
+    /* 장면이 바뀔 때마다 반짝이가 지나가고, 큰 자막이 말풍선처럼 팝 하고 올라옵니다 */
+    screen.innerHTML = '<div class="th-slide is-' + s.kind + '">' + s.html() + '</div>' +
+      '<div class="th-spark" aria-hidden="true"></div>';
   }
   function thDots(k) {
     const box = $("#thDots");
@@ -1669,6 +1741,7 @@
     th.slides = slides;
     th.i = 0;
     thDots(0);
+    thBgmStart();
     thStep(0);
   }
 
@@ -1735,6 +1808,7 @@
     const theater = $("#rdTheater"), stage = $("#rdStage");
     if (!theater) return;
     thStopAll();
+    thBgmStop();
     thSetSub(null);
     th.open = false;
     theater.hidden = true;

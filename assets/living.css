@@ -1399,3 +1399,86 @@ body.is-reading{overflow:hidden}
   .lv-act.is-tv .tv-btns{grid-column:1/-1;grid-row:3/4}
   .lv-act.is-tv.is-done .tv-time{font-size:24px}
 }
+
+/* ───────────── 🎬 읽을거리 만화 연출 업그레이드 (2026-11-24) ─────────────
+   · 4컷 카드가 열릴 때 살짝 떠오르고, 말풍선이 톡 튀어나옵니다.
+   · 소리 나는 컷은 카드가 부드럽게 떠오르며 그림에 천천히 줌·팬(Ken Burns)이 걸립니다.
+   · 영상은 장면이 바뀔 때마다 반짝이가 지나가고, 큰 자막이 말풍선처럼 팝 하고 나타납니다. */
+@keyframes pvPanelIn{from{opacity:0;transform:translateY(14px) scale(.972)}to{opacity:1;transform:none}}
+@keyframes pvBubPop{
+  0%{opacity:0;transform:translateY(9px) scale(.78)}
+  58%{opacity:1;transform:translateY(-1px) scale(1.05)}
+  100%{opacity:1;transform:none}
+}
+@keyframes pvShine{0%,100%{opacity:0}32%{opacity:.72}66%{opacity:.18}}
+@keyframes pvKen1{from{transform:scale(1.02)}to{transform:scale(1.12) translate3d(-1.4%,-1.2%,0)}}
+@keyframes pvKen2{from{transform:scale(1.11) translate3d(1.2%,0.8%,0)}to{transform:scale(1.01)}}
+@keyframes pvKen3{from{transform:scale(1.03) translate3d(1.2%,-0.9%,0)}to{transform:scale(1.13) translate3d(-1%,0.9%,0)}}
+@keyframes pvKen4{from{transform:scale(1.1) translate3d(-1.2%,1%,0)}to{transform:scale(1.02)}}
+
+/* 4컷 카드 — 열릴 때 차례로 떠오르고, 말풍선이 통통 튀어나옵니다 */
+.pv-comic .pv-panel{animation:pvPanelIn .52s cubic-bezier(.2,.9,.3,1.04) backwards}
+.pv-comic .pv-panel:nth-child(1){animation-delay:.02s}
+.pv-comic .pv-panel:nth-child(2){animation-delay:.09s}
+.pv-comic .pv-panel:nth-child(3){animation-delay:.16s}
+.pv-comic .pv-panel:nth-child(4){animation-delay:.23s}
+.pv-comic .pv-bub{animation:pvBubPop .56s cubic-bezier(.2,.9,.3,1.42) both}
+.pv-comic .pv-panel:nth-child(1) .pv-bub{animation-delay:.2s}
+.pv-comic .pv-panel:nth-child(2) .pv-bub{animation-delay:.27s}
+.pv-comic .pv-panel:nth-child(3) .pv-bub{animation-delay:.34s}
+.pv-comic .pv-panel:nth-child(4) .pv-bub{animation-delay:.41s}
+
+/* 재생 중인 컷 — 카드가 살짝 떠오르고 그림이 천천히 움직입니다 */
+.pv-panel{position:relative;transition:transform .38s cubic-bezier(.2,.9,.3,1.1),box-shadow .38s,border-color .38s}
+.pv-panel::after{
+  content:"";position:absolute;inset:0;border-radius:15px;pointer-events:none;opacity:0;
+  background:radial-gradient(120% 80% at 10% 6%,rgba(255,255,255,.9),rgba(255,255,255,0) 44%),
+             radial-gradient(90% 70% at 92% 96%,rgba(255,231,166,.75),rgba(255,231,166,0) 48%);
+}
+.pv-panel.is-saying{transform:translateY(-3px) scale(1.018);border-color:#B49BEA}
+.pv-panel.is-saying::after{animation:pvShine 2.6s ease-in-out infinite}
+.pv-panel.is-saying .pv-ph img{transform-origin:50% 44%}
+.pv-panel:nth-child(1).is-saying .pv-ph img{animation:pvKen1 8.5s ease-out both}
+.pv-panel:nth-child(2).is-saying .pv-ph img{animation:pvKen2 8.5s ease-out both}
+.pv-panel:nth-child(3).is-saying .pv-ph img{animation:pvKen3 8.5s ease-out both}
+.pv-panel:nth-child(4).is-saying .pv-ph img{animation:pvKen4 8.5s ease-out both}
+.pv-panel.is-saying .pv-bub{
+  box-shadow:0 4px 12px -4px rgba(70,50,120,.5),0 0 0 3px rgba(180,155,234,.35);
+}
+
+/* 영상 — 장면이 바뀔 때 반짝이가 지나갑니다 */
+.th-spark{position:absolute;inset:0;pointer-events:none;z-index:6;
+  background:radial-gradient(62% 42% at 50% 16%,rgba(255,243,206,.92),rgba(255,243,206,0) 64%);
+  animation:thSpark .8s ease-out both}
+@keyframes thSpark{0%{opacity:0;transform:scale(.62)}20%{opacity:.85}100%{opacity:0;transform:scale(1.14)}}
+.th-spark::before,.th-spark::after{
+  content:"✦";position:absolute;color:#FFF3CE;line-height:1;
+  font-size:clamp(16px,3.2vh,36px);text-shadow:0 0 18px rgba(255,226,152,.95);
+  animation:thTwinkle .95s ease-out both;
+}
+.th-spark::before{left:13%;top:15%}
+.th-spark::after{right:15%;top:30%;animation-delay:.1s}
+@keyframes thTwinkle{
+  0%{opacity:0;transform:scale(.3) rotate(-24deg)}
+  34%{opacity:1;transform:scale(1.18) rotate(4deg)}
+  100%{opacity:0;transform:scale(1.7) rotate(14deg)}
+}
+/* 큰 자막이 말풍선처럼 팝 */
+.th-speech{animation:thSpeechPop .58s cubic-bezier(.2,.9,.3,1.36) both}
+.th-caption{animation:thRise .62s ease-out .1s both}
+@keyframes thSpeechPop{
+  0%{opacity:0;transform:translateY(16px) scale(.9)}
+  58%{opacity:1;transform:translateY(-2px) scale(1.035)}
+  100%{opacity:1;transform:none}
+}
+/* 그림 카드가 은은하게 떠 있는 느낌 */
+.th-shot::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 90px 12px rgba(20,10,40,.55);border-radius:inherit;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .pv-comic .pv-panel,.pv-comic .pv-bub,.pv-panel.is-saying .pv-ph img,.pv-panel.is-saying .pv-bub,
+  .th-spark,.th-spark::before,.th-spark::after,.th-speech,.th-caption{animation:none!important}
+  .pv-panel{transition:none}
+}
