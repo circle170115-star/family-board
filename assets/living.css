@@ -1482,3 +1482,36 @@ body.is-reading{overflow:hidden}
   .th-spark,.th-spark::before,.th-spark::after,.th-speech,.th-caption{animation:none!important}
   .pv-panel{transition:none}
 }
+
+/* ── 🎵 동요 듣기 버튼 (2026-11-24) — 오늘 4호 속담 테마 동요. 대사·영상과 따로 원곡을 재생합니다. */
+.rd-song{
+  flex:none;display:inline-flex;align-items:center;gap:clamp(4px,.5vw,8px);cursor:pointer;
+  font-family:JuaBoard;font-weight:400;letter-spacing:0;white-space:nowrap;
+  font-size:clamp(11.5px,1.8vh,17px);line-height:1.1;
+  padding:clamp(4px,.95vh,10px) clamp(10px,1.3vw,18px);
+  border-radius:999px;border:2.5px solid #E7A9D4;color:#6E2A57;
+  background:linear-gradient(180deg,#FFF0F9,#FFD3EC);
+  box-shadow:0 12px 24px -20px rgba(160,50,120,.9);
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .12s,filter .15s,box-shadow .2s;
+}
+.rd-song em{font-style:normal;font-weight:700;font-size:.86em;color:#A0467C;opacity:.9}
+.rd-song:hover{filter:brightness(1.03)}
+.rd-song:active{transform:scale(.97)}
+.rd-song.is-playing{
+  border-color:#C77BB0;color:#fff;background:linear-gradient(180deg,#E86BB6,#C64C97);
+  box-shadow:0 14px 26px -18px rgba(180,50,130,.95);
+  animation:rdSongPulse 1.8s ease-in-out infinite;
+}
+.rd-song.is-playing em{color:#FFE6F4}
+@keyframes rdSongPulse{
+  0%,100%{box-shadow:0 14px 26px -18px rgba(180,50,130,.95),0 0 0 0 rgba(255,150,210,.45)}
+  50%{box-shadow:0 14px 26px -18px rgba(180,50,130,.95),0 0 0 7px rgba(255,160,215,0)}
+}
+@media (max-width:900px),(max-height:560px){
+  .rd-song{font-size:12px;padding:5px 11px;border-width:2px}
+  .rd-song em{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .rd-song.is-playing{animation:none}
+}

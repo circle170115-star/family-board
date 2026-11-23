@@ -1963,6 +1963,8 @@
       "audio": "assets/reading/audio/proverb-20261124-title.mp3",
       "bgmAudio": "assets/reading/audio/bgm-gentle-story.mp3",
       "bgmVolume": 0.16,
+      "songAudio": "assets/reading/audio/proverb-20261124-song.mp3",
+      "songTitle": "🎵 세 살 버릇 착착착",
       "panels": [
         {
           "num": 1,

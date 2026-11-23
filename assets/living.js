@@ -972,7 +972,17 @@
   function rdProverbHTML(pv) {
     /* 컷마다 한국어 이야기 MP3(proverb-YYYYMMDD-pN.mp3)를 붙여, 그림을 눌러도 들을 수 있게 합니다.
        왼쪽 영역(배지·제목·한 줄 요약)을 누르면 속담 제목 음성(pv.audio),
-       뜻 카드는 pv.meaningAudio, 약속 카드는 약속 글을 한국어 음성으로 읽어 줍니다. */
+       뜻 카드는 pv.meaningAudio, 약속 카드는 약속 글을 한국어 음성으로 읽어 줍니다.
+       🎵 동요 듣기 — pv.songAudio(보컬 동요 원곡)가 있으면 4컷 위에 버튼이 생깁니다. */
+    const songSrc = pv.songAudio ? String(pv.songAudio) : "";
+    const songName = String(pv.songTitle || "").replace(/^\s*[\u{1F3B5}\u{1F3B6}]\s*/u, "").trim() || "오늘의 동요";
+    const songBtn = songSrc
+      ? '<button class="rd-song" id="rdSong" type="button" data-rd-song="' + esc(songSrc) + '"' +
+        ' aria-pressed="false" aria-label="' + esc("동요 듣기 · " + songName + " · 누르면 재생, 다시 누르면 멈춤") + '">' +
+        '<span class="rd-song-ico" aria-hidden="true">🎵</span>' +
+        '<span class="rd-song-lab">동요 듣기</span>' +
+        '<em class="rd-song-t">' + esc(songName) + "</em></button>"
+      : "";
     const pvTitleText = [pv.title, pv.subtitle, pv.summary].filter(Boolean).join(". ");
     const panels = (Array.isArray(pv.panels) ? pv.panels : []).slice(0, 4).map((p, i) => {
       const n = p.num != null ? p.num : i + 1;
@@ -1009,6 +1019,7 @@
         "</div>" +
         '<div class="pv-right">' +
           '<div class="rd-sec"><img src="' + RD_ICO + 'palette.png" alt=""><b>4컷 만화로 배워요</b><span class="line"></span>' +
+            songBtn +
             '<button class="rd-play" type="button" data-rd-play="proverb" aria-label="속담 4컷을 영상처럼 크게 보면서 한국어 이야기 듣기"><span aria-hidden="true">🎬</span> 영상으로 듣기</button>' +
           "</div>" +
           '<div class="pv-comic">' + panels + "</div>" +
@@ -1155,8 +1166,61 @@
     b.setAttribute("aria-pressed", playing ? "true" : "false");
     b.innerHTML = playing ? '<span aria-hidden="true">⏹</span> 멈춤' : '<span aria-hidden="true">🔊</span> 영어만 듣기';
   }
+  /* ── 🎵 동요 듣기 — readingPoster.proverb.songAudio(보컬 동요)를 원곡 그대로 재생/정지합니다.
+     대사·영상 소리와는 섮이지 않도록, 누구든 먼저 멈춘 뒤 재생합니다. ── */
+  const rds = { audio: null, on: false };
+  function rdSongBtn(on) {
+    const b = $("#rdSong");
+    if (!b) return;
+    b.classList.toggle("is-playing", !!on);
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+    const ic = b.querySelector(".rd-song-ico");
+    const lb = b.querySelector(".rd-song-lab");
+    if (ic) ic.textContent = on ? "⏹" : "🎵";
+    if (lb) lb.textContent = on ? "동요 멈추기" : "동요 듣기";
+  }
+  function rdSongStop() {
+    rds.on = false;
+    const a = rds.audio;
+    if (a) {
+      try {
+        a.onended = null;
+        a.pause();
+        a.currentTime = 0;
+      } catch (e) { /* noop */ }
+    }
+    rdSongBtn(false);
+  }
+  function rdSongToggle(src) {
+    if (!src) return;
+    if (rds.on) { rdSongStop(); return; }
+    rdHardStop();                 /* 내레이션·영어 발음·영상 소리는 먼저 멈춤 */
+    if (th.open) thClose(true);
+    if (!rds.audio) {
+      rds.audio = new Audio();
+      rds.audio.preload = "auto";
+    }
+    const a = rds.audio;
+    a.loop = false;
+    if (a.dataset.src !== src) {
+      a.dataset.src = src;
+      try { a.src = src; } catch (e) { return; }
+    }
+    a.onended = () => { rds.on = false; rdSongBtn(false); };
+    a.onerror = () => { rds.on = false; rdSongBtn(false); toast("동요를 불러오지 못했어요"); };
+    try { a.currentTime = 0; } catch (e) { /* noop */ }
+    try { a.volume = 1; } catch (e) { /* noop */ }
+    let pr = null;
+    try { pr = a.play(); } catch (e) { rdSongBtn(false); return; }
+    if (pr && typeof pr.catch === "function") {
+      pr.catch(() => { if (a.onerror) a.onerror(); /* 자동재생이 막히면 버튼을 도로 내려놓음 */ });
+    }
+    rds.on = true;
+    rdSongBtn(true);
+  }
   /* 완전 정지 — 닫기·탭 전환·⏹ 멈춤 */
   function rdHardStop() {
+    rdSongStop();
     rda.seqId++;
     rda.seq = false;
     clearTimeout(rda.timer);
@@ -1174,6 +1238,7 @@
   /* 한 조각 재생 — el 에 반짝임, 끝나면 onDone (lang: 한국어 이야기는 "ko-KR") */
   function rdSay(el, src, text, onDone, lang) {
     const id = ++rda.sayId;
+    rdSongStop();       /* 동요를 듣는 중이면 내레이션 시작과 함께 멈춥니다 */
     rdClearSaying();
     if (el) { el.classList.add("is-saying"); rda.el = el; }
     let done = false;
@@ -1319,6 +1384,11 @@
         if (e.target.closest("#rdListenAll")) { rdPlayAll(); return; }
         const pb = e.target.closest("[data-rd-play]");
         if (pb) thOpen(pb.dataset.rdPlay === "word" ? "word" : "proverb");
+        return;
+      });
+      stage.addEventListener("click", (e) => {
+        const sb = e.target.closest("[data-rd-song]");
+        if (sb) rdSongToggle(sb.dataset.rdSong || "");
       });
     }
     document.addEventListener("keydown", (e) => {
