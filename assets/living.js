@@ -1207,13 +1207,19 @@
       try { a.src = src; } catch (e) { return; }
     }
     a.onended = () => { rds.on = false; rdSongBtn(false); };
-    a.onerror = () => { rds.on = false; rdSongBtn(false); toast("동요를 불러오지 못했어요"); };
+    a.onerror = () => {
+      if (!rds.on) return;          /* 멈춘 뒤에 오는 신호는 오류가 아닙니다 */
+      rds.on = false; rdSongBtn(false); toast("동요를 불러오지 못했어요");
+    };
     try { a.currentTime = 0; } catch (e) { /* noop */ }
     try { a.volume = 1; } catch (e) { /* noop */ }
     let pr = null;
     try { pr = a.play(); } catch (e) { rdSongBtn(false); return; }
     if (pr && typeof pr.catch === "function") {
-      pr.catch(() => { if (a.onerror) a.onerror(); /* 자동재생이 막히면 버튼을 도로 내려놓음 */ });
+      pr.catch(() => {
+        if (!rds.on) return;        /* 누르자마자 다시 멈춘 경우는 실패가 아닙니다 */
+        rds.on = false; rdSongBtn(false); toast("동요를 불러오지 못했어요");
+      });
     }
     rds.on = true;
     rdSongBtn(true);
