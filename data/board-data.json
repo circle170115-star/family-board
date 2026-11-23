@@ -1952,95 +1952,95 @@
   },
   "holidayNote": "관공서의 공휴일에 관한 규정 · 2026/2027년 월력요항 기준. 공휴일에는 모든 수업·등원이 자동 제외됩니다.",
   "readingPoster": {
-    "date": "2026-11-23",
-    "title": "티끌 모아 태산",
+    "date": "2026-11-24",
+    "title": "세 살 버릇 여든까지 간다",
     "subtitle": "오늘의 속담 + 오늘의 영단어",
     "proverb": {
-      "badge": "오늘의 속담 · 3호",
-      "title": "티끌 모아 태산",
-      "subtitle": "작은 동전 하나가 모여 큰 산이 돼요",
-      "summary": "작은 동전도 하나씩 모으면 동전 산이, 정리도 하나씩 하면 방이 반짝반짝!",
-      "audio": "assets/reading/audio/proverb-20261123-title.mp3",
+      "badge": "오늘의 속담 · 4호",
+      "title": "세 살 버릇 여든까지 간다",
+      "subtitle": "어릴 때 들인 좋은 습관은 평생 쭉 이어져요",
+      "summary": "양치도, 정리도, 인사도 매일 조금씩! 어릴 때 들인 버릇은 어른이 되어도 반짝반짝!",
+      "audio": "assets/reading/audio/proverb-20261124-title.mp3",
       "panels": [
         {
           "num": 1,
-          "speech": "동전 하나, 아껴 둘래!",
-          "caption": "동전 하나가 아까워요",
+          "speech": "양치도 스스로 척척!",
+          "caption": "아침마다 스스로 양치",
           "image": "assets/reading/panel1-crop.png",
-          "audio": "assets/reading/audio/proverb-20261123-p1.mp3"
+          "audio": "assets/reading/audio/proverb-20261124-p1.mp3"
         },
         {
           "num": 2,
-          "speech": "하나, 둘, 셋! 차곡차곡.",
-          "caption": "하나씩 모으는 재미",
+          "speech": "놀이 끝! 장난감도 제자리에.",
+          "caption": "놀이 뒤엔 스스로 정리",
           "image": "assets/reading/panel2-crop.png",
-          "audio": "assets/reading/audio/proverb-20261123-p2.mp3"
+          "audio": "assets/reading/audio/proverb-20261124-p2.mp3"
         },
         {
           "num": 3,
-          "speech": "장난감 정리도 하나씩!",
-          "caption": "작은 정리도 힘이 돼요",
+          "speech": "만나면 먼저, 안녕하세요!",
+          "caption": "먼저 인사하는 다정함",
           "image": "assets/reading/panel3-crop.png",
-          "audio": "assets/reading/audio/proverb-20261123-p3.mp3"
+          "audio": "assets/reading/audio/proverb-20261124-p3.mp3"
         },
         {
           "num": 4,
-          "speech": "와! 동전이 산처럼 쌓였어!",
-          "caption": "티끌이 태산이 됐어요",
+          "speech": "좋은 버릇은 쑥쑥 자라요!",
+          "caption": "버릇은 나무처럼 자라요",
           "image": "assets/reading/panel4-crop.png",
-          "audio": "assets/reading/audio/proverb-20261123-p4.mp3"
+          "audio": "assets/reading/audio/proverb-20261124-p4.mp3"
         }
       ],
-      "meaning": "작은 동전 하나, 장난감 하나를 정리하는 일도 매일매일 모으면 큰 산처럼 커진다는 뜻이에요.",
-      "promise": "오늘 저금통에 동전 하나 넣기, 장난감 하나 정리하기, 꼭 해 볼까요?",
-      "meaningAudio": "assets/reading/audio/proverb-20261123-meaning.mp3"
+      "meaning": "'세 살 버릇 여든까지 간다'는 어릴 때 몸에 익힌 좋은 습관은 어른이 될 때까지 오래오래 이어진다는 뜻이에요. 양치하기, 장난감 정리하기, 먼저 인사하기 같은 작은 습관이 평생의 힘이 된대요.",
+      "promise": "오늘은 양치 한 번 스스로, 장난감 세 개 정리, 그리고 만나는 사람에게 먼저 인사하기 — 셋 중 하나부터 해 볼까요?",
+      "meaningAudio": "assets/reading/audio/proverb-20261124-meaning.mp3"
     },
     "word": {
-      "badge": "오늘의 영단어 · 3호",
-      "word": "smile",
-      "meaning": "미소 짓다 · 활짝 웃다",
-      "audio": "assets/reading/audio/smile.mp3",
+      "badge": "오늘의 영단어 · 4호",
+      "word": "help",
+      "meaning": "도와주다 · 돕다",
+      "audio": "assets/reading/audio/help.mp3",
       "bannerImage": "assets/reading/word-banner.png",
       "examples": [
         {
           "num": 1,
-          "en": "I smile at you.",
-          "ko": "나는 너에게 활짝 웃어요.",
-          "audio": "assets/reading/audio/smile-ex1.mp3",
+          "en": "I can help you.",
+          "ko": "내가 도와줄 수 있어.",
+          "audio": "assets/reading/audio/help-ex1.mp3",
           "highlight": [
-            "smile"
+            "help"
           ],
-          "koAudio": "assets/reading/audio/smile-ko-ex1.mp3",
-          "koScript": "그림을 보세요. 다은이가 친구에게 활짝 웃어 주고 있어요. 첫 번째 문장! 나는 너에게 활짝 웃어요, 라는 뜻이에요."
+          "koAudio": "assets/reading/audio/help-ko-ex1.mp3",
+          "koScript": "그림을 보세요. 승민이가 다은이를 도와주고 있어요. 첫 번째 문장! 내가 도와줄 수 있어, 라는 뜻이에요."
         },
         {
           "num": 2,
-          "en": "We smile together.",
-          "ko": "우리는 함께 웃어요.",
-          "audio": "assets/reading/audio/smile-ex2.mp3",
+          "en": "Help me, please.",
+          "ko": "저 좀 도와주세요.",
+          "audio": "assets/reading/audio/help-ex2.mp3",
           "highlight": [
-            "smile"
+            "help"
           ],
-          "koAudio": "assets/reading/audio/smile-ko-ex2.mp3",
-          "koScript": "두 번째 문장! 우리는 함께 웃어요. 다 같이 웃으니 기분이 좋아져요."
+          "koAudio": "assets/reading/audio/help-ko-ex2.mp3",
+          "koScript": "두 번째 문장! 저 좀 도와주세요, 라는 뜻이에요. 도움이 필요할 때는 예쁘게 부탁해요."
         },
         {
           "num": 3,
-          "en": "A big smile helps.",
-          "ko": "큰 미소가 힘을 줘요.",
-          "audio": "assets/reading/audio/smile-ex3.mp3",
+          "en": "We help each other.",
+          "ko": "우리는 서로 도와요.",
+          "audio": "assets/reading/audio/help-ex3.mp3",
           "highlight": [
-            "smile"
+            "help"
           ],
-          "koAudio": "assets/reading/audio/smile-ko-ex3.mp3",
-          "koScript": "세 번째 문장! 큰 미소가 힘을 줘요. 웃는 얼굴 하나가 모두에게 힘이 된대요."
+          "koAudio": "assets/reading/audio/help-ko-ex3.mp3",
+          "koScript": "세 번째 문장! 우리는 서로 도와요, 라는 뜻이에요. 가족끼리 서로 도우면 모두 즐거워져요."
         }
       ],
-      "tip": "입꼬리를 살짝 올려 웃는 것, 그게 바로 smile이에요. 오늘 가족에게 먼저 smile 해 볼까요?",
-      "koIntroAudio": "assets/reading/audio/smile-ko-intro.mp3",
-      "koIntroText": "오늘의 영단어는 smile. 미소 짓다, 활짝 웃다는 뜻이에요. 그림을 보면서 같이 연습해 볼까요?",
-      "koTipAudio": "assets/reading/audio/smile-ko-tip.mp3",
-      "koTipText": "기억 쏙 한마디! 입꼬리를 살짝 올려 웃는 것, 그게 바로 smile 예요."
+      "tip": "누군가 힘들어 보이면 '내가 도와줄게!' 하고 손을 내미는 것, 그게 바로 help예요. 오늘 가족에게 먼저 help 해 볼까요?",
+      "koIntroAudio": "assets/reading/audio/help-ko-intro.mp3",
+      "koIntroText": "오늘의 영단어는 help. 도와주다, 돕다는 뜻이에요. 그림을 보면서 같이 연습해 볼까요?",
+      "koTipAudio": "assets/reading/audio/help-ko-tip.mp3",
+      "koTipText": "기억 쏙 한마디! 누군가 힘들어 보이면, 내가 도와줄게, 하고 손을 내미는 것. 그게 바로 help 예요."
     },
     "note": "거실 보드 '📖 오늘의 읽을거리' 전체화면 모달. proverb(속담 4컷) · word(터치 발음 영단어) 두 탭을 이 객체만 고쳐 바꿉니다. 이미지는 assets/reading/ 아래에 두고 audio 는 MP3 경로(없으면 Web Speech en-US 로 자동 대체)를 적습니다. proverb·word 가 모두 비면 안내 카드가 보입니다."
   }
