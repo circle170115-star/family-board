@@ -1250,7 +1250,7 @@
             '<button class="wd-all" id="rdListenAll" type="button" aria-pressed="false" aria-label="영어만 듣기 — 단어와 예문 3개를 원어민 발음으로 이어서 듣기"><span aria-hidden="true">🔊</span> 영어만 듣기</button>' +
             '<button class="rd-play is-word" type="button" data-rd-play="word" aria-label="오늘의 영단어를 한국어 설명과 원어민 발음이 함께 나오는 영상으로 듣기"><span aria-hidden="true">🎬</span> 영상으로 듣기</button>' +
             songBtn +
-            '<span class="wd-tools-note">단어·예문은 원어민 발음, 그림·뜻·한마디는 한국어 설명이 나와요</span>' +
+            '<span class="wd-tools-note">' + (songBtn ? "영어는 원어민 발음, 그림·뜻은 한국어" : "단어·예문은 원어민 발음, 그림·뜻·한마디는 한국어 설명이 나와요") + '</span>' +
           "</div>" +
           '<div class="wd-cards">' + examples + "</div>" +
         "</div>" +
