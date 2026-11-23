@@ -1129,20 +1129,26 @@
     return out + esc(s.slice(last));
   }
 
+  /* 🎵 동요 듣기 버튼 한 벌 — 속담 탭(4컷 위)과 영단어 탭(영어만 듣기·영상으로 듣기 옆)이
+     같은 모양·같은 동작을 씁니다. songAudio 가 있는 호수에만 버튼이 생기고,
+     없는 호수(예: 동요를 넣지 않은 지난 호)로 옮기면 버튼이 통째로 사라집니다. */
+  function rdSongBtnHTML(obj, id) {
+    const src = obj && obj.songAudio ? String(obj.songAudio) : "";
+    if (!src) return "";
+    const name = String(obj.songTitle || "").replace(/^\s*[\u{1F3B5}\u{1F3B6}]\s*/u, "").trim() || "오늘의 동요";
+    return '<button class="rd-song" id="' + id + '" type="button" data-rd-song="' + esc(src) + '"' +
+      ' aria-pressed="false" aria-label="' + esc("동요 듣기 · " + name + " · 누르면 재생, 다시 누르면 멈춤") + '">' +
+      '<span class="rd-song-ico" aria-hidden="true">🎵</span>' +
+      '<span class="rd-song-lab">동요 듣기</span>' +
+      '<em class="rd-song-t">' + esc(name) + "</em></button>";
+  }
+
   function rdProverbHTML(pv) {
     /* 컷마다 한국어 이야기 MP3(proverb-YYYYMMDD-pN.mp3)를 붙여, 그림을 눌러도 들을 수 있게 합니다.
        왼쪽 영역(배지·제목·한 줄 요약)을 누르면 속담 제목 음성(pv.audio),
        뜻 카드는 pv.meaningAudio, 약속 카드는 약속 글을 한국어 음성으로 읽어 줍니다.
        🎵 동요 듣기 — pv.songAudio(보컬 동요 원곡)가 있으면 4컷 위에 버튼이 생깁니다. */
-    const songSrc = pv.songAudio ? String(pv.songAudio) : "";
-    const songName = String(pv.songTitle || "").replace(/^\s*[\u{1F3B5}\u{1F3B6}]\s*/u, "").trim() || "오늘의 동요";
-    const songBtn = songSrc
-      ? '<button class="rd-song" id="rdSong" type="button" data-rd-song="' + esc(songSrc) + '"' +
-        ' aria-pressed="false" aria-label="' + esc("동요 듣기 · " + songName + " · 누르면 재생, 다시 누르면 멈춤") + '">' +
-        '<span class="rd-song-ico" aria-hidden="true">🎵</span>' +
-        '<span class="rd-song-lab">동요 듣기</span>' +
-        '<em class="rd-song-t">' + esc(songName) + "</em></button>"
-      : "";
+    const songBtn = rdSongBtnHTML(pv, "rdSong");
     const pvTitleText = [pv.title, pv.subtitle, pv.summary].filter(Boolean).join(". ");
     const panels = (Array.isArray(pv.panels) ? pv.panels : []).slice(0, 4).map((p, i) => {
       const n = p.num != null ? p.num : i + 1;
@@ -1190,6 +1196,9 @@
 
   function rdWordHTML(wd) {
     const word = String(wd.word || "");
+    /* 🎵 동요 듣기 — wd.songAudio(그 단어로 만든 영어 동요)가 있으면
+       '영어만 듣기 · 영상으로 듣기' 옆에 나란히 놓입니다. */
+    const songBtn = rdSongBtnHTML(wd, "rdSongWord");
     /* 왼쪽 영역(그림 배너·뜻 칩·기억 쏙 한마디)을 누르면 한국어 설명 음성을 읽어 줍니다.
        큰 영어 단어와 예문 카드는 지금처럼 원어민 영어 발음이 먼저입니다. */
     const koIntroAudio = wd.koIntroAudio || "";
@@ -1240,6 +1249,7 @@
           '<div class="wd-tools">' +
             '<button class="wd-all" id="rdListenAll" type="button" aria-pressed="false" aria-label="영어만 듣기 — 단어와 예문 3개를 원어민 발음으로 이어서 듣기"><span aria-hidden="true">🔊</span> 영어만 듣기</button>' +
             '<button class="rd-play is-word" type="button" data-rd-play="word" aria-label="오늘의 영단어를 한국어 설명과 원어민 발음이 함께 나오는 영상으로 듣기"><span aria-hidden="true">🎬</span> 영상으로 듣기</button>' +
+            songBtn +
             '<span class="wd-tools-note">단어·예문은 원어민 발음, 그림·뜻·한마디는 한국어 설명이 나와요</span>' +
           "</div>" +
           '<div class="wd-cards">' + examples + "</div>" +
@@ -1255,6 +1265,7 @@
     stage.classList.toggle("is-card", !(p.proverb || p.word));
     if (p.proverb || p.word) {
       stage.innerHTML = (p.proverb ? rdProverbHTML(p.proverb) : "") + (p.word ? rdWordHTML(p.word) : "");
+      rdSongResync();          /* 동요 버튼이 없는 호수로 바뀌면 재생도 멈춥니다 */
       setReadingTab(p.proverb ? "proverb" : "word");
       return;
     }
@@ -1326,21 +1337,36 @@
     b.setAttribute("aria-pressed", playing ? "true" : "false");
     b.innerHTML = playing ? '<span aria-hidden="true">⏹</span> 멈춤' : '<span aria-hidden="true">🔊</span> 영어만 듣기';
   }
-  /* ── 🎵 동요 듣기 — readingPoster.proverb.songAudio(보컬 동요)를 원곡 그대로 재생/정지합니다.
-     대사·영상 소리와는 섮이지 않도록, 누구든 먼저 멈춘 뒤 재생합니다. ── */
-  const rds = { audio: null, on: false };
-  function rdSongBtn(on) {
-    const b = $("#rdSong");
-    if (!b) return;
-    b.classList.toggle("is-playing", !!on);
-    b.setAttribute("aria-pressed", on ? "true" : "false");
-    const ic = b.querySelector(".rd-song-ico");
-    const lb = b.querySelector(".rd-song-lab");
-    if (ic) ic.textContent = on ? "⏹" : "🎵";
-    if (lb) lb.textContent = on ? "동요 멈추기" : "동요 듣기";
+  /* ── 🎵 동요 듣기 — readingPoster.proverb.songAudio(속담 탭) · readingPoster.word.songAudio(영단어 탭)를
+     원곡 그대로 재생/정지합니다. 두 탭의 버튼이 같은 상태를 함께 쓰므로,
+     지금 울리는 동요(src)에 해당하는 버튼만 ⏹ 로 바뀝니다.
+     대사·영상 소리와는 섞이지 않도록, 누구든 먼저 멈춘 뒤 재생합니다. ── */
+  const rds = { audio: null, on: false, src: "" };
+  function rdSongBtn(on, src) {
+    const list = document.querySelectorAll("#rdStage .rd-song");
+    Array.prototype.forEach.call(list, (b) => {
+      const mine = !!on && (!src || b.dataset.rdSong === src);
+      b.classList.toggle("is-playing", mine);
+      b.setAttribute("aria-pressed", mine ? "true" : "false");
+      const ic = b.querySelector(".rd-song-ico");
+      const lb = b.querySelector(".rd-song-lab");
+      if (ic) ic.textContent = mine ? "⏹" : "🎵";
+      if (lb) lb.textContent = mine ? "동요 멈추기" : "동요 듣기";
+    });
+  }
+  /* 화면을 다시 그린 뒤 — 그 동요 버튼이 새 화면에 없으면(호수·탭 전환) 재생도 멈춥니다 */
+  function rdSongResync() {
+    if (!rds.on) return;
+    const stage = $("#rdStage");
+    const list = stage ? stage.querySelectorAll(".rd-song") : [];
+    let alive = false;
+    Array.prototype.forEach.call(list, (b) => { if (b.dataset.rdSong === rds.src) alive = true; });
+    if (alive) rdSongBtn(true, rds.src);
+    else rdSongStop();
   }
   function rdSongStop() {
     rds.on = false;
+    rds.src = "";
     const a = rds.audio;
     if (a) {
       try {
@@ -1353,7 +1379,7 @@
   }
   function rdSongToggle(src) {
     if (!src) return;
-    if (rds.on) { rdSongStop(); return; }
+    if (rds.on && rds.src === src) { rdSongStop(); return; }
     rdHardStop();                 /* 내레이션·영어 발음·영상 소리는 먼저 멈춤 */
     if (th.open) thClose(true);
     if (!rds.audio) {
@@ -1366,6 +1392,7 @@
       a.dataset.src = src;
       try { a.src = src; } catch (e) { return; }
     }
+    rds.src = src;
     a.onended = () => { rds.on = false; rdSongBtn(false); };
     a.onerror = () => {
       if (!rds.on) return;          /* 멈춘 뒤에 오는 신호는 오류가 아닙니다 */
@@ -1382,7 +1409,7 @@
       });
     }
     rds.on = true;
-    rdSongBtn(true);
+    rdSongBtn(true, src);
   }
   /* 완전 정지 — 닫기·탭 전환·⏹ 멈춤 */
   function rdHardStop() {

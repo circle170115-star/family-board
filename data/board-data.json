@@ -2004,6 +2004,8 @@
    "word": "help",
    "meaning": "도와주다 · 돕다",
    "audio": "assets/reading/audio/help.mp3",
+   "songAudio": "assets/reading/audio/help-song.mp3",
+   "songTitle": "🎵 Help Song",
    "bannerImage": "assets/reading/word-banner.png",
    "examples": [
     {

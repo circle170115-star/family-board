@@ -83,7 +83,7 @@ def asset_paths(poster):
             out.append(panel["image"])
         if panel.get("audio"):
             out.append(panel["audio"])
-    for k in ("audio", "bannerImage", "koIntroAudio", "koTipAudio"):
+    for k in ("audio", "bannerImage", "koIntroAudio", "koTipAudio", "songAudio"):
         if wd.get(k):
             out.append(wd[k])
     for ex in wd.get("examples") or []:
@@ -124,7 +124,7 @@ def rewrite_paths(poster, date_str):
                     panel[k] = to_archive_path(panel[k], date_str)
     wd = out.get("word")
     if isinstance(wd, dict):
-        for k in ("audio", "bannerImage", "koIntroAudio", "koTipAudio"):
+        for k in ("audio", "bannerImage", "koIntroAudio", "koTipAudio", "songAudio"):
             if wd.get(k):
                 wd[k] = to_archive_path(wd[k], date_str)
         for ex in wd.get("examples") or []:
