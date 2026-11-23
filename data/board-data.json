@@ -1,2051 +1,2051 @@
 {
-  "meta": {
-    "version": 1,
-    "updatedAt": "2026-11-23T06:05:00+09:00",
-    "updatedBy": "포근이 · 모아보드 아침 갱신 (날씨·급식·updatedAt)",
-    "schemaNote": "일정·급식·날씨·건강 데이터는 이 파일만 고치면 보드에 반영됩니다. 자세한 구조는 README.md 참고."
-  },
-  "family": {
-    "title": "우리 집 모아보드",
-    "subtitle": "다은이 · 승민이의 하루를 한 화면에",
-    "location": {
-      "name": "서울시 강서구 우장산동",
-      "lat": 37.549,
-      "lon": 126.836,
-      "timezone": "Asia/Seoul"
-    }
-  },
-  "school": {
-    "name": "서울내발산초등학교",
-    "kindergarten": "병설유치원",
-    "neis": {
-      "atptOfcdcScCode": "B10",
-      "schulCode": "7081430",
-      "mealService": "중식"
-    }
-  },
-  "children": [
-    {
-      "id": "daeun",
-      "name": "다은",
-      "ageLabel": "7세",
-      "birthYear": 2020,
-      "grade": "열매반 (유치원 7세)",
-      "color": "#C1687F",
-      "soft": "#FDEDF2"
-    },
-    {
-      "id": "seungmin",
-      "name": "승민",
-      "ageLabel": "5세",
-      "birthYear": 2022,
-      "grade": "새싹반 (유치원 5세)",
-      "color": "#3E76C4",
-      "soft": "#E9F2FE"
-    }
-  ],
-  "schedules": [
-    {
-      "id": "daeun-pickup",
-      "child": "daeun",
-      "title": "병설유치원 하원",
-      "kind": "pickup",
-      "times": {
-        "mon": "15:30",
-        "tue": "15:15",
-        "wed": "15:30",
-        "thu": "15:30",
-        "fri": "15:15"
-      },
-      "note": "엄마 픽업"
-    },
-    {
-      "id": "daeun-piano",
-      "child": "daeun",
-      "title": "피아노",
-      "kind": "lesson",
-      "times": {
-        "mon": "15:40",
-        "wed": "15:40",
-        "thu": "15:40"
-      },
-      "note": "하원 후 바로"
-    },
-    {
-      "id": "daeun-upperroom",
-      "child": "daeun",
-      "title": "어퍼룸영어학원",
-      "kind": "academy",
-      "times": {
-        "tue": "15:30",
-        "fri": "15:30"
-      },
-      "note": "월 8차시",
-      "session": {
-        "kind": "monthly",
-        "perMonth": 8,
-        "unit": "차시"
-      }
-    },
-    {
-      "id": "daeun-reading",
-      "child": "daeun",
-      "title": "독서화상",
-      "kind": "online",
-      "times": {
-        "mon": "18:00"
-      },
-      "note": "집에서"
-    },
-    {
-      "id": "daeun-elihi",
-      "child": "daeun",
-      "title": "엘리하이화상",
-      "kind": "online",
-      "times": {
-        "wed": "18:10"
-      },
-      "note": "월 4차시",
-      "session": {
-        "kind": "oddEven",
-        "perMonth": 4,
-        "odd": {
-          "time": "18:10",
-          "label": "단독수업"
-        },
-        "even": {
-          "time": "18:20",
-          "label": "격주수업"
-        }
-      }
-    },
-    {
-      "id": "seungmin-pickup",
-      "child": "seungmin",
-      "title": "병설유치원 하원",
-      "kind": "pickup",
-      "times": {
-        "mon": "17:00",
-        "tue": "17:00",
-        "wed": "17:00",
-        "thu": "17:00",
-        "fri": "17:00"
-      },
-      "note": "엄마 픽업"
-    },
-    {
-      "id": "seungmin-elihi",
-      "child": "seungmin",
-      "title": "엘리하이화상",
-      "kind": "online",
-      "times": {
-        "tue": "17:40"
-      },
-      "note": "월 4차시",
-      "session": {
-        "kind": "seungminTuesday",
-        "perMonth": 4,
-        "switchMonth": "2027-01",
-        "before": {
-          "first": {
-            "time": "17:40",
-            "label": "엄마-담임선생님 상담"
-          },
-          "rest": {
-            "time": "17:40",
-            "label": "승민 단독수업"
-          }
-        },
-        "after": {
-          "time": "17:40",
-          "label": "승민 단독수업"
-        }
-      }
-    }
-  ],
-  "meals": {
-    "2026-11-02": {
-      "menu": [
-        {
-          "name": "흑미밥",
-          "allergy": []
-        },
-        {
-          "name": "얼큰김치콩나물국",
-          "allergy": [
-            5,
-            6,
-            9,
-            13
-          ]
-        },
-        {
-          "name": "*뱅어포양념조림",
-          "allergy": [
-            5,
-            6,
-            12,
-            13
-          ]
-        },
-        {
-          "name": "천사채샐러드",
-          "allergy": [
-            1,
-            5,
-            6,
-            8,
-            13
-          ]
-        },
-        {
-          "name": "치킨까스+잠발라소스",
-          "allergy": [
-            1,
-            2,
-            5,
-            6,
-            12,
-            13,
-            15,
-            18
-          ]
-        },
-        {
-          "name": "깍두기",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        }
-      ],
-      "calories": "643.2 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-03": {
-      "menu": [
-        {
-          "name": "현미찹쌀밥",
-          "allergy": []
-        },
-        {
-          "name": "닭곰탕",
-          "allergy": [
-            15
-          ]
-        },
-        {
-          "name": "꽁치김치조림",
-          "allergy": [
-            5,
-            6,
-            9,
-            13
-          ]
-        },
-        {
-          "name": "버섯잡채",
-          "allergy": [
-            5,
-            6,
-            10,
-            13
-          ]
-        },
-        {
-          "name": "오이김치",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "샤인머스켓",
-          "allergy": []
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        }
-      ],
-      "calories": "667.8 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-04": {
-      "menu": [
-        {
-          "name": "스파게티-",
-          "allergy": [
-            1,
-            2,
-            5,
-            6,
-            12,
-            13,
-            16
-          ]
-        },
-        {
-          "name": "오이피클",
-          "allergy": []
-        },
-        {
-          "name": "*수제마늘빵",
-          "allergy": [
-            2,
-            5,
-            6
-          ]
-        },
-        {
-          "name": "윌 미니",
-          "allergy": [
-            2
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        },
-        {
-          "name": "양상추(감,귤)오리엔탈샐러드",
-          "allergy": [
-            1,
-            2,
-            5,
-            6
-          ]
-        }
-      ],
-      "calories": "705.3 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-05": {
-      "menu": [
-        {
-          "name": "삼입국화밥",
-          "allergy": [
-            5,
-            6,
-            13
-          ]
-        },
-        {
-          "name": "무청시래기국",
-          "allergy": [
-            5,
-            6,
-            9
-          ]
-        },
-        {
-          "name": "열탄오리돈불고기",
-          "allergy": [
-            5,
-            6,
-            10
-          ]
-        },
-        {
-          "name": "배추겉절이",
-          "allergy": [
-            13
-          ]
-        },
-        {
-          "name": "페스츄리꽈배기",
-          "allergy": [
-            1,
-            2,
-            5,
-            6,
-            13
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        },
-        {
-          "name": "(친환경)귤",
-          "allergy": []
-        }
-      ],
-      "calories": "832.1 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-06": {
-      "menu": [
-        {
-          "name": "통밀밥",
-          "allergy": [
-            6
-          ]
-        },
-        {
-          "name": "물만두국",
-          "allergy": [
-            1,
-            5,
-            6,
-            10,
-            16,
-            18
-          ]
-        },
-        {
-          "name": "쫄면무침(대)",
-          "allergy": [
-            5,
-            6,
-            13
-          ]
-        },
-        {
-          "name": "임연수카레마요구이",
-          "allergy": [
-            1,
-            2,
-            5,
-            6,
-            12,
-            13,
-            16,
-            18
-          ]
-        },
-        {
-          "name": "배추김치",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        },
-        {
-          "name": "김구이",
-          "allergy": []
-        }
-      ],
-      "calories": "720.4 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-09": {
-      "menu": [
-        {
-          "name": "클로렐라쌀밥(기능성)",
-          "allergy": []
-        },
-        {
-          "name": "황태무국",
-          "allergy": [
-            5,
-            6
-          ]
-        },
-        {
-          "name": "가마보꼬사각어묵조림(스테이크소스)",
-          "allergy": [
-            1,
-            5,
-            6,
-            12,
-            13,
-            16
-          ]
-        },
-        {
-          "name": "세발나물골뱅이초무침",
-          "allergy": [
-            5,
-            6,
-            13,
-            17
-          ]
-        },
-        {
-          "name": "계란말이",
-          "allergy": [
-            1,
-            5
-          ]
-        },
-        {
-          "name": "깍두기",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        }
-      ],
-      "calories": "601.9 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-10": {
-      "menu": [
-        {
-          "name": "강황쌀밥(기능성)",
-          "allergy": []
-        },
-        {
-          "name": "홍합미역국",
-          "allergy": [
-            5,
-            6,
-            18
-          ]
-        },
-        {
-          "name": "사태떡찜",
-          "allergy": [
-            5,
-            6,
-            10,
-            13,
-            16
-          ]
-        },
-        {
-          "name": "콩나물당근무침",
-          "allergy": [
-            5,
-            6,
-            13
-          ]
-        },
-        {
-          "name": "두반장알감자조림",
-          "allergy": [
-            5,
-            6,
-            10,
-            12,
-            13,
-            18
-          ]
-        },
-        {
-          "name": "총각김치",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        }
-      ],
-      "calories": "617.6 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-11": {
-      "menu": [
-        {
-          "name": "스팸마요볶음밥",
-          "allergy": [
-            1,
-            2,
-            5,
-            6,
-            10,
-            13,
-            15,
-            16
-          ]
-        },
-        {
-          "name": "유부된장국",
-          "allergy": [
-            5,
-            6
-          ]
-        },
-        {
-          "name": "밀떡볶이",
-          "allergy": [
-            1,
-            5,
-            6,
-            12,
-            13
-          ]
-        },
-        {
-          "name": "깍두기",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "츄러스(초코)",
-          "allergy": [
-            1,
-            2,
-            5,
-            6,
-            13
-          ]
-        },
-        {
-          "name": "대추방울토마토",
-          "allergy": [
-            12
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        }
-      ],
-      "calories": "846.5 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-12": {
-      "menu": [
-        {
-          "name": "보리밥",
-          "allergy": []
-        },
-        {
-          "name": "조랭이떡국(국용)",
-          "allergy": [
-            1,
-            5,
-            6,
-            16,
-            18
-          ]
-        },
-        {
-          "name": "돼지고기야채볶음",
-          "allergy": [
-            5,
-            6,
-            10,
-            13
-          ]
-        },
-        {
-          "name": "연근튀김",
-          "allergy": [
-            5,
-            13
-          ]
-        },
-        {
-          "name": "배추김치",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "사과",
-          "allergy": [
-            13
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        }
-      ],
-      "calories": "642.3 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-13": {
-      "menu": [
-        {
-          "name": "혼합잡곡밥",
-          "allergy": [
-            5
-          ]
-        },
-        {
-          "name": "육개장",
-          "allergy": [
-            5,
-            6,
-            16
-          ]
-        },
-        {
-          "name": "깐풍코다리",
-          "allergy": [
-            5,
-            6,
-            13,
-            18
-          ]
-        },
-        {
-          "name": "새송이애호박볶음",
-          "allergy": [
-            5,
-            9
-          ]
-        },
-        {
-          "name": "백김치",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "돌김자반",
-          "allergy": [
-            5,
-            9
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        }
-      ],
-      "calories": "689.2 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-16": {
-      "menu": [
-        {
-          "name": "차수수밥",
-          "allergy": []
-        },
-        {
-          "name": "어묵탕",
-          "allergy": [
-            1,
-            5,
-            6
-          ]
-        },
-        {
-          "name": "두부소보로시금치무침",
-          "allergy": [
-            5,
-            6,
-            13
-          ]
-        },
-        {
-          "name": "목살불고기양념구이",
-          "allergy": [
-            5,
-            6,
-            10,
-            13,
-            18
-          ]
-        },
-        {
-          "name": "총각김치",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        },
-        {
-          "name": "스위티오바나나",
-          "allergy": []
-        }
-      ],
-      "calories": "752.1 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-17": {
-      "menu": [
-        {
-          "name": "귀리밥",
-          "allergy": []
-        },
-        {
-          "name": "햄모듬찌개",
-          "allergy": [
-            1,
-            2,
-            5,
-            6,
-            9,
-            10,
-            12,
-            15,
-            16
-          ]
-        },
-        {
-          "name": "새우무나물볶음",
-          "allergy": [
-            5,
-            6,
-            9,
-            13
-          ]
-        },
-        {
-          "name": "쇠고기육전",
-          "allergy": [
-            1,
-            5,
-            6,
-            16
-          ]
-        },
-        {
-          "name": "배추김치",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "사과",
-          "allergy": [
-            13
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        }
-      ],
-      "calories": "700.9 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-18": {
-      "menu": [
-        {
-          "name": "단호박죽",
-          "allergy": [
-            13
-          ]
-        },
-        {
-          "name": "미니하트감자튀김&케찹",
-          "allergy": [
-            5,
-            6,
-            12
-          ]
-        },
-        {
-          "name": "나박김치",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "셀프텐더또띠아",
-          "allergy": [
-            1,
-            2,
-            5,
-            6,
-            12,
-            13,
-            15,
-            18
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        },
-        {
-          "name": "코우슬로샐러드",
-          "allergy": [
-            1,
-            5,
-            13
-          ]
-        }
-      ],
-      "calories": "661.0 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-19": {
-      "menu": [
-        {
-          "name": "기장밥",
-          "allergy": []
-        },
-        {
-          "name": "팽이된장국",
-          "allergy": [
-            5,
-            6
-          ]
-        },
-        {
-          "name": "삼색나물(시금치)",
-          "allergy": [
-            5,
-            6
-          ]
-        },
-        {
-          "name": "쇠불고기",
-          "allergy": [
-            5,
-            6,
-            13,
-            16
-          ]
-        },
-        {
-          "name": "배추김치",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "요쿠르트",
-          "allergy": [
-            2
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        }
-      ],
-      "calories": "644.6 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-20": {
-      "menu": [
-        {
-          "name": "자장밥",
-          "allergy": [
-            1,
-            5,
-            6,
-            10,
-            13
-          ]
-        },
-        {
-          "name": "계란국",
-          "allergy": [
-            1,
-            5,
-            6
-          ]
-        },
-        {
-          "name": "배추김치",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "탕수육(완)",
-          "allergy": [
-            1,
-            5,
-            6,
-            10,
-            13
-          ]
-        },
-        {
-          "name": "찐만두",
-          "allergy": [
-            5
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        },
-        {
-          "name": "(친환경)귤",
-          "allergy": []
-        }
-      ],
-      "calories": "753.4 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-23": {
-      "menu": [
-        {
-          "name": "율무밥",
-          "allergy": []
-        },
-        {
-          "name": "등뼈김치찌개",
-          "allergy": [
-            5,
-            6,
-            9,
-            10
-          ]
-        },
-        {
-          "name": "매실양념깻잎지",
-          "allergy": []
-        },
-        {
-          "name": "숙주미나리무침",
-          "allergy": [
-            5,
-            6
-          ]
-        },
-        {
-          "name": "어묵볶음",
-          "allergy": [
-            1,
-            5,
-            6
-          ]
-        },
-        {
-          "name": "비엔나멸치볶음",
-          "allergy": [
-            2,
-            5,
-            6,
-            10,
-            13,
-            15,
-            16
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        }
-      ],
-      "calories": "737.3 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-24": {
-      "menu": [
-        {
-          "name": "흑미밥",
-          "allergy": []
-        },
-        {
-          "name": "맑은콩나물국",
-          "allergy": [
-            5,
-            6,
-            9
-          ]
-        },
-        {
-          "name": "진미채조림",
-          "allergy": [
-            1,
-            5,
-            6,
-            13,
-            17
-          ]
-        },
-        {
-          "name": "돼지갈비찜(떡)",
-          "allergy": [
-            5,
-            6,
-            10,
-            13
-          ]
-        },
-        {
-          "name": "취나물볶음",
-          "allergy": [
-            5,
-            6
-          ]
-        },
-        {
-          "name": "배추김치",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        }
-      ],
-      "calories": "656.2 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-25": {
-      "menu": [
-        {
-          "name": "고소한파니르카레",
-          "allergy": [
-            2,
-            5,
-            6,
-            12,
-            13,
-            15,
-            16,
-            18
-          ]
-        },
-        {
-          "name": "왕새우튀김",
-          "allergy": [
-            1,
-            5,
-            6,
-            9
-          ]
-        },
-        {
-          "name": "배추김치",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "팬케익",
-          "allergy": [
-            1,
-            2,
-            5,
-            6
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        },
-        {
-          "name": "그릭요거트",
-          "allergy": [
-            2
-          ]
-        }
-      ],
-      "calories": "867.8 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-26": {
-      "menu": [
-        {
-          "name": "현미찹쌀밥",
-          "allergy": []
-        },
-        {
-          "name": "버섯전골",
-          "allergy": [
-            5,
-            6,
-            13,
-            16
-          ]
-        },
-        {
-          "name": "메추리알감자조림",
-          "allergy": [
-            6,
-            13,
-            1,
-            5
-          ]
-        },
-        {
-          "name": "삼치어향소스구이",
-          "allergy": [
-            5,
-            6,
-            10,
-            12,
-            13,
-            18
-          ]
-        },
-        {
-          "name": "총각김치",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        },
-        {
-          "name": "스위티오바나나",
-          "allergy": []
-        }
-      ],
-      "calories": "663.2 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-27": {
-      "menu": [
-        {
-          "name": "샌드위치",
-          "allergy": [
-            1,
-            2,
-            5,
-            6,
-            10
-          ]
-        },
-        {
-          "name": "비타민C젤리",
-          "allergy": []
-        },
-        {
-          "name": "바나나맛우유",
-          "allergy": [
-            2
-          ]
-        },
-        {
-          "name": "후레쉬삼색과일",
-          "allergy": [
-            12
-          ]
-        },
-        {
-          "name": "현미가래떡",
-          "allergy": [
-            1,
-            2,
-            5,
-            6
-          ]
-        }
-      ],
-      "calories": "463.7 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    },
-    "2026-11-30": {
-      "menu": [
-        {
-          "name": "찰옥수수밥",
-          "allergy": []
-        },
-        {
-          "name": "감자탕",
-          "allergy": [
-            5,
-            6,
-            9,
-            10
-          ]
-        },
-        {
-          "name": "쑥갓두부무침",
-          "allergy": [
-            5,
-            6,
-            13
-          ]
-        },
-        {
-          "name": "미역줄기볶음",
-          "allergy": [
-            1,
-            5,
-            6
-          ]
-        },
-        {
-          "name": "깍두기",
-          "allergy": [
-            9
-          ]
-        },
-        {
-          "name": "귤(노지)",
-          "allergy": []
-        },
-        {
-          "name": "우유",
-          "allergy": [
-            2
-          ]
-        }
-      ],
-      "calories": "624.8 Kcal",
-      "meal": "중식",
-      "source": "NEIS"
-    }
-  },
-  "weather": {
-    "place": "서울시 강서구 우장산동",
-    "obsTime": "2026-11-23T06:00:00+09:00",
-    "source": "Apple Weather (weather snapshot)",
-    "now": {
-      "temp": 2,
-      "feels": -1,
-      "condition": "Cloudy",
-      "humidity": 76,
-      "windKmh": 12,
-      "uv": 0
-    },
-    "days": [
-      {
-        "date": "2026-11-23",
-        "condition": "Rain",
-        "high": 12,
-        "low": 1,
-        "precip": 95,
-        "morning": 2
-      },
-      {
-        "date": "2026-11-24",
-        "condition": "Partly Cloudy",
-        "high": 3,
-        "low": -3,
-        "precip": 0,
-        "morning": -2
-      },
-      {
-        "date": "2026-11-25",
-        "condition": "Partly Cloudy",
-        "high": 9,
-        "low": -4,
-        "precip": 0,
-        "morning": -4
-      },
-      {
-        "date": "2026-11-26",
-        "condition": "Partly Cloudy",
-        "high": 15,
-        "low": 5,
-        "precip": 0,
-        "morning": 6
-      },
-      {
-        "date": "2026-11-27",
-        "condition": "Drizzle",
-        "high": 15,
-        "low": 8,
-        "precip": 47,
-        "morning": 9
-      },
-      {
-        "date": "2026-11-28",
-        "condition": "Mostly Clear",
-        "high": 8,
-        "low": -1,
-        "precip": 0,
-        "morning": 4
-      },
-      {
-        "date": "2026-11-29",
-        "condition": "Partly Cloudy",
-        "high": 7,
-        "low": -2,
-        "precip": 0,
-        "morning": -2
-      }
-    ],
-    "hours": [
-      {
-        "time": "2026-11-23 00:00",
-        "condition": "Partly Cloudy",
-        "temp": 1,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-23 01:00",
-        "condition": "Partly Cloudy",
-        "temp": 1,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-23 02:00",
-        "condition": "Partly Cloudy",
-        "temp": 1,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-23 03:00",
-        "condition": "Partly Cloudy",
-        "temp": 1,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-23 04:00",
-        "condition": "Partly Cloudy",
-        "temp": 2,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-23 05:00",
-        "condition": "Mostly Cloudy",
-        "temp": 1,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-23 06:00",
-        "condition": "Cloudy",
-        "temp": 2,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-23 07:00",
-        "condition": "Cloudy",
-        "temp": 3,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-23 08:00",
-        "condition": "Drizzle",
-        "temp": 3,
-        "precip": 36
-      },
-      {
-        "time": "2026-11-23 09:00",
-        "condition": "Drizzle",
-        "temp": 4,
-        "precip": 48
-      },
-      {
-        "time": "2026-11-23 10:00",
-        "condition": "Rain",
-        "temp": 5,
-        "precip": 66
-      },
-      {
-        "time": "2026-11-23 11:00",
-        "condition": "Drizzle",
-        "temp": 6,
-        "precip": 65
-      },
-      {
-        "time": "2026-11-23 12:00",
-        "condition": "Rain",
-        "temp": 9,
-        "precip": 66
-      },
-      {
-        "time": "2026-11-23 13:00",
-        "condition": "Drizzle",
-        "temp": 10,
-        "precip": 58
-      },
-      {
-        "time": "2026-11-23 14:00",
-        "condition": "Rain",
-        "temp": 11,
-        "precip": 60
-      },
-      {
-        "time": "2026-11-23 15:00",
-        "condition": "Drizzle",
-        "temp": 12,
-        "precip": 63
-      },
-      {
-        "time": "2026-11-23 16:00",
-        "condition": "Drizzle",
-        "temp": 12,
-        "precip": 61
-      },
-      {
-        "time": "2026-11-23 17:00",
-        "condition": "Rain",
-        "temp": 11,
-        "precip": 64
-      },
-      {
-        "time": "2026-11-23 18:00",
-        "condition": "Drizzle",
-        "temp": 10,
-        "precip": 56
-      },
-      {
-        "time": "2026-11-23 19:00",
-        "condition": "Drizzle",
-        "temp": 10,
-        "precip": 40
-      },
-      {
-        "time": "2026-11-23 20:00",
-        "condition": "Cloudy",
-        "temp": 9,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-23 21:00",
-        "condition": "Cloudy",
-        "temp": 8,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-23 22:00",
-        "condition": "Cloudy",
-        "temp": 6,
-        "precip": 0
-      },
-      {
-        "time": "2026-11-23 23:00",
-        "condition": "Cloudy",
-        "temp": 4,
-        "precip": 0
-      }
-    ],
-    "air": {
-      "station": "강서구",
-      "observedAt": "2026-11-23T05:00:00+09:00",
-      "pm10": {
-        "value": 26.0,
-        "grade": "좋음"
-      },
-      "pm25": {
-        "value": 18.0,
-        "grade": "보통"
-      }
-    }
-  },
-  "kindergartenEvents": [
-    {
-      "date": "2026-11-02",
-      "title": "신입 유아 우선모집 시작",
-      "detail": "2027학년도 신입 유아 우선모집",
-      "kind": "admin",
-      "child": null
-    },
-    {
-      "date": "2026-11-04",
-      "title": "꼬마도시농부",
-      "detail": "열매반 · 가을작물 수확 및 채소꾸러미, 가을 파종",
-      "kind": "activity",
-      "child": "daeun"
-    },
-    {
-      "date": "2026-11-06",
-      "title": "요리활동 김장",
-      "detail": "새싹·열매 10:00~10:30 / 꽃잎 10:50~11:20",
-      "kind": "activity",
-      "child": null
-    },
-    {
-      "date": "2026-11-11",
-      "title": "꼬마도시농부",
-      "detail": "열매반",
-      "kind": "activity",
-      "child": "daeun"
-    },
-    {
-      "date": "2026-11-17",
-      "title": "신입 유아 일반모집 시작",
-      "detail": "2027학년도 신입 유아 일반모집",
-      "kind": "admin",
-      "child": null
-    },
-    {
-      "date": "2026-11-17",
-      "title": "유초이음활동",
-      "detail": "열매반(다은) · 병뚜껑 활용 키링 제작 (업사이클링 환경 교육)",
-      "kind": "activity",
-      "child": "daeun"
-    },
-    {
-      "date": "2026-11-19",
-      "title": "대학수학능력시험일",
-      "detail": "등원 시간 10시부터로 조정",
-      "kind": "alert",
-      "child": null,
-      "important": true
-    }
-  ],
-  "bookRental": [
-    {
-      "weekday": "tue",
-      "label": "새싹반 도서대여",
-      "child": "seungmin"
-    },
-    {
-      "weekday": "wed",
-      "label": "꽃잎반 도서대여"
-    },
-    {
-      "weekday": "thu",
-      "label": "열매반 도서대여",
-      "child": "daeun"
-    }
-  ],
-  "kindergartenSnacks": {
-    "2026-11-02": [
-      "초코머핀",
-      "우유"
-    ],
-    "2026-11-03": [
-      "오메기떡",
-      "사과주스"
-    ],
-    "2026-11-04": [
-      "현미콩칩",
-      "고칼슘두유"
-    ],
-    "2026-11-05": [
-      "배",
-      "크림 케이크"
-    ],
-    "2026-11-06": [
-      "요거트",
-      "카스타드"
-    ],
-    "2026-11-09": [
-      "딸기 도넛",
-      "우유"
-    ],
-    "2026-11-10": [
-      "빼빼로떡",
-      "청포도 주스",
-      "도시락김"
-    ],
-    "2026-11-11": [
-      "고구마빵",
-      "오렌지 주스"
-    ],
-    "2026-11-12": [
-      "사과",
-      "미니 치즈롤",
-      "앙팡요구르트"
-    ],
-    "2026-11-13": [
-      "달달맛밤",
-      "자몽 주스"
-    ],
-    "2026-11-16": [
-      "우유식빵+딸기잼",
-      "우유",
-      "체다치즈"
-    ],
-    "2026-11-17": [
-      "인절미",
-      "믹스베리씨"
-    ],
-    "2026-11-18": [
-      "초코칩쿠키",
-      "플레인 음료"
-    ],
-    "2026-11-19": [
-      "귤",
-      "밤콘"
-    ],
-    "2026-11-20": [
-      "튼튼 육포",
-      "사과주스",
-      "모닝롤"
-    ],
-    "2026-11-23": [
-      "마들렌",
-      "유산균음료"
-    ],
-    "2026-11-24": [
-      "꿀떡",
-      "자몽주스"
-    ],
-    "2026-11-25": [
-      "아몬드 시리얼",
-      "우유"
-    ],
-    "2026-11-26": [
-      "바나나",
-      "요거트딸기",
-      "망고향 크림크래커"
-    ],
-    "2026-11-27": [
-      "자색고구마칩",
-      "윌미니"
-    ],
-    "2026-11-30": [
-      "베이글",
-      "초코우유"
-    ]
-  },
-  "snackNote": "방과후과정 간식 (11월 가정통신문)",
-  "eveningRoutine": {
-    "id": "evening-five-subjects",
-    "title": "저녁 홈활동",
-    "time": "20:00",
-    "anchor": "2026-11-17",
-    "step": 2,
-    "weekdaysOnly": true,
-    "target": "both",
-    "subjects": [
-      {
-        "emoji": "🎨",
-        "name": "미술"
-      },
-      {
-        "emoji": "📖",
-        "name": "독서"
-      },
-      {
-        "emoji": "🔢",
-        "name": "수학"
-      },
-      {
-        "emoji": "🔬",
-        "name": "과학"
-      },
-      {
-        "emoji": "🎲",
-        "name": "보드게임"
-      }
-    ],
-    "note": "평일(월~금) 격일 저녁 8시 · 다은·승민 공통 · 2주에 5과목 한 바퀴"
-  },
-  "growth": [
-    {
-      "child": "daeun",
-      "records": []
-    },
-    {
-      "child": "seungmin",
-      "records": []
-    }
-  ],
-  "growthNote": "채팅으로 키·몸무게를 알려주면 바로 업데이트됩니다",
-  "holidays": {
-    "2026-01-01": {
-      "name": "신정",
-      "type": "공휴일"
-    },
-    "2026-02-16": {
-      "name": "설날 연휴",
-      "type": "공휴일"
-    },
-    "2026-02-17": {
-      "name": "설날",
-      "type": "공휴일"
-    },
-    "2026-02-18": {
-      "name": "설날 연휴",
-      "type": "공휴일"
-    },
-    "2026-03-01": {
-      "name": "삼일절",
-      "type": "공휴일"
-    },
-    "2026-03-02": {
-      "name": "대체공휴일(삼일절)",
-      "type": "대체공휴일"
-    },
-    "2026-05-01": {
-      "name": "노동절",
-      "type": "공휴일"
-    },
-    "2026-05-05": {
-      "name": "어린이날",
-      "type": "공휴일"
-    },
-    "2026-05-24": {
-      "name": "부처님오신날",
-      "type": "공휴일"
-    },
-    "2026-05-25": {
-      "name": "대체공휴일(부처님오신날)",
-      "type": "대체공휴일"
-    },
-    "2026-06-06": {
-      "name": "현충일",
-      "type": "공휴일"
-    },
-    "2026-08-15": {
-      "name": "광복절",
-      "type": "공휴일"
-    },
-    "2026-08-17": {
-      "name": "대체공휴일(광복절)",
-      "type": "대체공휴일"
-    },
-    "2026-09-24": {
-      "name": "추석 연휴",
-      "type": "공휴일"
-    },
-    "2026-09-25": {
-      "name": "추석",
-      "type": "공휴일"
-    },
-    "2026-09-26": {
-      "name": "추석 연휴",
-      "type": "공휴일"
-    },
-    "2026-10-03": {
-      "name": "개천절",
-      "type": "공휴일"
-    },
-    "2026-10-05": {
-      "name": "대체공휴일(개천절)",
-      "type": "대체공휴일"
-    },
-    "2026-10-09": {
-      "name": "한글날",
-      "type": "공휴일"
-    },
-    "2026-12-25": {
-      "name": "성탄절",
-      "type": "공휴일"
-    },
-    "2027-01-01": {
-      "name": "신정",
-      "type": "공휴일"
-    },
-    "2027-02-06": {
-      "name": "설날 연휴",
-      "type": "공휴일"
-    },
-    "2027-02-07": {
-      "name": "설날",
-      "type": "공휴일"
-    },
-    "2027-02-08": {
-      "name": "설날 연휴",
-      "type": "공휴일"
-    },
-    "2027-02-09": {
-      "name": "대체공휴일(설날)",
-      "type": "대체공휴일"
-    },
-    "2027-03-01": {
-      "name": "삼일절",
-      "type": "공휴일"
-    },
-    "2027-05-01": {
-      "name": "노동절",
-      "type": "공휴일"
-    },
-    "2027-05-03": {
-      "name": "대체공휴일(노동절)",
-      "type": "대체공휴일"
-    },
-    "2027-05-05": {
-      "name": "어린이날",
-      "type": "공휴일"
-    },
-    "2027-05-13": {
-      "name": "부처님오신날",
-      "type": "공휴일"
-    },
-    "2027-06-06": {
-      "name": "현충일",
-      "type": "공휴일"
-    },
-    "2027-07-17": {
-      "name": "제헌절",
-      "type": "공휴일"
-    },
-    "2027-07-19": {
-      "name": "대체공휴일(제헌절)",
-      "type": "대체공휴일"
-    },
-    "2027-08-15": {
-      "name": "광복절",
-      "type": "공휴일"
-    },
-    "2027-08-16": {
-      "name": "대체공휴일(광복절)",
-      "type": "대체공휴일"
-    },
-    "2027-09-14": {
-      "name": "추석 연휴",
-      "type": "공휴일"
-    },
-    "2027-09-15": {
-      "name": "추석",
-      "type": "공휴일"
-    },
-    "2027-09-16": {
-      "name": "추석 연휴",
-      "type": "공휴일"
-    },
-    "2027-10-03": {
-      "name": "개천절",
-      "type": "공휴일"
-    },
-    "2027-10-04": {
-      "name": "대체공휴일(개천절)",
-      "type": "대체공휴일"
-    },
-    "2027-10-09": {
-      "name": "한글날",
-      "type": "공휴일"
-    },
-    "2027-10-11": {
-      "name": "대체공휴일(한글날)",
-      "type": "대체공휴일"
-    },
-    "2027-12-25": {
-      "name": "기독탄신일(성탄절)",
-      "type": "공휴일"
-    },
-    "2027-12-27": {
-      "name": "대체공휴일(기독탄신일)",
-      "type": "대체공휴일"
-    }
-  },
-  "holidayNote": "관공서의 공휴일에 관한 규정 · 2026/2027년 월력요항 기준. 공휴일에는 모든 수업·등원이 자동 제외됩니다.",
-  "readingPoster": {
-    "date": "2026-11-24",
-    "title": "세 살 버릇 여든까지 간다",
-    "subtitle": "오늘의 속담 + 오늘의 영단어",
-    "proverb": {
-      "badge": "오늘의 속담 · 4호",
-      "title": "세 살 버릇 여든까지 간다",
-      "subtitle": "어릴 때 들인 좋은 습관은 평생 쭉 이어져요",
-      "summary": "양치도, 정리도, 인사도 매일 조금씩! 어릴 때 들인 버릇은 어른이 되어도 반짝반짝!",
-      "audio": "assets/reading/audio/proverb-20261124-title.mp3",
-      "bgmAudio": "assets/reading/audio/bgm-gentle-story.mp3",
-      "bgmVolume": 0.16,
-      "songAudio": "assets/reading/audio/proverb-20261124-song.mp3",
-      "songTitle": "🎵 세 살 버릇 착착착",
-      "panels": [
-        {
-          "num": 1,
-          "speech": "양치도 스스로 척척!",
-          "caption": "아침마다 스스로 양치",
-          "image": "assets/reading/panel1-crop.png",
-          "audio": "assets/reading/audio/proverb-20261124-p1.mp3"
-        },
-        {
-          "num": 2,
-          "speech": "놀이 끝! 장난감도 제자리에.",
-          "caption": "놀이 뒤엔 스스로 정리",
-          "image": "assets/reading/panel2-crop.png",
-          "audio": "assets/reading/audio/proverb-20261124-p2.mp3"
-        },
-        {
-          "num": 3,
-          "speech": "만나면 먼저, 안녕하세요!",
-          "caption": "먼저 인사하는 다정함",
-          "image": "assets/reading/panel3-crop.png",
-          "audio": "assets/reading/audio/proverb-20261124-p3.mp3"
-        },
-        {
-          "num": 4,
-          "speech": "좋은 버릇은 쑥쑥 자라요!",
-          "caption": "버릇은 나무처럼 자라요",
-          "image": "assets/reading/panel4-crop.png",
-          "audio": "assets/reading/audio/proverb-20261124-p4.mp3"
-        }
-      ],
-      "meaning": "'세 살 버릇 여든까지 간다'는 어릴 때 몸에 익힌 좋은 습관은 어른이 될 때까지 오래오래 이어진다는 뜻이에요. 양치하기, 장난감 정리하기, 먼저 인사하기 같은 작은 습관이 평생의 힘이 된대요.",
-      "promise": "오늘은 양치 한 번 스스로, 장난감 세 개 정리, 그리고 만나는 사람에게 먼저 인사하기 — 셋 중 하나부터 해 볼까요?",
-      "meaningAudio": "assets/reading/audio/proverb-20261124-meaning.mp3"
-    },
-    "word": {
-      "badge": "오늘의 영단어 · 4호",
-      "word": "help",
-      "meaning": "도와주다 · 돕다",
-      "audio": "assets/reading/audio/help.mp3",
-      "bannerImage": "assets/reading/word-banner.png",
-      "examples": [
-        {
-          "num": 1,
-          "en": "I can help you.",
-          "ko": "내가 도와줄 수 있어.",
-          "audio": "assets/reading/audio/help-ex1.mp3",
-          "highlight": [
-            "help"
-          ],
-          "koAudio": "assets/reading/audio/help-ko-ex1.mp3",
-          "koScript": "그림을 보세요. 승민이가 다은이를 도와주고 있어요. 첫 번째 문장! 내가 도와줄 수 있어, 라는 뜻이에요."
-        },
-        {
-          "num": 2,
-          "en": "Help me, please.",
-          "ko": "저 좀 도와주세요.",
-          "audio": "assets/reading/audio/help-ex2.mp3",
-          "highlight": [
-            "help"
-          ],
-          "koAudio": "assets/reading/audio/help-ko-ex2.mp3",
-          "koScript": "두 번째 문장! 저 좀 도와주세요, 라는 뜻이에요. 도움이 필요할 때는 예쁘게 부탁해요."
-        },
-        {
-          "num": 3,
-          "en": "We help each other.",
-          "ko": "우리는 서로 도와요.",
-          "audio": "assets/reading/audio/help-ex3.mp3",
-          "highlight": [
-            "help"
-          ],
-          "koAudio": "assets/reading/audio/help-ko-ex3.mp3",
-          "koScript": "세 번째 문장! 우리는 서로 도와요, 라는 뜻이에요. 가족끼리 서로 도우면 모두 즐거워져요."
-        }
-      ],
-      "tip": "누군가 힘들어 보이면 '내가 도와줄게!' 하고 손을 내미는 것, 그게 바로 help예요. 오늘 가족에게 먼저 help 해 볼까요?",
-      "koIntroAudio": "assets/reading/audio/help-ko-intro.mp3",
-      "koIntroText": "오늘의 영단어는 help. 도와주다, 돕다는 뜻이에요. 그림을 보면서 같이 연습해 볼까요?",
-      "koTipAudio": "assets/reading/audio/help-ko-tip.mp3",
-      "koTipText": "기억 쏙 한마디! 누군가 힘들어 보이면, 내가 도와줄게, 하고 손을 내미는 것. 그게 바로 help 예요."
-    },
-    "note": "거실 보드 '📖 오늘의 읽을거리' 전체화면 모달. proverb(속담 4컷) · word(터치 발음 영단어) 두 탭을 이 객체만 고쳐 바꿉니다. 이미지는 assets/reading/ 아래에 두고 audio 는 MP3 경로(없으면 Web Speech en-US 로 자동 대체)를 적습니다. proverb·word 가 모두 비면 안내 카드가 보입니다."
+ "meta": {
+  "version": 1,
+  "updatedAt": "2026-11-23T06:05:00+09:00",
+  "updatedBy": "포근이 · 모아보드 아침 갱신 (날씨·급식·updatedAt)",
+  "schemaNote": "일정·급식·날씨·건강 데이터는 이 파일만 고치면 보드에 반영됩니다. 자세한 구조는 README.md 참고."
+ },
+ "family": {
+  "title": "우리 집 모아보드",
+  "subtitle": "다은이 · 승민이의 하루를 한 화면에",
+  "location": {
+   "name": "서울시 강서구 우장산동",
+   "lat": 37.549,
+   "lon": 126.836,
+   "timezone": "Asia/Seoul"
   }
+ },
+ "school": {
+  "name": "서울내발산초등학교",
+  "kindergarten": "병설유치원",
+  "neis": {
+   "atptOfcdcScCode": "B10",
+   "schulCode": "7081430",
+   "mealService": "중식"
+  }
+ },
+ "children": [
+  {
+   "id": "daeun",
+   "name": "다은",
+   "ageLabel": "7세",
+   "birthYear": 2020,
+   "grade": "열매반 (유치원 7세)",
+   "color": "#C1687F",
+   "soft": "#FDEDF2"
+  },
+  {
+   "id": "seungmin",
+   "name": "승민",
+   "ageLabel": "5세",
+   "birthYear": 2022,
+   "grade": "새싹반 (유치원 5세)",
+   "color": "#3E76C4",
+   "soft": "#E9F2FE"
+  }
+ ],
+ "schedules": [
+  {
+   "id": "daeun-pickup",
+   "child": "daeun",
+   "title": "병설유치원 하원",
+   "kind": "pickup",
+   "times": {
+    "mon": "15:30",
+    "tue": "15:15",
+    "wed": "15:30",
+    "thu": "15:30",
+    "fri": "15:15"
+   },
+   "note": "엄마 픽업"
+  },
+  {
+   "id": "daeun-piano",
+   "child": "daeun",
+   "title": "피아노",
+   "kind": "lesson",
+   "times": {
+    "mon": "15:40",
+    "wed": "15:40",
+    "thu": "15:40"
+   },
+   "note": "하원 후 바로"
+  },
+  {
+   "id": "daeun-upperroom",
+   "child": "daeun",
+   "title": "어퍼룸영어학원",
+   "kind": "academy",
+   "times": {
+    "tue": "15:30",
+    "fri": "15:30"
+   },
+   "note": "월 8차시",
+   "session": {
+    "kind": "monthly",
+    "perMonth": 8,
+    "unit": "차시"
+   }
+  },
+  {
+   "id": "daeun-reading",
+   "child": "daeun",
+   "title": "독서화상",
+   "kind": "online",
+   "times": {
+    "mon": "18:00"
+   },
+   "note": "집에서"
+  },
+  {
+   "id": "daeun-elihi",
+   "child": "daeun",
+   "title": "엘리하이화상",
+   "kind": "online",
+   "times": {
+    "wed": "18:10"
+   },
+   "note": "월 4차시",
+   "session": {
+    "kind": "oddEven",
+    "perMonth": 4,
+    "odd": {
+     "time": "18:10",
+     "label": "단독수업"
+    },
+    "even": {
+     "time": "18:20",
+     "label": "격주수업"
+    }
+   }
+  },
+  {
+   "id": "seungmin-pickup",
+   "child": "seungmin",
+   "title": "병설유치원 하원",
+   "kind": "pickup",
+   "times": {
+    "mon": "17:00",
+    "tue": "17:00",
+    "wed": "17:00",
+    "thu": "17:00",
+    "fri": "17:00"
+   },
+   "note": "엄마 픽업"
+  },
+  {
+   "id": "seungmin-elihi",
+   "child": "seungmin",
+   "title": "엘리하이화상",
+   "kind": "online",
+   "times": {
+    "tue": "17:40"
+   },
+   "note": "월 4차시",
+   "session": {
+    "kind": "seungminTuesday",
+    "perMonth": 4,
+    "switchMonth": "2027-01",
+    "before": {
+     "first": {
+      "time": "17:40",
+      "label": "엄마-담임선생님 상담"
+     },
+     "rest": {
+      "time": "17:40",
+      "label": "승민 단독수업"
+     }
+    },
+    "after": {
+     "time": "17:40",
+     "label": "승민 단독수업"
+    }
+   }
+  }
+ ],
+ "meals": {
+  "2026-11-02": {
+   "menu": [
+    {
+     "name": "흑미밥",
+     "allergy": []
+    },
+    {
+     "name": "얼큰김치콩나물국",
+     "allergy": [
+      5,
+      6,
+      9,
+      13
+     ]
+    },
+    {
+     "name": "*뱅어포양념조림",
+     "allergy": [
+      5,
+      6,
+      12,
+      13
+     ]
+    },
+    {
+     "name": "천사채샐러드",
+     "allergy": [
+      1,
+      5,
+      6,
+      8,
+      13
+     ]
+    },
+    {
+     "name": "치킨까스+잠발라소스",
+     "allergy": [
+      1,
+      2,
+      5,
+      6,
+      12,
+      13,
+      15,
+      18
+     ]
+    },
+    {
+     "name": "깍두기",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    }
+   ],
+   "calories": "643.2 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-03": {
+   "menu": [
+    {
+     "name": "현미찹쌀밥",
+     "allergy": []
+    },
+    {
+     "name": "닭곰탕",
+     "allergy": [
+      15
+     ]
+    },
+    {
+     "name": "꽁치김치조림",
+     "allergy": [
+      5,
+      6,
+      9,
+      13
+     ]
+    },
+    {
+     "name": "버섯잡채",
+     "allergy": [
+      5,
+      6,
+      10,
+      13
+     ]
+    },
+    {
+     "name": "오이김치",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "샤인머스켓",
+     "allergy": []
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    }
+   ],
+   "calories": "667.8 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-04": {
+   "menu": [
+    {
+     "name": "스파게티-",
+     "allergy": [
+      1,
+      2,
+      5,
+      6,
+      12,
+      13,
+      16
+     ]
+    },
+    {
+     "name": "오이피클",
+     "allergy": []
+    },
+    {
+     "name": "*수제마늘빵",
+     "allergy": [
+      2,
+      5,
+      6
+     ]
+    },
+    {
+     "name": "윌 미니",
+     "allergy": [
+      2
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    },
+    {
+     "name": "양상추(감,귤)오리엔탈샐러드",
+     "allergy": [
+      1,
+      2,
+      5,
+      6
+     ]
+    }
+   ],
+   "calories": "705.3 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-05": {
+   "menu": [
+    {
+     "name": "삼입국화밥",
+     "allergy": [
+      5,
+      6,
+      13
+     ]
+    },
+    {
+     "name": "무청시래기국",
+     "allergy": [
+      5,
+      6,
+      9
+     ]
+    },
+    {
+     "name": "열탄오리돈불고기",
+     "allergy": [
+      5,
+      6,
+      10
+     ]
+    },
+    {
+     "name": "배추겉절이",
+     "allergy": [
+      13
+     ]
+    },
+    {
+     "name": "페스츄리꽈배기",
+     "allergy": [
+      1,
+      2,
+      5,
+      6,
+      13
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    },
+    {
+     "name": "(친환경)귤",
+     "allergy": []
+    }
+   ],
+   "calories": "832.1 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-06": {
+   "menu": [
+    {
+     "name": "통밀밥",
+     "allergy": [
+      6
+     ]
+    },
+    {
+     "name": "물만두국",
+     "allergy": [
+      1,
+      5,
+      6,
+      10,
+      16,
+      18
+     ]
+    },
+    {
+     "name": "쫄면무침(대)",
+     "allergy": [
+      5,
+      6,
+      13
+     ]
+    },
+    {
+     "name": "임연수카레마요구이",
+     "allergy": [
+      1,
+      2,
+      5,
+      6,
+      12,
+      13,
+      16,
+      18
+     ]
+    },
+    {
+     "name": "배추김치",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    },
+    {
+     "name": "김구이",
+     "allergy": []
+    }
+   ],
+   "calories": "720.4 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-09": {
+   "menu": [
+    {
+     "name": "클로렐라쌀밥(기능성)",
+     "allergy": []
+    },
+    {
+     "name": "황태무국",
+     "allergy": [
+      5,
+      6
+     ]
+    },
+    {
+     "name": "가마보꼬사각어묵조림(스테이크소스)",
+     "allergy": [
+      1,
+      5,
+      6,
+      12,
+      13,
+      16
+     ]
+    },
+    {
+     "name": "세발나물골뱅이초무침",
+     "allergy": [
+      5,
+      6,
+      13,
+      17
+     ]
+    },
+    {
+     "name": "계란말이",
+     "allergy": [
+      1,
+      5
+     ]
+    },
+    {
+     "name": "깍두기",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    }
+   ],
+   "calories": "601.9 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-10": {
+   "menu": [
+    {
+     "name": "강황쌀밥(기능성)",
+     "allergy": []
+    },
+    {
+     "name": "홍합미역국",
+     "allergy": [
+      5,
+      6,
+      18
+     ]
+    },
+    {
+     "name": "사태떡찜",
+     "allergy": [
+      5,
+      6,
+      10,
+      13,
+      16
+     ]
+    },
+    {
+     "name": "콩나물당근무침",
+     "allergy": [
+      5,
+      6,
+      13
+     ]
+    },
+    {
+     "name": "두반장알감자조림",
+     "allergy": [
+      5,
+      6,
+      10,
+      12,
+      13,
+      18
+     ]
+    },
+    {
+     "name": "총각김치",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    }
+   ],
+   "calories": "617.6 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-11": {
+   "menu": [
+    {
+     "name": "스팸마요볶음밥",
+     "allergy": [
+      1,
+      2,
+      5,
+      6,
+      10,
+      13,
+      15,
+      16
+     ]
+    },
+    {
+     "name": "유부된장국",
+     "allergy": [
+      5,
+      6
+     ]
+    },
+    {
+     "name": "밀떡볶이",
+     "allergy": [
+      1,
+      5,
+      6,
+      12,
+      13
+     ]
+    },
+    {
+     "name": "깍두기",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "츄러스(초코)",
+     "allergy": [
+      1,
+      2,
+      5,
+      6,
+      13
+     ]
+    },
+    {
+     "name": "대추방울토마토",
+     "allergy": [
+      12
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    }
+   ],
+   "calories": "846.5 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-12": {
+   "menu": [
+    {
+     "name": "보리밥",
+     "allergy": []
+    },
+    {
+     "name": "조랭이떡국(국용)",
+     "allergy": [
+      1,
+      5,
+      6,
+      16,
+      18
+     ]
+    },
+    {
+     "name": "돼지고기야채볶음",
+     "allergy": [
+      5,
+      6,
+      10,
+      13
+     ]
+    },
+    {
+     "name": "연근튀김",
+     "allergy": [
+      5,
+      13
+     ]
+    },
+    {
+     "name": "배추김치",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "사과",
+     "allergy": [
+      13
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    }
+   ],
+   "calories": "642.3 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-13": {
+   "menu": [
+    {
+     "name": "혼합잡곡밥",
+     "allergy": [
+      5
+     ]
+    },
+    {
+     "name": "육개장",
+     "allergy": [
+      5,
+      6,
+      16
+     ]
+    },
+    {
+     "name": "깐풍코다리",
+     "allergy": [
+      5,
+      6,
+      13,
+      18
+     ]
+    },
+    {
+     "name": "새송이애호박볶음",
+     "allergy": [
+      5,
+      9
+     ]
+    },
+    {
+     "name": "백김치",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "돌김자반",
+     "allergy": [
+      5,
+      9
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    }
+   ],
+   "calories": "689.2 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-16": {
+   "menu": [
+    {
+     "name": "차수수밥",
+     "allergy": []
+    },
+    {
+     "name": "어묵탕",
+     "allergy": [
+      1,
+      5,
+      6
+     ]
+    },
+    {
+     "name": "두부소보로시금치무침",
+     "allergy": [
+      5,
+      6,
+      13
+     ]
+    },
+    {
+     "name": "목살불고기양념구이",
+     "allergy": [
+      5,
+      6,
+      10,
+      13,
+      18
+     ]
+    },
+    {
+     "name": "총각김치",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    },
+    {
+     "name": "스위티오바나나",
+     "allergy": []
+    }
+   ],
+   "calories": "752.1 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-17": {
+   "menu": [
+    {
+     "name": "귀리밥",
+     "allergy": []
+    },
+    {
+     "name": "햄모듬찌개",
+     "allergy": [
+      1,
+      2,
+      5,
+      6,
+      9,
+      10,
+      12,
+      15,
+      16
+     ]
+    },
+    {
+     "name": "새우무나물볶음",
+     "allergy": [
+      5,
+      6,
+      9,
+      13
+     ]
+    },
+    {
+     "name": "쇠고기육전",
+     "allergy": [
+      1,
+      5,
+      6,
+      16
+     ]
+    },
+    {
+     "name": "배추김치",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "사과",
+     "allergy": [
+      13
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    }
+   ],
+   "calories": "700.9 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-18": {
+   "menu": [
+    {
+     "name": "단호박죽",
+     "allergy": [
+      13
+     ]
+    },
+    {
+     "name": "미니하트감자튀김&케찹",
+     "allergy": [
+      5,
+      6,
+      12
+     ]
+    },
+    {
+     "name": "나박김치",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "셀프텐더또띠아",
+     "allergy": [
+      1,
+      2,
+      5,
+      6,
+      12,
+      13,
+      15,
+      18
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    },
+    {
+     "name": "코우슬로샐러드",
+     "allergy": [
+      1,
+      5,
+      13
+     ]
+    }
+   ],
+   "calories": "661.0 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-19": {
+   "menu": [
+    {
+     "name": "기장밥",
+     "allergy": []
+    },
+    {
+     "name": "팽이된장국",
+     "allergy": [
+      5,
+      6
+     ]
+    },
+    {
+     "name": "삼색나물(시금치)",
+     "allergy": [
+      5,
+      6
+     ]
+    },
+    {
+     "name": "쇠불고기",
+     "allergy": [
+      5,
+      6,
+      13,
+      16
+     ]
+    },
+    {
+     "name": "배추김치",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "요쿠르트",
+     "allergy": [
+      2
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    }
+   ],
+   "calories": "644.6 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-20": {
+   "menu": [
+    {
+     "name": "자장밥",
+     "allergy": [
+      1,
+      5,
+      6,
+      10,
+      13
+     ]
+    },
+    {
+     "name": "계란국",
+     "allergy": [
+      1,
+      5,
+      6
+     ]
+    },
+    {
+     "name": "배추김치",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "탕수육(완)",
+     "allergy": [
+      1,
+      5,
+      6,
+      10,
+      13
+     ]
+    },
+    {
+     "name": "찐만두",
+     "allergy": [
+      5
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    },
+    {
+     "name": "(친환경)귤",
+     "allergy": []
+    }
+   ],
+   "calories": "753.4 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-23": {
+   "menu": [
+    {
+     "name": "율무밥",
+     "allergy": []
+    },
+    {
+     "name": "등뼈김치찌개",
+     "allergy": [
+      5,
+      6,
+      9,
+      10
+     ]
+    },
+    {
+     "name": "매실양념깻잎지",
+     "allergy": []
+    },
+    {
+     "name": "숙주미나리무침",
+     "allergy": [
+      5,
+      6
+     ]
+    },
+    {
+     "name": "어묵볶음",
+     "allergy": [
+      1,
+      5,
+      6
+     ]
+    },
+    {
+     "name": "비엔나멸치볶음",
+     "allergy": [
+      2,
+      5,
+      6,
+      10,
+      13,
+      15,
+      16
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    }
+   ],
+   "calories": "737.3 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-24": {
+   "menu": [
+    {
+     "name": "흑미밥",
+     "allergy": []
+    },
+    {
+     "name": "맑은콩나물국",
+     "allergy": [
+      5,
+      6,
+      9
+     ]
+    },
+    {
+     "name": "진미채조림",
+     "allergy": [
+      1,
+      5,
+      6,
+      13,
+      17
+     ]
+    },
+    {
+     "name": "돼지갈비찜(떡)",
+     "allergy": [
+      5,
+      6,
+      10,
+      13
+     ]
+    },
+    {
+     "name": "취나물볶음",
+     "allergy": [
+      5,
+      6
+     ]
+    },
+    {
+     "name": "배추김치",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    }
+   ],
+   "calories": "656.2 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-25": {
+   "menu": [
+    {
+     "name": "고소한파니르카레",
+     "allergy": [
+      2,
+      5,
+      6,
+      12,
+      13,
+      15,
+      16,
+      18
+     ]
+    },
+    {
+     "name": "왕새우튀김",
+     "allergy": [
+      1,
+      5,
+      6,
+      9
+     ]
+    },
+    {
+     "name": "배추김치",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "팬케익",
+     "allergy": [
+      1,
+      2,
+      5,
+      6
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    },
+    {
+     "name": "그릭요거트",
+     "allergy": [
+      2
+     ]
+    }
+   ],
+   "calories": "867.8 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-26": {
+   "menu": [
+    {
+     "name": "현미찹쌀밥",
+     "allergy": []
+    },
+    {
+     "name": "버섯전골",
+     "allergy": [
+      5,
+      6,
+      13,
+      16
+     ]
+    },
+    {
+     "name": "메추리알감자조림",
+     "allergy": [
+      6,
+      13,
+      1,
+      5
+     ]
+    },
+    {
+     "name": "삼치어향소스구이",
+     "allergy": [
+      5,
+      6,
+      10,
+      12,
+      13,
+      18
+     ]
+    },
+    {
+     "name": "총각김치",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    },
+    {
+     "name": "스위티오바나나",
+     "allergy": []
+    }
+   ],
+   "calories": "663.2 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-27": {
+   "menu": [
+    {
+     "name": "샌드위치",
+     "allergy": [
+      1,
+      2,
+      5,
+      6,
+      10
+     ]
+    },
+    {
+     "name": "비타민C젤리",
+     "allergy": []
+    },
+    {
+     "name": "바나나맛우유",
+     "allergy": [
+      2
+     ]
+    },
+    {
+     "name": "후레쉬삼색과일",
+     "allergy": [
+      12
+     ]
+    },
+    {
+     "name": "현미가래떡",
+     "allergy": [
+      1,
+      2,
+      5,
+      6
+     ]
+    }
+   ],
+   "calories": "463.7 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  },
+  "2026-11-30": {
+   "menu": [
+    {
+     "name": "찰옥수수밥",
+     "allergy": []
+    },
+    {
+     "name": "감자탕",
+     "allergy": [
+      5,
+      6,
+      9,
+      10
+     ]
+    },
+    {
+     "name": "쑥갓두부무침",
+     "allergy": [
+      5,
+      6,
+      13
+     ]
+    },
+    {
+     "name": "미역줄기볶음",
+     "allergy": [
+      1,
+      5,
+      6
+     ]
+    },
+    {
+     "name": "깍두기",
+     "allergy": [
+      9
+     ]
+    },
+    {
+     "name": "귤(노지)",
+     "allergy": []
+    },
+    {
+     "name": "우유",
+     "allergy": [
+      2
+     ]
+    }
+   ],
+   "calories": "624.8 Kcal",
+   "meal": "중식",
+   "source": "NEIS"
+  }
+ },
+ "weather": {
+  "place": "서울시 강서구 우장산동",
+  "obsTime": "2026-11-23T06:00:00+09:00",
+  "source": "Apple Weather (weather snapshot)",
+  "now": {
+   "temp": 2,
+   "feels": -1,
+   "condition": "Cloudy",
+   "humidity": 76,
+   "windKmh": 12,
+   "uv": 0
+  },
+  "days": [
+   {
+    "date": "2026-11-23",
+    "condition": "Rain",
+    "high": 12,
+    "low": 1,
+    "precip": 95,
+    "morning": 2
+   },
+   {
+    "date": "2026-11-24",
+    "condition": "Partly Cloudy",
+    "high": 3,
+    "low": -3,
+    "precip": 0,
+    "morning": -2
+   },
+   {
+    "date": "2026-11-25",
+    "condition": "Partly Cloudy",
+    "high": 9,
+    "low": -4,
+    "precip": 0,
+    "morning": -4
+   },
+   {
+    "date": "2026-11-26",
+    "condition": "Partly Cloudy",
+    "high": 15,
+    "low": 5,
+    "precip": 0,
+    "morning": 6
+   },
+   {
+    "date": "2026-11-27",
+    "condition": "Drizzle",
+    "high": 15,
+    "low": 8,
+    "precip": 47,
+    "morning": 9
+   },
+   {
+    "date": "2026-11-28",
+    "condition": "Mostly Clear",
+    "high": 8,
+    "low": -1,
+    "precip": 0,
+    "morning": 4
+   },
+   {
+    "date": "2026-11-29",
+    "condition": "Partly Cloudy",
+    "high": 7,
+    "low": -2,
+    "precip": 0,
+    "morning": -2
+   }
+  ],
+  "hours": [
+   {
+    "time": "2026-11-23 00:00",
+    "condition": "Partly Cloudy",
+    "temp": 1,
+    "precip": 0
+   },
+   {
+    "time": "2026-11-23 01:00",
+    "condition": "Partly Cloudy",
+    "temp": 1,
+    "precip": 0
+   },
+   {
+    "time": "2026-11-23 02:00",
+    "condition": "Partly Cloudy",
+    "temp": 1,
+    "precip": 0
+   },
+   {
+    "time": "2026-11-23 03:00",
+    "condition": "Partly Cloudy",
+    "temp": 1,
+    "precip": 0
+   },
+   {
+    "time": "2026-11-23 04:00",
+    "condition": "Partly Cloudy",
+    "temp": 2,
+    "precip": 0
+   },
+   {
+    "time": "2026-11-23 05:00",
+    "condition": "Mostly Cloudy",
+    "temp": 1,
+    "precip": 0
+   },
+   {
+    "time": "2026-11-23 06:00",
+    "condition": "Cloudy",
+    "temp": 2,
+    "precip": 0
+   },
+   {
+    "time": "2026-11-23 07:00",
+    "condition": "Cloudy",
+    "temp": 3,
+    "precip": 0
+   },
+   {
+    "time": "2026-11-23 08:00",
+    "condition": "Drizzle",
+    "temp": 3,
+    "precip": 36
+   },
+   {
+    "time": "2026-11-23 09:00",
+    "condition": "Drizzle",
+    "temp": 4,
+    "precip": 48
+   },
+   {
+    "time": "2026-11-23 10:00",
+    "condition": "Rain",
+    "temp": 5,
+    "precip": 66
+   },
+   {
+    "time": "2026-11-23 11:00",
+    "condition": "Drizzle",
+    "temp": 6,
+    "precip": 65
+   },
+   {
+    "time": "2026-11-23 12:00",
+    "condition": "Rain",
+    "temp": 9,
+    "precip": 66
+   },
+   {
+    "time": "2026-11-23 13:00",
+    "condition": "Drizzle",
+    "temp": 10,
+    "precip": 58
+   },
+   {
+    "time": "2026-11-23 14:00",
+    "condition": "Rain",
+    "temp": 11,
+    "precip": 60
+   },
+   {
+    "time": "2026-11-23 15:00",
+    "condition": "Drizzle",
+    "temp": 12,
+    "precip": 63
+   },
+   {
+    "time": "2026-11-23 16:00",
+    "condition": "Drizzle",
+    "temp": 12,
+    "precip": 61
+   },
+   {
+    "time": "2026-11-23 17:00",
+    "condition": "Rain",
+    "temp": 11,
+    "precip": 64
+   },
+   {
+    "time": "2026-11-23 18:00",
+    "condition": "Drizzle",
+    "temp": 10,
+    "precip": 56
+   },
+   {
+    "time": "2026-11-23 19:00",
+    "condition": "Drizzle",
+    "temp": 10,
+    "precip": 40
+   },
+   {
+    "time": "2026-11-23 20:00",
+    "condition": "Cloudy",
+    "temp": 9,
+    "precip": 0
+   },
+   {
+    "time": "2026-11-23 21:00",
+    "condition": "Cloudy",
+    "temp": 8,
+    "precip": 0
+   },
+   {
+    "time": "2026-11-23 22:00",
+    "condition": "Cloudy",
+    "temp": 6,
+    "precip": 0
+   },
+   {
+    "time": "2026-11-23 23:00",
+    "condition": "Cloudy",
+    "temp": 4,
+    "precip": 0
+   }
+  ],
+  "air": {
+   "station": "강서구",
+   "observedAt": "2026-11-23T05:00:00+09:00",
+   "pm10": {
+    "value": 26.0,
+    "grade": "좋음"
+   },
+   "pm25": {
+    "value": 18.0,
+    "grade": "보통"
+   }
+  }
+ },
+ "kindergartenEvents": [
+  {
+   "date": "2026-11-02",
+   "title": "신입 유아 우선모집 시작",
+   "detail": "2027학년도 신입 유아 우선모집",
+   "kind": "admin",
+   "child": null
+  },
+  {
+   "date": "2026-11-04",
+   "title": "꼬마도시농부",
+   "detail": "열매반 · 가을작물 수확 및 채소꾸러미, 가을 파종",
+   "kind": "activity",
+   "child": "daeun"
+  },
+  {
+   "date": "2026-11-06",
+   "title": "요리활동 김장",
+   "detail": "새싹·열매 10:00~10:30 / 꽃잎 10:50~11:20",
+   "kind": "activity",
+   "child": null
+  },
+  {
+   "date": "2026-11-11",
+   "title": "꼬마도시농부",
+   "detail": "열매반",
+   "kind": "activity",
+   "child": "daeun"
+  },
+  {
+   "date": "2026-11-17",
+   "title": "신입 유아 일반모집 시작",
+   "detail": "2027학년도 신입 유아 일반모집",
+   "kind": "admin",
+   "child": null
+  },
+  {
+   "date": "2026-11-17",
+   "title": "유초이음활동",
+   "detail": "열매반(다은) · 병뚜껑 활용 키링 제작 (업사이클링 환경 교육)",
+   "kind": "activity",
+   "child": "daeun"
+  },
+  {
+   "date": "2026-11-19",
+   "title": "대학수학능력시험일",
+   "detail": "등원 시간 10시부터로 조정",
+   "kind": "alert",
+   "child": null,
+   "important": true
+  }
+ ],
+ "bookRental": [
+  {
+   "weekday": "tue",
+   "label": "새싹반 도서대여",
+   "child": "seungmin"
+  },
+  {
+   "weekday": "wed",
+   "label": "꽃잎반 도서대여"
+  },
+  {
+   "weekday": "thu",
+   "label": "열매반 도서대여",
+   "child": "daeun"
+  }
+ ],
+ "kindergartenSnacks": {
+  "2026-11-02": [
+   "초코머핀",
+   "우유"
+  ],
+  "2026-11-03": [
+   "오메기떡",
+   "사과주스"
+  ],
+  "2026-11-04": [
+   "현미콩칩",
+   "고칼슘두유"
+  ],
+  "2026-11-05": [
+   "배",
+   "크림 케이크"
+  ],
+  "2026-11-06": [
+   "요거트",
+   "카스타드"
+  ],
+  "2026-11-09": [
+   "딸기 도넛",
+   "우유"
+  ],
+  "2026-11-10": [
+   "빼빼로떡",
+   "청포도 주스",
+   "도시락김"
+  ],
+  "2026-11-11": [
+   "고구마빵",
+   "오렌지 주스"
+  ],
+  "2026-11-12": [
+   "사과",
+   "미니 치즈롤",
+   "앙팡요구르트"
+  ],
+  "2026-11-13": [
+   "달달맛밤",
+   "자몽 주스"
+  ],
+  "2026-11-16": [
+   "우유식빵+딸기잼",
+   "우유",
+   "체다치즈"
+  ],
+  "2026-11-17": [
+   "인절미",
+   "믹스베리씨"
+  ],
+  "2026-11-18": [
+   "초코칩쿠키",
+   "플레인 음료"
+  ],
+  "2026-11-19": [
+   "귤",
+   "밤콘"
+  ],
+  "2026-11-20": [
+   "튼튼 육포",
+   "사과주스",
+   "모닝롤"
+  ],
+  "2026-11-23": [
+   "마들렌",
+   "유산균음료"
+  ],
+  "2026-11-24": [
+   "꿀떡",
+   "자몽주스"
+  ],
+  "2026-11-25": [
+   "아몬드 시리얼",
+   "우유"
+  ],
+  "2026-11-26": [
+   "바나나",
+   "요거트딸기",
+   "망고향 크림크래커"
+  ],
+  "2026-11-27": [
+   "자색고구마칩",
+   "윌미니"
+  ],
+  "2026-11-30": [
+   "베이글",
+   "초코우유"
+  ]
+ },
+ "snackNote": "방과후과정 간식 (11월 가정통신문)",
+ "eveningRoutine": {
+  "id": "evening-five-subjects",
+  "title": "저녁 홈활동",
+  "time": "20:00",
+  "anchor": "2026-11-17",
+  "step": 2,
+  "weekdaysOnly": true,
+  "target": "both",
+  "subjects": [
+   {
+    "emoji": "🎨",
+    "name": "미술"
+   },
+   {
+    "emoji": "📖",
+    "name": "독서"
+   },
+   {
+    "emoji": "🔢",
+    "name": "수학"
+   },
+   {
+    "emoji": "🔬",
+    "name": "과학"
+   },
+   {
+    "emoji": "🎲",
+    "name": "보드게임"
+   }
+  ],
+  "note": "평일(월~금) 격일 저녁 8시 · 다은·승민 공통 · 2주에 5과목 한 바퀴"
+ },
+ "growth": [
+  {
+   "child": "daeun",
+   "records": []
+  },
+  {
+   "child": "seungmin",
+   "records": []
+  }
+ ],
+ "growthNote": "채팅으로 키·몸무게를 알려주면 바로 업데이트됩니다",
+ "holidays": {
+  "2026-01-01": {
+   "name": "신정",
+   "type": "공휴일"
+  },
+  "2026-02-16": {
+   "name": "설날 연휴",
+   "type": "공휴일"
+  },
+  "2026-02-17": {
+   "name": "설날",
+   "type": "공휴일"
+  },
+  "2026-02-18": {
+   "name": "설날 연휴",
+   "type": "공휴일"
+  },
+  "2026-03-01": {
+   "name": "삼일절",
+   "type": "공휴일"
+  },
+  "2026-03-02": {
+   "name": "대체공휴일(삼일절)",
+   "type": "대체공휴일"
+  },
+  "2026-05-01": {
+   "name": "노동절",
+   "type": "공휴일"
+  },
+  "2026-05-05": {
+   "name": "어린이날",
+   "type": "공휴일"
+  },
+  "2026-05-24": {
+   "name": "부처님오신날",
+   "type": "공휴일"
+  },
+  "2026-05-25": {
+   "name": "대체공휴일(부처님오신날)",
+   "type": "대체공휴일"
+  },
+  "2026-06-06": {
+   "name": "현충일",
+   "type": "공휴일"
+  },
+  "2026-08-15": {
+   "name": "광복절",
+   "type": "공휴일"
+  },
+  "2026-08-17": {
+   "name": "대체공휴일(광복절)",
+   "type": "대체공휴일"
+  },
+  "2026-09-24": {
+   "name": "추석 연휴",
+   "type": "공휴일"
+  },
+  "2026-09-25": {
+   "name": "추석",
+   "type": "공휴일"
+  },
+  "2026-09-26": {
+   "name": "추석 연휴",
+   "type": "공휴일"
+  },
+  "2026-10-03": {
+   "name": "개천절",
+   "type": "공휴일"
+  },
+  "2026-10-05": {
+   "name": "대체공휴일(개천절)",
+   "type": "대체공휴일"
+  },
+  "2026-10-09": {
+   "name": "한글날",
+   "type": "공휴일"
+  },
+  "2026-12-25": {
+   "name": "성탄절",
+   "type": "공휴일"
+  },
+  "2027-01-01": {
+   "name": "신정",
+   "type": "공휴일"
+  },
+  "2027-02-06": {
+   "name": "설날 연휴",
+   "type": "공휴일"
+  },
+  "2027-02-07": {
+   "name": "설날",
+   "type": "공휴일"
+  },
+  "2027-02-08": {
+   "name": "설날 연휴",
+   "type": "공휴일"
+  },
+  "2027-02-09": {
+   "name": "대체공휴일(설날)",
+   "type": "대체공휴일"
+  },
+  "2027-03-01": {
+   "name": "삼일절",
+   "type": "공휴일"
+  },
+  "2027-05-01": {
+   "name": "노동절",
+   "type": "공휴일"
+  },
+  "2027-05-03": {
+   "name": "대체공휴일(노동절)",
+   "type": "대체공휴일"
+  },
+  "2027-05-05": {
+   "name": "어린이날",
+   "type": "공휴일"
+  },
+  "2027-05-13": {
+   "name": "부처님오신날",
+   "type": "공휴일"
+  },
+  "2027-06-06": {
+   "name": "현충일",
+   "type": "공휴일"
+  },
+  "2027-07-17": {
+   "name": "제헌절",
+   "type": "공휴일"
+  },
+  "2027-07-19": {
+   "name": "대체공휴일(제헌절)",
+   "type": "대체공휴일"
+  },
+  "2027-08-15": {
+   "name": "광복절",
+   "type": "공휴일"
+  },
+  "2027-08-16": {
+   "name": "대체공휴일(광복절)",
+   "type": "대체공휴일"
+  },
+  "2027-09-14": {
+   "name": "추석 연휴",
+   "type": "공휴일"
+  },
+  "2027-09-15": {
+   "name": "추석",
+   "type": "공휴일"
+  },
+  "2027-09-16": {
+   "name": "추석 연휴",
+   "type": "공휴일"
+  },
+  "2027-10-03": {
+   "name": "개천절",
+   "type": "공휴일"
+  },
+  "2027-10-04": {
+   "name": "대체공휴일(개천절)",
+   "type": "대체공휴일"
+  },
+  "2027-10-09": {
+   "name": "한글날",
+   "type": "공휴일"
+  },
+  "2027-10-11": {
+   "name": "대체공휴일(한글날)",
+   "type": "대체공휴일"
+  },
+  "2027-12-25": {
+   "name": "기독탄신일(성탄절)",
+   "type": "공휴일"
+  },
+  "2027-12-27": {
+   "name": "대체공휴일(기독탄신일)",
+   "type": "대체공휴일"
+  }
+ },
+ "holidayNote": "관공서의 공휴일에 관한 규정 · 2026/2027년 월력요항 기준. 공휴일에는 모든 수업·등원이 자동 제외됩니다.",
+ "readingPoster": {
+  "date": "2026-11-24",
+  "title": "세 살 버릇 여든까지 간다",
+  "subtitle": "오늘의 속담 + 오늘의 영단어",
+  "proverb": {
+   "badge": "오늘의 속담 · 4호",
+   "title": "세 살 버릇 여든까지 간다",
+   "subtitle": "어릴 때 들인 좋은 습관은 평생 쭉 이어져요",
+   "summary": "양치도, 정리도, 인사도 매일 조금씩! 어릴 때 들인 버릇은 어른이 되어도 반짝반짝!",
+   "audio": "assets/reading/audio/proverb-20261124-title.mp3",
+   "bgmAudio": "assets/reading/audio/bgm-gentle-story.mp3",
+   "bgmVolume": 0.16,
+   "songAudio": "assets/reading/audio/proverb-20261124-song-v2.mp3",
+   "songTitle": "🎵 치카치카 착착 안녕",
+   "panels": [
+    {
+     "num": 1,
+     "speech": "양치도 스스로 척척!",
+     "caption": "아침마다 스스로 양치",
+     "image": "assets/reading/panel1-crop.png",
+     "audio": "assets/reading/audio/proverb-20261124-p1.mp3"
+    },
+    {
+     "num": 2,
+     "speech": "놀이 끝! 장난감도 제자리에.",
+     "caption": "놀이 뒤엔 스스로 정리",
+     "image": "assets/reading/panel2-crop.png",
+     "audio": "assets/reading/audio/proverb-20261124-p2.mp3"
+    },
+    {
+     "num": 3,
+     "speech": "만나면 먼저, 안녕하세요!",
+     "caption": "먼저 인사하는 다정함",
+     "image": "assets/reading/panel3-crop.png",
+     "audio": "assets/reading/audio/proverb-20261124-p3.mp3"
+    },
+    {
+     "num": 4,
+     "speech": "좋은 버릇은 쑥쑥 자라요!",
+     "caption": "버릇은 나무처럼 자라요",
+     "image": "assets/reading/panel4-crop.png",
+     "audio": "assets/reading/audio/proverb-20261124-p4.mp3"
+    }
+   ],
+   "meaning": "'세 살 버릇 여든까지 간다'는 어릴 때 몸에 익힌 좋은 습관은 어른이 될 때까지 오래오래 이어진다는 뜻이에요. 양치하기, 장난감 정리하기, 먼저 인사하기 같은 작은 습관이 평생의 힘이 된대요.",
+   "promise": "오늘은 양치 한 번 스스로, 장난감 세 개 정리, 그리고 만나는 사람에게 먼저 인사하기 — 셋 중 하나부터 해 볼까요?",
+   "meaningAudio": "assets/reading/audio/proverb-20261124-meaning.mp3"
+  },
+  "word": {
+   "badge": "오늘의 영단어 · 4호",
+   "word": "help",
+   "meaning": "도와주다 · 돕다",
+   "audio": "assets/reading/audio/help.mp3",
+   "bannerImage": "assets/reading/word-banner.png",
+   "examples": [
+    {
+     "num": 1,
+     "en": "I can help you.",
+     "ko": "내가 도와줄 수 있어.",
+     "audio": "assets/reading/audio/help-ex1.mp3",
+     "highlight": [
+      "help"
+     ],
+     "koAudio": "assets/reading/audio/help-ko-ex1.mp3",
+     "koScript": "그림을 보세요. 승민이가 다은이를 도와주고 있어요. 첫 번째 문장! 내가 도와줄 수 있어, 라는 뜻이에요."
+    },
+    {
+     "num": 2,
+     "en": "Help me, please.",
+     "ko": "저 좀 도와주세요.",
+     "audio": "assets/reading/audio/help-ex2.mp3",
+     "highlight": [
+      "help"
+     ],
+     "koAudio": "assets/reading/audio/help-ko-ex2.mp3",
+     "koScript": "두 번째 문장! 저 좀 도와주세요, 라는 뜻이에요. 도움이 필요할 때는 예쁘게 부탁해요."
+    },
+    {
+     "num": 3,
+     "en": "We help each other.",
+     "ko": "우리는 서로 도와요.",
+     "audio": "assets/reading/audio/help-ex3.mp3",
+     "highlight": [
+      "help"
+     ],
+     "koAudio": "assets/reading/audio/help-ko-ex3.mp3",
+     "koScript": "세 번째 문장! 우리는 서로 도와요, 라는 뜻이에요. 가족끼리 서로 도우면 모두 즐거워져요."
+    }
+   ],
+   "tip": "누군가 힘들어 보이면 '내가 도와줄게!' 하고 손을 내미는 것, 그게 바로 help예요. 오늘 가족에게 먼저 help 해 볼까요?",
+   "koIntroAudio": "assets/reading/audio/help-ko-intro.mp3",
+   "koIntroText": "오늘의 영단어는 help. 도와주다, 돕다는 뜻이에요. 그림을 보면서 같이 연습해 볼까요?",
+   "koTipAudio": "assets/reading/audio/help-ko-tip.mp3",
+   "koTipText": "기억 쏙 한마디! 누군가 힘들어 보이면, 내가 도와줄게, 하고 손을 내미는 것. 그게 바로 help 예요."
+  },
+  "note": "거실 보드 '📖 오늘의 읽을거리' 전체화면 모달. proverb(속담 4컷) · word(터치 발음 영단어) 두 탭을 이 객체만 고쳐 바꿉니다. 이미지는 assets/reading/ 아래에 두고 audio 는 MP3 경로(없으면 Web Speech en-US 로 자동 대체)를 적습니다. proverb·word 가 모두 비면 안내 카드가 보입니다."
+ }
 }

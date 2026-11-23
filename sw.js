@@ -14,7 +14,7 @@
 
 "use strict";
 
-const CACHE = "family-living-v15-20261124c";
+const CACHE = "family-living-v16-20261124e";
 
 /* 설치할 때 미리 받아 둘 것 — 하나가 실패해도 설치 자체는 계속한다 */
 const PRECACHE = [
@@ -43,7 +43,7 @@ const PRECACHE = [
   "assets/reading/audio/proverb-20261124-p4.mp3",
   "assets/reading/audio/proverb-20261124-meaning.mp3",
   "assets/reading/audio/bgm-gentle-story.mp3",
-  "assets/reading/audio/proverb-20261124-song.mp3",
+  "assets/reading/audio/proverb-20261124-song-v2.mp3",
 ];
 
 /* 네트워크 우선 대상 (정규식, 경로 기준) */
@@ -53,8 +53,10 @@ const NETWORK_FIRST = [
   /\/assets\/kr-holidays\.js$/,
   /\/assets\/math-engine\.js$/,
   /\/data\/board-data\.json$/,
+  /\/data\/reading-archive\.json$/,
   /\/manifest-living\.json$/,
   /\/assets\/reading\/audio\/.*\.mp3$/,
+  /\/assets\/reading\/archive\/.*\.mp3$/,
 ];
 
 const CACHE_FIRST = /\.(png|jpe?g|webp|gif|svg|ico|woff2?|ttf|otf)$/i;

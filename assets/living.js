@@ -914,11 +914,30 @@
   const RD_ICO = "assets/reading/ico/";
   const rd = { open: false, tab: "proverb" };
   const rda = { audio: null, seq: false, seqId: 0, timer: 0, el: null, sayId: 0 };
+  /* 📅 날짜별 보관함 — data/reading-archive.json (최신 호가 맨 위).
+     cur 가 null 이면 오늘(board-data.json 의 readingPoster), 아니면 그 날짜의 호수를 봅니다. */
+  const rdArch = { list: [], cur: null, loaded: false };
 
+  function rdLivePoster() {
+    const rp = data && data.readingPoster;
+    return rp && typeof rp === "object" ? rp : null;
+  }
+  function rdLiveDate() {
+    const rp = rdLivePoster();
+    return rp && rp.date ? String(rp.date).slice(0, 10) : todayStr;
+  }
+  /* 호수 번호 — 보관함 항목의 issueNo → 같은 날짜의 보관 호수 → 배지의 'N호' 순서 */
+  function rdIssueNo(dateStr, rp) {
+    if (rp && rp.issueNo) return Number(rp.issueNo) || 0;
+    const hit = (rdArch.list || []).filter((it) => String(it.date).slice(0, 10) === dateStr)[0];
+    if (hit && hit.issueNo) return Number(hit.issueNo) || 0;
+    const m = String((rp && rp.proverb && rp.proverb.badge) || "").match(/(\d+)\s*호/);
+    return m ? Number(m[1]) : 0;
+  }
   function readingData() {
-    const rp = (data && data.readingPoster) || null;
-    if (!rp) return { date: "", title: "", sub: "", img: "", proverb: null, word: null, stale: false };
-    if (typeof rp === "string") return { date: "", title: "", sub: "", img: rp, proverb: null, word: null, stale: false };
+    const rp = rdArch.cur || rdLivePoster();
+    if (!rp) return { date: "", title: "", sub: "", img: "", proverb: null, word: null, stale: false, issueNo: 0, isPast: false };
+    if (typeof rp === "string") return { date: "", title: "", sub: "", img: rp, proverb: null, word: null, stale: false, issueNo: 0, isPast: false };
     const date = rp.date ? String(rp.date).slice(0, 10) : "";
     const proverb = rp.proverb && typeof rp.proverb === "object" ? rp.proverb : null;
     const word = rp.word && typeof rp.word === "object" ? rp.word : null;
@@ -930,14 +949,20 @@
       proverb: proverb,
       word: word,
       stale: !!date && date !== todayStr,
+      issueNo: rdIssueNo(date, rp),
+      isPast: !!rdArch.cur,
     };
   }
   function renderReadingCard() {
-    const p = readingData();
+    /* 보드 카드는 보관함에서 지난 호를 보는 중에도 늘 '오늘' 읽을거리를 가리킵니다 */
+    const rp = rdLivePoster() || {};
+    const pv = rp.proverb && typeof rp.proverb === "object" ? rp.proverb : null;
+    const wd = rp.word && typeof rp.word === "object" ? rp.word : null;
+    const title = rp.title || (pv && pv.title) || "";
     const sub = $("#readSub"), btn = $("#readBtn");
-    if (sub) sub.textContent = p.title || "오늘의 포스터 보기";
+    if (sub) sub.textContent = title || "오늘의 포스터 보기";
     if (btn) {
-      const what = p.proverb && p.word ? "오늘의 속담·영단어" : p.proverb ? "오늘의 속담" : p.word ? "오늘의 영단어" : "오늘의 포스터";
+      const what = pv && wd ? "오늘의 속담·영단어" : pv ? "오늘의 속담" : wd ? "오늘의 영단어" : "오늘의 포스터";
       btn.title = "오늘의 읽을거리 · " + what + " 화면 가득 보기";
     }
   }
@@ -950,6 +975,141 @@
         '<span class="rd-empty-tip">🌱 읽을거리가 확정되면 바로 여기에 나타나요</span>' +
       "</div>"
     );
+  }
+
+  /* ── 📅 날짜별 보관함 (지난 호 다시 보기) ─────────────────────────────
+     · data/reading-archive.json = { updatedAt, items:[ {date, issueNo, proverb, word, …} ] } 최신순
+     · 맨 위 날짜 칩을 누르면 호수 목록(팝오버)이 열리고, ‹ › 로 한 호씩 옮겨 다닙니다.
+     · 지난 호를 보는 동안 배지는 '지난 호 · 11월 23일 · 3호' 로 바뀌고 '오늘로 돌아가기' 가 나타납니다.
+     · 호수를 바꿀 때 재생 중이던 대사·동요·영상은 모두 멈춥니다. */
+  async function fetchArchive() {
+    try {
+      const res = await fetch("data/reading-archive.json?ts=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const j = await res.json();
+      const items = Array.isArray(j) ? j : (j && j.items) || [];
+      rdArch.list = items
+        .filter((it) => it && it.date && (it.proverb || it.word))
+        .map((it) => Object.assign({}, it, { date: String(it.date).slice(0, 10) }))
+        .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+      rdArch.loaded = true;
+    } catch (e) {
+      rdArch.loaded = true;   /* 보관함이 없어도 오늘 읽을거리는 그대로 보입니다 */
+    }
+    rdRenderHead();
+    rdRenderPop();
+  }
+
+  /* 오늘 호 + 보관함 호수를 날짜 최신순으로 — 같은 날짜는 오늘 것을 씁니다 */
+  function rdVersions() {
+    const out = [];
+    const live = rdLivePoster();
+    if (live) {
+      const d = rdLiveDate();
+      out.push({
+        date: d,
+        issueNo: rdIssueNo(d, live),
+        title: live.title || (live.proverb && live.proverb.title) || "",
+        word: (live.word && live.word.word) || "",
+        today: true,
+      });
+    }
+    (rdArch.list || []).forEach((it) => {
+      const d = String(it.date).slice(0, 10);
+      if (!d || out.some((o) => o.date === d)) return;
+      out.push({
+        date: d,
+        issueNo: Number(it.issueNo) || rdIssueNo(d, it),
+        title: it.title || (it.proverb && it.proverb.title) || "",
+        word: (it.word && it.word.word) || "",
+        today: false,
+      });
+    });
+    out.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+    return out;
+  }
+  function rdMonthDay(ds) {
+    const d = parseISO(ds);
+    return (d.getMonth() + 1) + "월 " + d.getDate() + "일";
+  }
+
+  function rdRenderHead() {
+    const p = readingData();
+    const vs = rdVersions();
+    const cur = p.date || rdLiveDate();
+    const idx = vs.findIndex((v) => v.date === cur);
+    const isToday = !rdArch.cur;
+    const noText = p.issueNo ? " · " + p.issueNo + "호" : "";
+    const t = $("#rdDateTxt"), b = $("#rdDateBtn"), prev = $("#rdPrev"), next = $("#rdNext"), today = $("#rdToday");
+    if (t) t.textContent = (isToday ? "오늘 · " + rdMonthDay(cur) : "지난 호 · " + rdMonthDay(cur)) + noText;
+    if (b) {
+      b.classList.toggle("is-stale", !isToday);
+      b.setAttribute("aria-label", "읽을거리 날짜 고르기 — 지금은 " + (isToday ? "오늘 " : "지난 호 ") +
+        rdMonthDay(cur) + (p.issueNo ? " " + p.issueNo + "호" : "") + (p.title ? " " + p.title : ""));
+    }
+    if (prev) prev.disabled = idx < 0 || idx >= vs.length - 1;
+    if (next) next.disabled = idx <= 0;
+    if (today) today.hidden = isToday;
+    const lp = $("#rdLabProverb"), lw = $("#rdLabWord");
+    if (lp) lp.textContent = isToday ? "오늘의 속담" : "속담";
+    if (lw) lw.textContent = isToday ? "오늘의 영단어" : "영단어";
+  }
+
+  function rdRenderPop() {
+    const pop = $("#rdDatePop");
+    if (!pop) return;
+    const vs = rdVersions();
+    const cur = readingData().date || rdLiveDate();
+    pop.innerHTML = vs.map((v) =>
+      '<button class="rd-popt" type="button" role="option" aria-selected="' + (v.date === cur ? "true" : "false") +
+        '" data-rd-date="' + esc(v.date) + '"' +
+        ' aria-label="' + esc(rdMonthDay(v.date) + (v.issueNo ? " " + v.issueNo + "호" : "") + " · " + v.title) + '">' +
+        '<span class="rd-popt-d">' + esc(rdMonthDay(v.date)) +
+          (v.issueNo ? '<em>' + esc(v.issueNo) + '호</em>' : "") +
+          (v.today ? '<span class="rd-popt-tag">오늘</span>' : "") +
+        "</span>" +
+        '<span class="rd-popt-t">' + esc(v.title || "읽을거리") + (v.word ? " · " + esc(v.word) : "") + "</span>" +
+      "</button>"
+    ).join("");
+  }
+
+  function rdPopOpen(open) {
+    const pop = $("#rdDatePop"), b = $("#rdDateBtn");
+    if (!pop || !b) return;
+    if (open) rdRenderPop();
+    pop.hidden = !open;
+    b.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open) {
+      const on = pop.querySelector('.rd-popt[aria-selected="true"]');
+      if (on) on.focus({ preventScroll: true });
+    }
+  }
+
+  /* 날짜를 골라 그 호수로 전환 — 재생 중이던 소리·영상은 먼저 멈춥니다 */
+  function rdSelectDate(date) {
+    if (!date) return;
+    const liveDate = rdLiveDate();
+    const target = date === liveDate ? null : ((rdArch.list || []).filter((it) => String(it.date).slice(0, 10) === date)[0] || null);
+    if (date !== liveDate && !target) return;
+    const keep = rd.tab;
+    rdHardStop();
+    if (th.open) thClose(true);
+    rdArch.cur = target;
+    renderReadingStage();
+    if (keep === "word") setReadingTab("word");
+    rdRenderHead();
+    rdRenderPop();
+  }
+
+  /* ‹ › — dir -1 = 더 지난 호, +1 = 더 최근 호 */
+  function rdStep(dir) {
+    const vs = rdVersions();
+    const cur = readingData().date || rdLiveDate();
+    const i = vs.findIndex((v) => v.date === cur);
+    if (i < 0) return;
+    const j = i + (dir < 0 ? 1 : -1);
+    if (j < 0 || j >= vs.length) return;
+    rdSelectDate(vs[j].date);
   }
 
   /* 예문 속에 오늘의 단어(또는 highlight 낱말)만 노랗게 표시 */
@@ -1307,19 +1467,12 @@
     const panel = $("#readingPanel");
     if (!panel) return;
     if (th.open) thClose(true);
-    const p = readingData();
-    const sEl = $("#rdSub");
-    if (sEl) {
-      let label = "";
-      if (p.stale) label = "지난 읽을거리 · " + p.date;
-      else if (p.date) {
-        const d = parseISO(p.date);
-        label = "오늘 · " + (d.getMonth() + 1) + "월 " + d.getDate() + "일";
-      }
-      sEl.textContent = label;
-      sEl.classList.toggle("is-stale", !!p.stale);
-    }
+    rdArch.cur = null;          /* 열 때는 늘 오늘 읽을거리부터 */
+    rdPopOpen(false);
     renderReadingStage();
+    rdRenderHead();
+    rdRenderPop();
+    if (!rdArch.loaded) fetchArchive();   /* 보관함은 처음 한 번만 받아 옵니다 */
     panel.hidden = false;
     rd.open = true;
     document.body.classList.add("is-reading");
@@ -1331,7 +1484,9 @@
     const panel = $("#readingPanel");
     if (!panel || !rd.open) return;
     if (th.open) thClose(true);
+    rdPopOpen(false);
     rdHardStop();
+    rdArch.cur = null;          /* 보드 카드는 늘 오늘 읽을거리를 가리킵니다 */
     panel.hidden = true;
     rd.open = false;
     document.body.classList.remove("is-reading");
@@ -1349,6 +1504,30 @@
     });
     /* 포스터 바깥 여백을 눌러도 닫힙니다 */
     panel.addEventListener("click", (e) => { if (e.target === panel) closeReading(); });
+
+    /* 📅 날짜별 보관함 — 날짜 칩 팝오버 · ‹ › 한 호씩 · 오늘로 돌아가기 */
+    const dateBtn = $("#rdDateBtn"), datePop = $("#rdDatePop");
+    if (dateBtn) dateBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      rdPopOpen(datePop ? datePop.hidden : false);
+    });
+    if (datePop) datePop.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-rd-date]");
+      if (!b) return;
+      rdSelectDate(b.dataset.rdDate || "");
+      rdPopOpen(false);
+      if (dateBtn) dateBtn.focus({ preventScroll: true });
+    });
+    const prevBtn = $("#rdPrev"), nextBtn = $("#rdNext"), todayBtn = $("#rdToday");
+    if (prevBtn) prevBtn.addEventListener("click", () => rdStep(-1));
+    if (nextBtn) nextBtn.addEventListener("click", () => rdStep(1));
+    if (todayBtn) todayBtn.addEventListener("click", () => rdSelectDate(rdLiveDate()));
+    /* 팝오버 바깥을 누르면 접힙니다 */
+    document.addEventListener("click", (e) => {
+      if (!datePop || datePop.hidden) return;
+      if (datePop.contains(e.target) || (dateBtn && dateBtn.contains(e.target))) return;
+      rdPopOpen(false);
+    });
 
     /* 🎬 탭 안의 '영상으로 듣기' — 누른 탭의 영상이 그 탭 자리에서 시작됩니다 */
     wireTheater();
@@ -1399,6 +1578,20 @@
     }
     document.addEventListener("keydown", (e) => {
       if (!rd.open) return;
+      const pop = $("#rdDatePop");
+      if (pop && !pop.hidden) {
+        if (e.key === "Escape") { e.preventDefault(); rdPopOpen(false); const b = $("#rdDateBtn"); if (b) b.focus({ preventScroll: true }); return; }
+        if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+          const opts = Array.prototype.slice.call(pop.querySelectorAll(".rd-popt"));
+          if (opts.length) {
+            e.preventDefault();
+            const i = opts.indexOf(document.activeElement);
+            const j = e.key === "ArrowDown" ? Math.min(opts.length - 1, i + 1) : Math.max(0, i <= 0 ? 0 : i - 1);
+            opts[j].focus({ preventScroll: true });
+          }
+          return;
+        }
+      }
       if (e.key === "Escape") {
         if (th.open) { thClose(); return; }
         closeReading();
@@ -2204,6 +2397,7 @@
       data = await fetchData();
       derive();
       renderAll();
+      fetchArchive();          /* 새 호가 올라왔으면 보관함 목록도 함께 새로 */
       if (notify) toast("보드 데이터를 새로 불러왔어요");
     } catch (e) {
       if (notify) toast("데이터를 불러오지 못했어요 · 잠시 뒤 다시 시도해요");
@@ -2573,6 +2767,7 @@
   renderAll();
   wire();
   tick();
+  fetchArchive();   /* 📅 날짜별 보관함(지난 호 목록) — 오늘 읽을거리와 따로 받아 옵니다 */
   fetchLiveWx();   /* 페이지를 열면 바로 우장산동 실시간 날씨로 덮어쓰고, 15분마다 새로 받습니다 */
   /* 검증용 — 주소에 debug=1 이 있을 때만 열립니다 (보드 화면에는 영향 없음) */
   if (DEBUG) {

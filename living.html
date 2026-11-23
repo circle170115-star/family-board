@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://api.open-meteo.com" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="assets/living.css?v=20261124c">
+<link rel="stylesheet" href="assets/living.css?v=20261124e">
 <link rel="manifest" href="manifest-living.json">
 <meta name="application-name" content="등원 보드">
 <meta name="mobile-web-app-capable" content="yes">
@@ -127,10 +127,19 @@
     <header class="rd-head">
       <h2 class="rd-title" id="rdTitle"><span aria-hidden="true">📖</span> 오늘의 읽을거리</h2>
       <div class="rd-tabs" role="tablist" aria-label="읽을거리 고르기">
-        <button class="rd-tab is-on" id="rdTabProverb" type="button" role="tab" aria-selected="true" aria-controls="rdStage" data-tab="proverb"><span aria-hidden="true">📖</span> 오늘의 속담</button>
-        <button class="rd-tab" id="rdTabWord" type="button" role="tab" aria-selected="false" aria-controls="rdStage" data-tab="word" tabindex="-1"><span aria-hidden="true">🌱</span> 오늘의 영단어</button>
+        <button class="rd-tab is-on" id="rdTabProverb" type="button" role="tab" aria-selected="true" aria-controls="rdStage" data-tab="proverb"><span aria-hidden="true">📖</span> <span class="rd-tab-lab" id="rdLabProverb">오늘의 속담</span></button>
+        <button class="rd-tab" id="rdTabWord" type="button" role="tab" aria-selected="false" aria-controls="rdStage" data-tab="word" tabindex="-1"><span aria-hidden="true">🌱</span> <span class="rd-tab-lab" id="rdLabWord">오늘의 영단어</span></button>
       </div>
-      <span class="rd-sub" id="rdSub"></span>
+      <!-- 📅 날짜별 보관함 — 지난 호를 골라 다시 봅니다 (‹ 이전 호 · 날짜 칩 ▾ · 다음 호 ›) -->
+      <div class="rd-hist" id="rdHist">
+        <button class="rd-arrow" id="rdPrev" type="button" aria-label="더 지난 읽을거리 보기"><span aria-hidden="true">‹</span></button>
+        <button class="rd-date" id="rdDateBtn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="rdDatePop" aria-label="읽을거리 날짜 고르기">
+          <span class="rd-date-txt" id="rdDateTxt">오늘 · 11월 24일</span><span class="rd-caret" aria-hidden="true">▾</span>
+        </button>
+        <button class="rd-arrow" id="rdNext" type="button" aria-label="더 최근 읽을거리 보기"><span aria-hidden="true">›</span></button>
+        <button class="rd-today" id="rdToday" type="button" hidden><span aria-hidden="true">↩</span> 오늘로 돌아가기</button>
+        <div class="rd-pop" id="rdDatePop" role="listbox" aria-label="읽을거리 호수 고르기" hidden></div>
+      </div>
       <button class="rd-close" id="rdClose" type="button" aria-label="읽을거리를 닫고 보드로 돌아가기"><span aria-hidden="true">✕</span> 닫기</button>
     </header>
     <div class="rd-stage" id="rdStage" role="tabpanel" aria-labelledby="rdTabProverb"></div>
@@ -239,6 +248,6 @@
 <noscript><p style="text-align:center;padding:24px">이 보드는 JavaScript가 필요해요.</p></noscript>
 <script src="assets/kr-holidays.js?v=20261122a"></script>
 <script src="assets/math-engine.js?v=20261121a"></script>
-<script src="assets/living.js?v=20261124d"></script>
+<script src="assets/living.js?v=20261124e"></script>
 </body>
 </html>
