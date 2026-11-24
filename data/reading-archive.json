@@ -1,7 +1,103 @@
 {
- "updatedAt": "2026-11-24",
+ "updatedAt": "2026-11-25",
  "note": "거실 보드 '📖 오늘의 읽을거리' 날짜별 보관함 — 최신 호가 맨 위. tools/reading_archive.py 가 갱신합니다.",
  "items": [
+  {
+   "date": "2026-11-25",
+   "title": "천 리 길도 한 걸음부터",
+   "subtitle": "오늘의 속담 + 오늘의 영단어",
+   "proverb": {
+    "badge": "속담 · 5호",
+    "title": "천 리 길도 한 걸음부터",
+    "subtitle": "아무리 먼 길도 첫 한 걸음에서 시작해요",
+    "summary": "블록 하나, 한 걸음, 하나씩! 큰일도 작은 첫걸음부터 시작하면 어느새 다 해내요.",
+    "audio": "assets/reading/archive/2026-11-25/audio/proverb-20261125-title.mp3",
+    "bgmAudio": "assets/reading/archive/2026-11-25/audio/bgm-gentle-story.mp3",
+    "bgmVolume": 0.16,
+    "panels": [
+     {
+      "num": 1,
+      "speech": "이걸 다 어떻게 쌓지…?",
+      "caption": "블록 산 앞에서 엄두가 안 나요",
+      "image": "assets/reading/archive/2026-11-25/panel1-crop.png",
+      "audio": "assets/reading/archive/2026-11-25/audio/proverb-20261125-p1.mp3"
+     },
+     {
+      "num": 2,
+      "speech": "하나씩 차곡차곡!",
+      "caption": "엄마가 첫 블록을 톡",
+      "image": "assets/reading/archive/2026-11-25/panel2-crop.png",
+      "audio": "assets/reading/archive/2026-11-25/audio/proverb-20261125-p2.mp3"
+     },
+     {
+      "num": 3,
+      "speech": "하나, 둘, 셋!",
+      "caption": "하나둘 쌓이는 블록",
+      "image": "assets/reading/archive/2026-11-25/panel3-crop.png",
+      "audio": "assets/reading/archive/2026-11-25/audio/proverb-20261125-p3.mp3"
+     },
+     {
+      "num": 4,
+      "speech": "우와, 다 쌓았다!",
+      "caption": "한 걸음씩 쌓은 멋진 탑",
+      "image": "assets/reading/archive/2026-11-25/panel4-crop.png",
+      "audio": "assets/reading/archive/2026-11-25/audio/proverb-20261125-p4.mp3"
+     }
+    ],
+    "meaning": "'천 리 길도 한 걸음부터'는 아무리 멀고 먼 길도 첫 한 걸음부터 시작한다는 뜻이에요. 아무리 크고 어려운 일도 가장 작은 첫걸음부터 하나씩 해 나가면 어느새 다 해낼 수 있답니다.",
+    "promise": "오늘은 하기 싫거나 어려워 보이는 일 하나를 골라, 제일 작은 첫걸음만 해 볼까요? 블록 하나 정리하기, 신발 한 짝 갖다 놓기처럼요.",
+    "meaningAudio": "assets/reading/archive/2026-11-25/audio/proverb-20261125-meaning.mp3"
+   },
+   "word": {
+    "badge": "영단어 · 5호",
+    "word": "clean",
+    "meaning": "깨끗하게 치우다 · 닦다",
+    "audio": "assets/reading/archive/2026-11-25/audio/clean.mp3",
+    "bannerImage": "assets/reading/archive/2026-11-25/word-banner.png",
+    "examples": [
+     {
+      "num": 1,
+      "en": "Let's clean up!",
+      "ko": "우리 같이 치우자!",
+      "audio": "assets/reading/archive/2026-11-25/audio/clean-ex1.mp3",
+      "highlight": [
+       "clean"
+      ],
+      "koAudio": "assets/reading/archive/2026-11-25/audio/clean-ko-ex1.mp3",
+      "koScript": "그림을 보세요. 다은이와 승민이가 장난감을 바구니에 담고 있어요. 첫 번째 문장! 우리 같이 치우자, 라는 뜻이에요."
+     },
+     {
+      "num": 2,
+      "en": "Clean your hands.",
+      "ko": "손을 깨끗이 씻자.",
+      "audio": "assets/reading/archive/2026-11-25/audio/clean-ex2.mp3",
+      "highlight": [
+       "Clean"
+      ],
+      "koAudio": "assets/reading/archive/2026-11-25/audio/clean-ko-ex2.mp3",
+      "koScript": "두 번째 문장! 손을 깨끗이 씻자, 라는 뜻이에요. 밥 먹기 전에는 꼭꼭 손을 씻어요."
+     },
+     {
+      "num": 3,
+      "en": "My room is clean!",
+      "ko": "내 방이 깨끗해!",
+      "audio": "assets/reading/archive/2026-11-25/audio/clean-ex3.mp3",
+      "highlight": [
+       "clean"
+      ],
+      "koAudio": "assets/reading/archive/2026-11-25/audio/clean-ko-ex3.mp3",
+      "koScript": "세 번째 문장! 내 방은 깨끗해, 라는 뜻이에요. 정리하고 나면 방이 반짝반짝해요."
+     }
+    ],
+    "tip": "장난감을 바구니에 담고, 손을 씻고, 바닥을 닦는 것 — 그게 바로 clean이에요. 오늘 우리 집에서 같이 clean 해 볼까요?",
+    "koIntroAudio": "assets/reading/archive/2026-11-25/audio/clean-ko-intro.mp3",
+    "koIntroText": "오늘의 영단어는 clean. 깨끗하게 치우다, 닦다는 뜻이에요. 그림을 보면서 같이 연습해 볼까요?",
+    "koTipAudio": "assets/reading/archive/2026-11-25/audio/clean-ko-tip.mp3",
+    "koTipText": "기억 쏙 한마디! 장난감을 바구니에 담고, 손을 씻고, 바닥을 닦는 것. 그게 바로 clean 이에요."
+   },
+   "note": "거실 보드 '📖 오늘의 읽을거리' 전체화면 모달. proverb(속담 4컷) · word(터치 발음 영단어) 두 탭을 이 객체만 고쳐 바꿉니다. 이미지는 assets/reading/ 아래에 두고 audio 는 MP3 경로(없으면 Web Speech en-US 로 자동 대체)를 적습니다. proverb·word 가 모두 비면 안내 카드가 보입니다.",
+   "issueNo": 5
+  },
   {
    "date": "2026-11-24",
    "title": "세 살 버릇 여든까지 간다",
