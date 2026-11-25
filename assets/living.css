@@ -374,15 +374,22 @@ body.living::before{
 .st.on{background:#FFF7DE;border:1px solid #F0D68C;color:#DE9C10}
 .st-more{font-size:11px;font-weight:750;color:var(--muted)}
 
-/* 🎁 10개 달성 — 보상 배지 (스티커를 쓰지 않고 모으면 계속 쌓입니다) */
+/* 🎁 10개 달성 — 보상 배지 (스티커를 쓰지 않고 모으면 계속 쌓입니다)
+   실제 버튼이라 눌러서 바로 보상을 받을 수 있습니다 (확인 창 → 10개 차감). */
 .st-reward{
+  appearance:none;-webkit-appearance:none;
   flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
   padding:5px 11px;border-radius:13px;border:1.5px solid #F0C170;
   background:linear-gradient(135deg,#FFF8DE,#FFE7A8);color:#8A5A00;
-  line-height:1.25;white-space:nowrap;
+  font:inherit;line-height:1.25;white-space:nowrap;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;
   box-shadow:0 8px 16px -14px rgba(190,130,20,.95);
   animation:rewardGlow 2.6s ease-in-out infinite;
+  transition:transform .12s ease,box-shadow .12s ease,filter .12s ease;
 }
+.st-reward:active{transform:scale(.94);filter:brightness(.97);animation:none;box-shadow:0 4px 10px -8px rgba(190,130,20,.95)}
+.st-reward:focus-visible{outline:3px solid #E0A93B;outline-offset:2px}
 .st-reward b{font-size:clamp(10px,1.5vh,13.5px);font-weight:900;letter-spacing:-.03em}
 .st-reward span{font-size:clamp(9.5px,1.4vh,12.5px);font-weight:800;color:#A2761A}
 @keyframes rewardGlow{0%,100%{box-shadow:0 8px 16px -14px rgba(190,130,20,.95)}50%{box-shadow:0 10px 20px -10px rgba(214,150,20,.9)}}

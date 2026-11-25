@@ -338,13 +338,20 @@
       "</div>"
     );
   }
-  /* 10개마다 보상 1회 — 쓰지 않고 모으면 계속 쌓입니다 */
-  function rewardBadgeHTML(st) {
+  /* 10개마다 보상 1회 — 쓰지 않고 모으면 계속 쌓입니다.
+     배지를 그냥 눌러도 되도록 실제 버튼으로 그립니다 (확인 창을 거쳐 10개 차감). */
+  function rewardBadgeHTML(st, cid, name) {
     const n = rewardCount(st);
     if (n < 1) return "";
+    const cur = parseInt(st, 10) || 0;
     const top = "🎁 " + n * STICKERS_PER_REWARD + "개 달성!";
     const bot = n === 1 ? "보상 받기 가능" : "보상 " + n + "회 가능";
-    return '<div class="st-reward" title="스티커 ' + n * STICKERS_PER_REWARD + '개로 보상 ' + n + '회"><b>' + top + "</b><span>" + bot + "</span></div>";
+    return (
+      '<button type="button" class="st-reward" data-card-spend="' + esc(cid) + '"' +
+        ' title="스티커 ' + n * STICKERS_PER_REWARD + '개로 보상 ' + n + '회 · 눌러서 보상 받기"' +
+        ' aria-label="' + esc(name) + ' 칭찬스티커 ' + STICKERS_PER_REWARD + '개를 써서 보상 받기 (지금 ' + cur + '개)">' +
+        '<b>' + top + "</b><span>" + bot + "</span></button>"
+    );
   }
 
   /* 아이별 오늘 일정 한 줄 */
@@ -764,7 +771,7 @@
       '<div class="kid-foot">' +
         '<div class="st-head"><span class="st-star" aria-hidden="true">⭐</span><span class="st-num">' + st + '</span><span class="st-unit">개</span></div>' +
         '<div class="st-board">' + stickerRows(st) + "</div>" +
-        rewardBadgeHTML(st) +
+        rewardBadgeHTML(st, c.id, c.name) +
       "</div>"
     );
   }
@@ -2588,6 +2595,38 @@
     confetti();
     toast("🎁 " + nm + " 보상 1회 사용! 남은 스티커 " + store.stickers[cid] + "개");
   }
+  /* 아이 카드의 🎁 배지를 눌렀을 때 — 실수로 차감되지 않게 한 번 더 묻습니다 */
+  function askSpendFromCard(cid) {
+    const c = CHILDREN.find((x) => x.id === cid);
+    const nm = c ? c.name : "아이";
+    const cur = parseInt(store.stickers[cid], 10) || 0;
+    if (cur < STICKERS_PER_REWARD) {
+      toast(nm + " 스티커가 " + STICKERS_PER_REWARD + "개보다 적어요 (지금 " + cur + "개)");
+      refreshRewardBadge(cid);
+      return;
+    }
+    const ok = window.confirm(
+      "🎁 " + nm + " 칭찬스티커 " + STICKERS_PER_REWARD + "개를 써서 보상을 받을까요? " +
+      "(지금 " + cur + "개 → 쓰고 나면 " + (cur - STICKERS_PER_REWARD) + "개)"
+    );
+    if (!ok) return;
+    spendReward(cid);
+    cheer();   /* 폭죽(confetti)·토스트는 spendReward 안에서, 환호성은 여기서 */
+  }
+  /* 카드의 보상 배지만 다시 그립니다 (10개 미만이 되면 사라짐) */
+  function refreshRewardBadge(cid) {
+    const el = document.querySelector('.kid[data-child="' + cid + '"] .kid-foot');
+    const c = CHILDREN.find((x) => x.id === cid);
+    if (!el || !c) return;
+    const st = parseInt(store.stickers[cid], 10) || 0;
+    const cur = el.querySelector(".st-reward");
+    const html = rewardBadgeHTML(st, c.id, c.name);
+    if (cur && html) cur.outerHTML = html;
+    else if (cur && !html) cur.remove();
+    else if (!cur && html) el.insertAdjacentHTML("beforeend", html);
+    const num = el.querySelector(".st-num");
+    if (num) num.textContent = st;
+  }
   /* 초기화 — 실수 방지를 위해 한 번 더 묻게 합니다 */
   function resetStickers(cid) {
     const c = CHILDREN.find((x) => x.id === cid);
@@ -2794,6 +2833,11 @@
   /* ───────────── 이벤트 ───────────── */
   function wire() {
     $("#childGrid").addEventListener("click", (e) => {
+      const reward = e.target.closest("[data-card-spend]");
+      if (reward) {
+        askSpendFromCard(reward.dataset.cardSpend);
+        return;
+      }
       const tab = e.target.closest(".kid-tab");
       if (tab) {
         const cid = tab.closest(".kid").dataset.child;
