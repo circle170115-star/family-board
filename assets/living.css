@@ -355,7 +355,7 @@ body.living::before{
 
 /* ── 칭찬 스티커판 ── */
 .kid-foot{
-  flex:none;display:flex;align-items:center;gap:12px;
+  flex:none;display:flex;align-items:center;gap:10px;
   padding:6px 16px 9px;border-top:1px dashed var(--line2);
   background:linear-gradient(180deg,#FFFFFF,var(--k-wash));
 }
@@ -371,8 +371,56 @@ body.living::before{
   font-size:clamp(11px,1.75vh,17px);line-height:1;
   background:var(--k-wash);border:1px dashed var(--k-line);color:#C6D4E6;
 }
-.st.on{background:#FFF7DE;border:1px solid #F0D68C}
+.st.on{background:#FFF7DE;border:1px solid #F0D68C;color:#DE9C10}
 .st-more{font-size:11px;font-weight:750;color:var(--muted)}
+
+/* 🎁 10개 달성 — 보상 배지 (스티커를 쓰지 않고 모으면 계속 쌓입니다) */
+.st-reward{
+  flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  padding:5px 11px;border-radius:13px;border:1.5px solid #F0C170;
+  background:linear-gradient(135deg,#FFF8DE,#FFE7A8);color:#8A5A00;
+  line-height:1.25;white-space:nowrap;
+  box-shadow:0 8px 16px -14px rgba(190,130,20,.95);
+  animation:rewardGlow 2.6s ease-in-out infinite;
+}
+.st-reward b{font-size:clamp(10px,1.5vh,13.5px);font-weight:900;letter-spacing:-.03em}
+.st-reward span{font-size:clamp(9.5px,1.4vh,12.5px);font-weight:800;color:#A2761A}
+@keyframes rewardGlow{0%,100%{box-shadow:0 8px 16px -14px rgba(190,130,20,.95)}50%{box-shadow:0 10px 20px -10px rgba(214,150,20,.9)}}
+
+/* ── 🎉 다 했어요! 엄마·아빠 확인 (2초 길게 누르기) ──
+   시간 안에 다 끝내면 이 버튼이 뜨고, 2초 꾹 눌러야 스티커가 지급됩니다.
+   시간이 지난 뒤에는 같은 자리에 안내문만 보입니다. */
+.kid-award{flex:none;padding:0 12px 8px}
+.kid-award[hidden]{display:none}
+.aw-msg{
+  display:block;padding:clamp(6px,1.2vh,10px) 12px;border-radius:14px;
+  background:#F4F6FA;border:1px dashed #D8DFEA;color:#54657C;
+  font-size:clamp(10.5px,1.6vh,14px);font-weight:800;text-align:center;line-height:1.25;
+}
+.award-btn{
+  position:relative;overflow:hidden;width:100%;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:clamp(7px,1.5vh,12px) 12px;border-radius:16px;border:2px solid #EFC24A;
+  background:linear-gradient(135deg,#FFF5CC,#FFDD75);color:#7A5200;
+  font:inherit;font-size:clamp(12.5px,2.05vh,18px);font-weight:900;letter-spacing:-.025em;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;
+  animation:awardPulse 1.9s ease-in-out infinite;
+}
+.award-btn small{font-size:.8em;font-weight:800;opacity:.72}
+.award-btn .aw-ico{flex:none;font-size:1.15em;line-height:1}
+.award-btn .aw-txt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.award-btn .aw-hold{
+  position:absolute;left:0;bottom:0;height:4px;width:0;
+  background:linear-gradient(90deg,#F2A93B,#D97A00);border-radius:0 3px 3px 0;
+}
+.award-btn.is-holding{animation:none;transform:scale(.985);border-color:#D99A1E}
+.award-btn.is-holding .aw-hold{animation:awardHold var(--hold-ms,2000ms) linear forwards}
+@keyframes awardHold{from{width:0}to{width:100%}}
+@keyframes awardPulse{
+  0%,100%{box-shadow:0 10px 22px -18px rgba(200,140,10,.95)}
+  50%{box-shadow:0 14px 28px -12px rgba(200,140,10,.8)}
+}
 
 /* ── 축하 배너 · 폭죽 ── */
 .celebrate{
@@ -431,6 +479,15 @@ body.living::before{
 }
 .row-btns{display:flex;gap:8px;margin-top:14px}
 .st-num-b{font-size:16px;font-weight:850;min-width:2em;text-align:center;font-variant-numeric:tabular-nums}
+/* ⚙️ 아이별 스티커 관리 — −/+ 옆에 보상 쓰기·초기화 */
+.st-set .lv-set{padding:9px 0}
+.st-set-acts{display:flex;justify-content:flex-end;gap:7px;padding:0 0 10px}
+.mini-btn[disabled]{opacity:.42;cursor:default;background:#F4F6FA}
+.mini-btn[disabled]:hover{background:#F4F6FA}
+.mini-btn.is-reward{border-color:#F0C170;background:#FFF6DA;color:#8A5A00}
+.mini-btn.is-reward:hover:not([disabled]){background:#FFEFC2}
+.mini-btn.is-danger{border-color:#F3CFCB;background:#FFF5F4;color:#B4483F}
+.mini-btn.is-danger:hover{background:#FFECEA}
 
 .lv-error{
   grid-column:1/-1;margin:auto;text-align:center;font-weight:800;color:#A3423D;
@@ -470,7 +527,10 @@ body.living::before{
   .kid-tab{padding:4px 8px;border-radius:12px}
   .kid-body{padding:0 9px 6px}
   .kid-rest{margin:0 0 6px;padding:6px 11px}
-  .kid-foot{padding:3px 13px 5px;gap:10px}
+  .kid-foot{padding:3px 13px 5px;gap:8px}
+  .kid-award{padding:0 9px 6px}
+  .st-reward{padding:3px 7px;border-radius:11px}
+  .award-btn{padding:6px 10px;border-radius:14px}
   .tiles{gap:6px}
   .tile{padding:5px 7px;border-radius:15px;min-height:clamp(50px,8.6vh,96px)}
   .tile-emoji img{max-height:clamp(56px,12.5vh,120px)}
@@ -514,6 +574,7 @@ body.living::before{
   .tile,.kid-tab,.lv-home,.lv-icon-btn,.tile-badge{transition:none}
   .cf{display:none}
   .lv-count.is-red .cd-ico{animation:none}
+  .award-btn,.st-reward{animation:none}
 }
 
 /* ── ⏰ 등원 알람 배너 (08:00 시작 · 08:20 경고) ──

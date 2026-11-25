@@ -17,6 +17,15 @@
   const PREP_START = 7 * 60 + 30;   /* 아침 준비 시작 07:30 */
   const DEFAULT_DEPARTURE = "08:40"; /* 평일 기본 출발 시각 (2026-11-20 09:00 → 08:40) */
   const DEFAULT_DEP_MIN = 8 * 60 + 40;
+  /* ⭐ 칭찬 스티커 지급 시간대 (2026-11-25 개편) — 정해진 시간 안에 끝낸 경우에만 스티커를 줍니다
+       · 등원일 아침: 오늘 출발 시각(departureInfo().min, 기본 08:40) 이하
+       · 쉬는 날 아침: 11:00 이하
+       · 저녁 루틴: 17:00 ~ 21:30 (낮에 미리 끝내거나 21:30 이전에 끝내지 못하면 그날은 미지급) */
+  const AM_REST_AWARD_LIMIT = 11 * 60;        /* 쉬는 날 아침 스티커 마감 11:00 */
+  const PM_AWARD_FROM = 17 * 60;              /* 저녁 루틴 스티커 시작 17:00 */
+  const PM_AWARD_TO = 21 * 60 + 30;           /* 저녁 루틴 스티커 마감 21:30 */
+  const AWARD_HOLD_MS = 2000;                 /* 엄마·아빠 확인 — 2초 길게 누르기 */
+  const STICKERS_PER_REWARD = 10;             /* 보상 1회 = 스티커 10개 */
   /* ⏰ 등원 준비 알람 — ① 08:00 시작 ② 08:20 경고(출발 20분 전). 각각 08:00~08:09 / 08:20~08:29 사이 하루 한 번 */
   const ALARMS = [
     { key: "start", hm: 8 * 60, grace: 10, kind: "start" },
@@ -156,7 +165,7 @@
 
   /* ───────────── 저장소 (localStorage) ───────────── */
   let store = null;
-  function blankCheck() { return { morning: [], evening: [], awarded: { morning: "", evening: "" } }; }
+  function blankCheck() { return { morning: [], evening: [], awarded: { morning: "", evening: "" }, doneAt: { morning: 0, evening: 0 } }; }
   function blankChecks() {
     const o = {};
     CHILDREN.forEach((c) => { o[c.id] = blankCheck(); });
@@ -192,7 +201,13 @@
     s.checks = s.checks && typeof s.checks === "object" ? s.checks : {};
     CHILDREN.forEach((c) => {
       const cur = s.checks[c.id];
-      if (!cur || !Array.isArray(cur.morning) || !Array.isArray(cur.evening) || !cur.awarded) s.checks[c.id] = blankCheck();
+      if (!cur || !Array.isArray(cur.morning) || !Array.isArray(cur.evening) || !cur.awarded) { s.checks[c.id] = blankCheck(); return; }
+      /* 한쪽을 모두 끝낸 시각(doneAt) — 스티커 지급 시간대 판단 기준이라 예전 저장분에도 자리를 만들어 둡니다 */
+      if (!cur.doneAt || typeof cur.doneAt !== "object") cur.doneAt = { morning: 0, evening: 0 };
+      ["morning", "evening"].forEach((p) => {
+        const n = Number(cur.doneAt[p]);
+        cur.doneAt[p] = Number.isFinite(n) && n > 0 ? n : 0;
+      });
     });
     return s;
   }
@@ -272,6 +287,64 @@
     const arr = ensureCheck(cid)[part] || [];
     const done = items.filter((i) => arr.indexOf(i.id) >= 0).length;
     return { done: done, total: items.length };
+  }
+
+  /* ───────────── ⭐ 칭찬 스티커 지급 시간대 (2026-11-25 개편) ─────────────
+     "끝낸 시각"(when)을 기준으로 그날 스티커를 줄 수 있는지 판단합니다.
+       · 등원일 아침 — 오늘 출발 시각 이하
+       · 쉬는 날 아침 — 11:00 이하
+       · 저녁 루틴 — 17:00 ~ 21:30
+     open=false 일 때 early=true 면 아직 이른 때(저녁 17:00 전)에 끝낸 경우이고,
+     early=false 면 정해진 시간이 지난 뒤에 끝낸 경우입니다. */
+  function awardWindow(part, when) {
+    const d = when instanceof Date && Number.isFinite(when.getTime()) ? when : new Date();
+    const mins = d.getHours() * 60 + d.getMinutes() + d.getSeconds() / 60;
+    if (part === "morning") {
+      const rest = isRestDay(todayStr);
+      const limit = rest ? AM_REST_AWARD_LIMIT : departureInfo().min;
+      return { open: mins <= limit, early: false, limit: limit, rest: rest };
+    }
+    return { open: mins >= PM_AWARD_FROM && mins <= PM_AWARD_TO, early: mins < PM_AWARD_FROM, limit: PM_AWARD_TO };
+  }
+  const rewardCount = (st) => Math.floor((parseInt(st, 10) || 0) / STICKERS_PER_REWARD);
+
+  /* 아이 카드 안의 스티커 줄 — ① 시간 안에 다 했으면 엄마·아빠 확인 버튼
+                                  ② 시간이 지났으면 안내
+                                  ③ 오늘 이미 받았으면 작은 표시 */
+  function awardStripHTML(cid, part) {
+    const lists = buildChecklists(cid, todayStr);
+    const p = progressOf(cid, part, lists);
+    const c = ensureCheck(cid);
+    const partName = part === "morning" ? "아침" : "저녁";
+    if (!p.total || p.done !== p.total) return '<div class="kid-award" data-part="' + part + '" hidden></div>';
+    /* 오늘 몫은 이미 받았으면 자리만 차지하지 않게 숨깁니다 (스티커판·축하 배너로 확인) */
+    if (c.awarded[part] === todayStr) return '<div class="kid-award is-got" data-part="' + part + '" hidden></div>';
+    const doneAt = c.doneAt && c.doneAt[part] ? new Date(c.doneAt[part]) : new Date();
+    const w = awardWindow(part, doneAt);
+    if (!w.open) {
+      const msg = w.early
+        ? "⏰ " + hhmm(PM_AWARD_FROM) + " 전에 다 해서 오늘 저녁 스티커는 받을 수 없어요"
+        : "⏰ 정해진 시간이 지나 오늘 스티커는 받을 수 없어요";
+      return '<div class="kid-award is-late" data-part="' + part + '"><span class="aw-msg">' + msg + "</span></div>";
+    }
+    return (
+      '<div class="kid-award is-ready" data-part="' + part + '">' +
+        '<button type="button" class="award-btn" data-award="' + esc(cid) + '" data-part="' + part + '" ' +
+            'aria-label="' + esc(partName) + ' 준비를 다 했어요. 엄마·아빠 확인 — 2초 길게 누르면 스티커를 줍니다">' +
+          '<span class="aw-ico" aria-hidden="true">🎉</span>' +
+          '<span class="aw-txt">다 했어요! 엄마·아빠 확인 <small>(2초 길게 누르기)</small></span>' +
+          '<span class="aw-hold" aria-hidden="true"></span>' +
+        "</button>" +
+      "</div>"
+    );
+  }
+  /* 10개마다 보상 1회 — 쓰지 않고 모으면 계속 쌓입니다 */
+  function rewardBadgeHTML(st) {
+    const n = rewardCount(st);
+    if (n < 1) return "";
+    const top = "🎁 " + n * STICKERS_PER_REWARD + "개 달성!";
+    const bot = n === 1 ? "보상 받기 가능" : "보상 " + n + "회 가능";
+    return '<div class="st-reward" title="스티커 ' + n * STICKERS_PER_REWARD + '개로 보상 ' + n + '회"><b>' + top + "</b><span>" + bot + "</span></div>";
   }
 
   /* 아이별 오늘 일정 한 줄 */
@@ -687,9 +760,11 @@
         (isRestDay(todayStr) && part === "morning" ? '<p class="kid-rest">🌴 쉬는 날 아침 루틴이에요 · 천천히 해도 좋아요</p>' : "") +
         tilesHTML(items, arr, c.id) +
       "</div>" +
+      awardStripHTML(c.id, part) +
       '<div class="kid-foot">' +
         '<div class="st-head"><span class="st-star" aria-hidden="true">⭐</span><span class="st-num">' + st + '</span><span class="st-unit">개</span></div>' +
         '<div class="st-board">' + stickerRows(st) + "</div>" +
+        rewardBadgeHTML(st) +
       "</div>"
     );
   }
@@ -700,12 +775,14 @@
       return;
     }
     grid.innerHTML = CHILDREN.map((c) => '<section class="kid" data-child="' + esc(c.id) + '" aria-label="' + esc(c.name) + '">' + kidHTML(c) + "</section>").join("");
+    wireAwardButtons(grid);
   }
   function renderKid(cid) {
     const c = CHILDREN.find((x) => x.id === cid);
     const el = document.querySelector('.kid[data-child="' + cid + '"]');
     if (!c || !el) return;
     el.innerHTML = kidHTML(c);
+    wireAwardButtons(el);
   }
   function refreshBadges(cid) {
     const el = document.querySelector('.kid[data-child="' + cid + '"]');
@@ -719,6 +796,18 @@
       if (b) b.textContent = p.done + "/" + p.total;
       btn.classList.toggle("is-done", p.total > 0 && p.done === p.total);
     });
+  }
+  /* 지금 보이는 탭의 스티커 줄만 다시 그립니다 (타일을 다시 그리지 않아 스크롤·애니메이션이 흔들리지 않음) */
+  function refreshAwardStrip(cid) {
+    const el = document.querySelector('.kid[data-child="' + cid + '"]');
+    if (!el) return;
+    const body = el.querySelector(".kid-body");
+    const part = (body && body.dataset.part) || tabOf(cid);
+    const html = awardStripHTML(cid, part);
+    const cur = el.querySelector(".kid-award");
+    if (cur && cur.parentNode) cur.outerHTML = html;
+    else if (body) body.insertAdjacentHTML("afterend", html);
+    wireAwardButtons(el);
   }
 
   /* ───────────── 소리 (Web Audio) ───────────── */
@@ -2349,20 +2438,109 @@
     const at = arr.indexOf(id);
     if (at >= 0) { arr.splice(at, 1); paintTile(btn, false); tapSound(false); }
     else { arr.push(id); paintTile(btn, true); tapSound(true); }
+    /* 한쪽을 "모두 끝낸 시각"을 기억해 둡니다 — 스티커 지급 시간대는 이 시각으로 판단합니다 */
+    const lists = buildChecklists(cid, todayStr);
+    const p = progressOf(cid, part, lists);
+    const allDone = p.total > 0 && p.done === p.total;
+    if (!c.doneAt || typeof c.doneAt !== "object") c.doneAt = { morning: 0, evening: 0 };
+    if (allDone) { if (!c.doneAt[part]) c.doneAt[part] = Date.now(); }
+    else c.doneAt[part] = 0;
     save();
     refreshBadges(cid);
-    if (at < 0) maybeAward(cid, part);
+    refreshAwardStrip(cid);   /* 시간 안이면 엄마·아빠 확인 버튼, 시간이 지났으면 안내 */
+    if (allDone && at < 0) maybeAward(cid, part);
   }
+  /* 모두 체크해도 바로 스티커를 주지 않습니다 — 확인 버튼/시간 안내만 띄웁니다 (2026-11-25 개편) */
   function maybeAward(cid, part) {
     const lists = buildChecklists(cid, todayStr);
     const p = progressOf(cid, part, lists);
     if (!p.total || p.done !== p.total) return;
     const c = ensureCheck(cid);
     if (c.awarded[part] === todayStr) { toast("오늘 스티커는 이미 받았어! 그래도 최고야 ⭐"); return; }
+    const doneAt = c.doneAt && c.doneAt[part] ? new Date(c.doneAt[part]) : new Date();
+    const w = awardWindow(part, doneAt);
+    if (!w.open) {
+      toast(w.early
+        ? "⏰ " + hhmm(PM_AWARD_FROM) + " 전에 끝나서 오늘 저녁 스티커는 받을 수 없어요"
+        : "⏰ 정해진 시간이 지나 오늘 스티커는 받을 수 없어요");
+      return;
+    }
+    toast("🎉 다 했어요! 엄마·아빠가 2초 길게 눌러 확인해 주세요");
+  }
+
+  /* ───────────── 🎉 엄마·아빠 확인 — 2초 길게 누르기 ─────────────
+     아이가 마지막 타일을 눌러도 스티커는 바로 오르지 않습니다.
+     버튼을 2초 동안 꾹 누르고 있어야 비로소 +1 · 축하 배너 · 폭죽이 나옵니다.
+     (짧은 탭·장난으로는 절대 지급되지 않습니다) */
+  function wireAwardButtons(root) {
+    (root || document).querySelectorAll(".award-btn").forEach((btn) => {
+      if (btn.dataset.wired === "1") return;
+      btn.dataset.wired = "1";
+      let timer = null;
+      let holding = false;
+      let fired = false;
+      const stop = () => {
+        if (timer) { clearTimeout(timer); timer = null; }
+        holding = false;
+        btn.classList.remove("is-holding");
+        btn.removeAttribute("aria-busy");
+      };
+      const begin = () => {
+        if (holding || fired) return;
+        holding = true;
+        btn.classList.add("is-holding");
+        btn.setAttribute("aria-busy", "true");
+        btn.style.setProperty("--hold-ms", AWARD_HOLD_MS + "ms");
+        timer = setTimeout(() => {
+          timer = null;
+          holding = false;
+          fired = true;
+          btn.classList.remove("is-holding");
+          btn.removeAttribute("aria-busy");
+          confirmAward(btn.dataset.award, btn.dataset.part);
+        }, AWARD_HOLD_MS);
+      };
+      btn.addEventListener("pointerdown", (e) => {
+        if (typeof e.button === "number" && e.button !== 0) return;
+        e.preventDefault();
+        begin();
+      });
+      ["pointerup", "pointerleave", "pointercancel"].forEach((ev) => {
+        btn.addEventListener(ev, () => {
+          if (!holding) return;
+          stop();
+          if (!fired) toast("2초 동안 꾹 누르고 있어야 스티커가 나와요");
+        });
+      });
+      /* 키보드·보조기기 — Enter/Space 를 누르고 있는 동안 */
+      btn.addEventListener("keydown", (e) => {
+        if (e.key === " " || e.key === "Enter") { e.preventDefault(); begin(); }
+      });
+      btn.addEventListener("keyup", (e) => { if (e.key === " " || e.key === "Enter") stop(); });
+      btn.addEventListener("contextmenu", (e) => e.preventDefault());
+      btn.addEventListener("click", (e) => e.preventDefault());
+    });
+  }
+  function confirmAward(cid, part) {
+    const c = ensureCheck(cid);
+    if (c.awarded[part] === todayStr) {
+      toast("오늘 스티커는 이미 받았어! 그래도 최고야 ⭐");
+      renderKid(cid);
+      return;
+    }
+    const doneAt = c.doneAt && c.doneAt[part] ? new Date(c.doneAt[part]) : new Date();
+    const w = awardWindow(part, doneAt);
+    if (!w.open) {
+      toast(w.early
+        ? "⏰ " + hhmm(PM_AWARD_FROM) + " 전에 끝나서 오늘 저녁 스티커는 받을 수 없어요"
+        : "⏰ 정해진 시간이 지나 오늘 스티커는 받을 수 없어요");
+      renderKid(cid);
+      return;
+    }
     c.awarded[part] = todayStr;
     store.stickers[cid] = (store.stickers[cid] || 0) + 1;
     save();
-    renderKid(cid);          // 스티커판 갱신 (체크 상태 유지)
+    renderKid(cid);          // 스티커판·보상 배지 갱신 (체크 상태 유지)
     renderPanel();
     celebrate(cid, part);
     cheer();
@@ -2374,16 +2552,54 @@
     if (!box) return;
     box.innerHTML = CHILDREN.map((c) => {
       const face = avatarOf(c.id);
+      const st = parseInt(store.stickers[c.id], 10) || 0;
+      const canSpend = st >= STICKERS_PER_REWARD;
       return (
-        '<div class="lv-set"><span>' + (face ? '<img class="face-ico" src="' + face + '" alt="" aria-hidden="true">' : "") + esc(c.name) + " 스티커</span>" +
-        '<span class="mini">' +
-          '<button class="num-btn" type="button" data-minus="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' 스티커 줄이기">−</button>' +
-          '<b class="st-num-b">' + (store.stickers[c.id] || 0) + "</b>" +
-          '<button class="num-btn" type="button" data-plus="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' 스티커 늘리기">+</button>' +
-        "</span></div>"
+        '<div class="st-set" data-child="' + esc(c.id) + '">' +
+          '<div class="lv-set"><span>' + (face ? '<img class="face-ico" src="' + face + '" alt="" aria-hidden="true">' : "") + esc(c.name) + " 스티커</span>" +
+          '<span class="mini">' +
+            '<button class="num-btn" type="button" data-minus="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' 스티커 줄이기">−</button>' +
+            '<b class="st-num-b">' + st + "</b>" +
+            '<button class="num-btn" type="button" data-plus="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' 스티커 늘리기">+</button>' +
+          "</span></div>" +
+          '<div class="st-set-acts">' +
+            '<button class="mini-btn xs is-reward" type="button" data-spend="' + esc(c.id) + '"' + (canSpend ? "" : " disabled") +
+              ' aria-label="' + esc(c.name) + ' 스티커 ' + STICKERS_PER_REWARD + '개로 보상 1회 쓰기">🎁 ' + STICKERS_PER_REWARD + "개 쓰기 (-" + STICKERS_PER_REWARD + ')</button>' +
+            '<button class="mini-btn xs is-danger" type="button" data-streset="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' 스티커 0개로 초기화">초기화</button>' +
+          "</div>" +
+        "</div>"
       );
     }).join("");
     renderSettings();
+  }
+  /* 🎁 보상 1회 쓰기 — 10개를 차감하고 남은 적립분은 그대로 둡니다 */
+  function spendReward(cid) {
+    const c = CHILDREN.find((x) => x.id === cid);
+    const nm = c ? c.name : "아이";
+    const cur = parseInt(store.stickers[cid], 10) || 0;
+    if (cur < STICKERS_PER_REWARD) {
+      toast(nm + " 스티커가 " + STICKERS_PER_REWARD + "개보다 적어요 (지금 " + cur + "개)");
+      return;
+    }
+    store.stickers[cid] = cur - STICKERS_PER_REWARD;
+    save();
+    renderKid(cid);
+    renderPanel();
+    confetti();
+    toast("🎁 " + nm + " 보상 1회 사용! 남은 스티커 " + store.stickers[cid] + "개");
+  }
+  /* 초기화 — 실수 방지를 위해 한 번 더 묻게 합니다 */
+  function resetStickers(cid) {
+    const c = CHILDREN.find((x) => x.id === cid);
+    const nm = c ? c.name : "아이";
+    const cur = parseInt(store.stickers[cid], 10) || 0;
+    if (!cur) { toast(nm + " 스티커는 이미 0개예요"); return; }
+    if (!window.confirm(nm + " 스티커를 " + cur + "개 → 0개로 초기화할까요?\n보상 기록도 함께 사라지며 되돌릴 수 없어요.")) return;
+    store.stickers[cid] = 0;
+    save();
+    renderKid(cid);
+    renderPanel();
+    toast(nm + " 스티커를 0개로 초기화했어요");
   }
   function renderSettings() {
     const depToday = $("#depToday"), depDefault = $("#depDefault"), fs = $("#focusSwitch");
@@ -2634,6 +2850,10 @@
       const minus = e.target.closest("[data-minus]");
       if (plus) { adjustSticker(plus.dataset.plus, 1); return; }
       if (minus) { adjustSticker(minus.dataset.minus, -1); return; }
+      const spend = e.target.closest("[data-spend]");
+      if (spend) { spendReward(spend.dataset.spend); return; }
+      const stReset = e.target.closest("[data-streset]");
+      if (stReset) { resetStickers(stReset.dataset.streset); return; }
     });
     $("#soundSwitch").addEventListener("click", () => { setSound(!store.sound); if (store.sound) tapSound(true); });
     $("#focusSwitch").addEventListener("click", () => setFocus(!focusCfg().enabled));
@@ -2810,6 +3030,9 @@
       weather: () => todayWeather(),
       liveWx: () => (liveWx ? JSON.parse(JSON.stringify(liveWx)) : null),
       refreshWeather: () => fetchLiveWx(),
+      stickers: () => JSON.parse(JSON.stringify(store.stickers || {})),
+      checks: () => JSON.parse(JSON.stringify(store.checks || {})),
+      awardWindow: (part, at) => awardWindow(part, at ? new Date(at) : null),
     };
   }
   setInterval(tick, 1000);
