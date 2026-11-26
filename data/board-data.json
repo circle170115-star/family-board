@@ -1952,97 +1952,97 @@
  },
  "holidayNote": "관공서의 공휴일에 관한 규정 · 2026/2027년 월력요항 기준. 공휴일에는 모든 수업·등원이 자동 제외됩니다.",
  "readingPoster": {
-  "date": "2026-11-26",
-  "title": "콩 심은 데 콩 나고 팥 심은 데 팥 난다",
+  "date": "2026-11-27",
+  "title": "시작이 반이다",
   "subtitle": "오늘의 속담 + 오늘의 영단어",
   "proverb": {
-   "badge": "오늘의 속담 · 6호",
-   "title": "콩 심은 데 콩 나고 팥 심은 데 팥 난다",
-   "subtitle": "심은 대로 열매가 맺혀요",
-   "summary": "콩을 심으면 콩이, 팥을 심으면 팥이! 오늘 심은 작은 씨앗이 내일의 열매가 돼요.",
-   "audio": "assets/reading/audio/proverb-20261126-title.mp3",
+   "badge": "오늘의 속담 · 7호",
+   "title": "시작이 반이다",
+   "subtitle": "첫걸음을 떼면 이미 절반!",
+   "summary": "어려워 보여도 한 조각만 먼저 맞춰 보면, 어느새 반은 해낸 거나 다름없어요.",
+   "audio": "assets/reading/audio/proverb-20261127-title.mp3",
    "bgmAudio": "assets/reading/audio/bgm-gentle-story.mp3",
    "bgmVolume": 0.16,
    "panels": [
     {
      "num": 1,
-     "speech": "콩이랑 팥이랑 같이 심자!",
-     "caption": "밭에 콩 씨앗, 팥 씨앗을 심어요",
+     "speech": "이 퍼즐, 너무 어려워 보여…",
+     "caption": "어려운 퍼즐 앞에서 망설이는 남매",
      "image": "assets/reading/panel1-crop.png",
-     "audio": "assets/reading/audio/proverb-20261126-p1.mp3"
+     "audio": "assets/reading/audio/proverb-20261127-p1.mp3"
     },
     {
      "num": 2,
-     "speech": "물도 매일 줄게!",
-     "caption": "매일 물을 주며 정성껏 가꿔요",
+     "speech": "한 조각만 먼저 놓아 볼까?",
+     "caption": "용기를 내어 첫 조각을 조심스레 놓아요",
      "image": "assets/reading/panel2-crop.png",
-     "audio": "assets/reading/audio/proverb-20261126-p2.mp3"
+     "audio": "assets/reading/audio/proverb-20261127-p2.mp3"
     },
     {
      "num": 3,
-     "speech": "우와, 콩은 콩! 팥은 팥!",
-     "caption": "콩 줄기엔 콩, 팥 줄기엔 팥",
+     "speech": "어? 하나둘 맞춰지네!",
+     "caption": "조각이 이어지며 그림이 완성되어 가요",
      "image": "assets/reading/panel3-crop.png",
-     "audio": "assets/reading/audio/proverb-20261126-p3.mp3"
+     "audio": "assets/reading/audio/proverb-20261127-p3.mp3"
     },
     {
      "num": 4,
-     "speech": "우리가 심은 대로 열렸어!",
-     "caption": "수확한 콩과 팥을 보며 뿌듯",
+     "speech": "시작하길 잘했어! 하이파이브!",
+     "caption": "해냈다며 환하게 하이파이브",
      "image": "assets/reading/panel4-crop.png",
-     "audio": "assets/reading/audio/proverb-20261126-p4.mp3"
+     "audio": "assets/reading/audio/proverb-20261127-p4.mp3"
     }
    ],
-   "meaning": "'콩 심은 데 콩 나고 팥 심은 데 팥 난다'는 콩을 심으면 콩이 나오고, 팥을 심으면 팥이 나온다는 뜻이에요. 무엇이든 정성껏 심고 가꾼 그대로 결과가 나온답니다. 매일 조금씩 연습하고 바르게 행동하면 좋은 열매가 맺혀요.",
-   "promise": "오늘은 좋은 열매를 맺고 싶은 일 하나를 골라, 씨앗 심듯 작게 시작해 볼까요? 그림 한 장 그리기, 한글 한 줄 읽기, 인사 한 번 잘하기처럼요.",
-   "meaningAudio": "assets/reading/audio/proverb-20261126-meaning.mp3"
+   "meaning": "'시작이 반이다'는 무엇이든 망설이지 않고 첫걸음을 떼면 이미 절반은 해낸 거나 다름없다는 뜻이에요. 아무리 어려운 일도 한 조각, 한 걸음부터 시작하면 어느새 끝이 보인답니다. 잘할 수 있을지 걱정되더라도 일단 시작해 보는 용기가 제일 중요해요.",
+   "promise": "오늘은 하기 싫어서 미뤄 둔 일 하나를 골라, 딱 오 분만 시작해 볼까요? 숙제 한 줄 쓰기, 피아노 한 곡 치기, 장난감 하나 정리하기처럼요.",
+   "meaningAudio": "assets/reading/audio/proverb-20261127-meaning.mp3"
   },
   "word": {
-   "badge": "오늘의 영단어 · 6호",
-   "word": "listen",
-   "meaning": "귀 기울여 듣다 · 잘 듣다",
-   "audio": "assets/reading/audio/listen.mp3",
+   "badge": "오늘의 영단어 · 7호",
+   "word": "try",
+   "meaning": "시도하다 · 해 보다",
+   "audio": "assets/reading/audio/try.mp3",
    "bannerImage": "assets/reading/word-banner.png",
    "examples": [
     {
      "num": 1,
-     "en": "Listen to Mom.",
-     "ko": "엄마 말씀을 잘 들어요.",
-     "audio": "assets/reading/audio/listen-ex1.mp3",
+     "en": "I try it.",
+     "ko": "나는 한번 해 볼래요.",
+     "audio": "assets/reading/audio/try-ex1.mp3",
      "highlight": [
-      "Listen"
+      "try"
      ],
-     "koAudio": "assets/reading/audio/listen-ko-ex1.mp3",
-     "koScript": "그림을 보세요. 엄마가 그림책을 읽어 주고 있어요. 다은이와 승민이가 귀를 쫑긋 세우고 엄마 말씀을 듣고 있네요. 첫 번째 문장! 엄마 말씀을 잘 들어요, 라는 뜻이에요."
+     "koAudio": "assets/reading/audio/try-ko-ex1.mp3",
+     "koScript": "첫 번째 문장! 나는 한번 해 볼래요, 라는 뜻이에요. 잘 안 될까 봐 걱정되더라도 일단 try, 해 보는 거예요."
     },
     {
      "num": 2,
-     "en": "Listen carefully!",
-     "ko": "귀 기울여 잘 들어 봐요!",
-     "audio": "assets/reading/audio/listen-ex2.mp3",
+     "en": "Let's try again.",
+     "ko": "다시 한번 해 보자!",
+     "audio": "assets/reading/audio/try-ex2.mp3",
      "highlight": [
-      "Listen"
+      "try"
      ],
-     "koAudio": "assets/reading/audio/listen-ko-ex2.mp3",
-     "koScript": "두 번째 문장! 귀 기울여 잘 들어 봐요, 라는 뜻이에요. 어떤 소리가 들리는지 귀를 쫑긋 세우고 들어 봐요."
+     "koAudio": "assets/reading/audio/try-ko-ex2.mp3",
+     "koScript": "두 번째 문장! 다시 한번 해 보자, 라는 뜻이에요. 한 번에 안 되면 다시 try 해 보면 돼요."
     },
     {
      "num": 3,
-     "en": "I listen to music.",
-     "ko": "나는 음악을 들어요.",
-     "audio": "assets/reading/audio/listen-ex3.mp3",
+     "en": "You can try!",
+     "ko": "너도 해 볼 수 있어!",
+     "audio": "assets/reading/audio/try-ex3.mp3",
      "highlight": [
-      "listen"
+      "try"
      ],
-     "koAudio": "assets/reading/audio/listen-ko-ex3.mp3",
-     "koScript": "세 번째 문장! 나는 음악을 들어요, 라는 뜻이에요. 좋아하는 노래를 들을 때처럼 귀를 기울여 봐요."
+     "koAudio": "assets/reading/audio/try-ko-ex3.mp3",
+     "koScript": "세 번째 문장! 너도 해 볼 수 있어, 라는 뜻이에요. 친구에게 용기를 주는 말이에요."
     }
    ],
-   "tip": "엄마 말씀도, 선생님 이야기도, 좋아하는 노래도 — 귀를 쫑긋 세우고 듣는 것, 그게 바로 listen이에요.",
-   "koIntroAudio": "assets/reading/audio/listen-ko-intro.mp3",
-   "koIntroText": "오늘의 영단어는 listen. 귀 기울여 듣다, 잘 듣다는 뜻이에요. 그림을 보면서 같이 연습해 볼까요?",
-   "koTipAudio": "assets/reading/audio/listen-ko-tip.mp3",
-   "koTipText": "기억 쏙 한마디! 엄마 말씀도, 선생님 이야기도, 좋아하는 노래도 귀를 쫑긋 세우고 듣는 것. 그게 바로 listen 이에요."
+   "tip": "잘할 수 있을지 몰라도 괜찮아요. 일단 한번 해 보는 것, 그게 바로 try예요.",
+   "koIntroAudio": "assets/reading/audio/try-ko-intro.mp3",
+   "koIntroText": "오늘의 영단어는 try. 시도하다, 해 보다는 뜻이에요. 그림을 보면서 같이 연습해 볼까요?",
+   "koTipAudio": "assets/reading/audio/try-ko-tip.mp3",
+   "koTipText": "기억 쏙 한마디! 잘할 수 있을지 몰라도 괜찮아요. 일단 한번 해 보는 것, 그게 바로 try 예요."
   },
   "note": "거실 보드 '📖 오늘의 읽을거리' 전체화면 모달. proverb(속담 4컷) · word(터치 발음 영단어) 두 탭을 이 객체만 고쳐 바꿉니다. 이미지는 assets/reading/ 아래에 두고 audio 는 MP3 경로(없으면 Web Speech en-US 로 자동 대체)를 적습니다. proverb·word 가 모두 비면 안내 카드가 보입니다."
  }
