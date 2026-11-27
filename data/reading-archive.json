@@ -1,7 +1,103 @@
 {
- "updatedAt": "2026-11-27",
+ "updatedAt": "2026-11-28",
  "note": "거실 보드 '📖 오늘의 읽을거리' 날짜별 보관함 — 최신 호가 맨 위. tools/reading_archive.py 가 갱신합니다.",
  "items": [
+  {
+   "date": "2026-11-28",
+   "title": "원숭이도 나무에서 떨어질 때가 있다",
+   "subtitle": "오늘의 속담 + 오늘의 영단어",
+   "proverb": {
+    "badge": "속담 · 8호",
+    "title": "원숭이도 나무에서 떨어질 때가 있다",
+    "subtitle": "조심조심, 다시 한 번!",
+    "summary": "아무리 잘하는 일도 방심하면 실수할 수 있어요. 넘어져도 괜찮아요, 다시 천천히 하면 돼요.",
+    "audio": "assets/reading/archive/2026-11-28/audio/proverb-20261128-title.mp3",
+    "bgmAudio": "assets/reading/archive/2026-11-28/audio/bgm-gentle-story.mp3",
+    "bgmVolume": 0.16,
+    "panels": [
+     {
+      "num": 1,
+      "speech": "나무 타기는 내가 제일 잘해!",
+      "caption": "나무 오르기를 아주 잘하는 승민이, 자랑스레 팔을 번쩍",
+      "image": "assets/reading/archive/2026-11-28/panel1-crop.png",
+      "audio": "assets/reading/archive/2026-11-28/audio/proverb-20261128-p1.mp3"
+     },
+     {
+      "num": 2,
+      "speech": "이것 봐! 한 손으로도 돼!",
+      "caption": "한 손을 놓고 인사하다가 휘청휘청",
+      "image": "assets/reading/archive/2026-11-28/panel2-crop.png",
+      "audio": "assets/reading/archive/2026-11-28/audio/proverb-20261128-p2.mp3"
+     },
+     {
+      "num": 3,
+      "speech": "앗, 괜찮아?",
+      "caption": "쿵, 폭신한 자리에 앉았지만 하나도 안 다쳤어요",
+      "image": "assets/reading/archive/2026-11-28/panel3-crop.png",
+      "audio": "assets/reading/archive/2026-11-28/audio/proverb-20261128-p3.mp3"
+     },
+     {
+      "num": 4,
+      "speech": "천천히 하면 다시 잘할 수 있어!",
+      "caption": "두 손으로 꼭 잡고 다시 조심조심 올라가요",
+      "image": "assets/reading/archive/2026-11-28/panel4-crop.png",
+      "audio": "assets/reading/archive/2026-11-28/audio/proverb-20261128-p4.mp3"
+     }
+    ],
+    "meaning": "'원숭이도 나무에서 떨어질 때가 있다'는 아무리 나무 타기를 잘하는 원숭이도 가끔 떨어진다는 뜻이에요. 그래서 잘하는 일이라도 방심하지 말고 조심해야 하고, 실수해서 넘어졌다고 기죽을 필요도 없어요. 다시 천천히 하면 되는 거니까요.",
+    "promise": "오늘은 잘한다고 생각했던 일 하나를 골라, 한 번 더 천천히 해 보기! 넘어져도 '괜찮아, 다시!' 하고 다시 해 보는 거예요.",
+    "meaningAudio": "assets/reading/archive/2026-11-28/audio/proverb-20261128-meaning.mp3"
+   },
+   "word": {
+    "badge": "영단어 · 8호",
+    "word": "wait",
+    "meaning": "기다리다 · 차례를 기다리다",
+    "audio": "assets/reading/archive/2026-11-28/audio/wait.mp3",
+    "bannerImage": "assets/reading/archive/2026-11-28/word-banner.png",
+    "examples": [
+     {
+      "num": 1,
+      "en": "Please wait here.",
+      "ko": "여기서 잠깐 기다려 줘.",
+      "audio": "assets/reading/archive/2026-11-28/audio/wait-ex1.mp3",
+      "highlight": [
+       "wait"
+      ],
+      "koAudio": "assets/reading/archive/2026-11-28/audio/wait-ko-ex1.mp3",
+      "koScript": "첫 번째 문장! 여기서 잠깐 기다려 줘, 라는 뜻이에요. Please wait here. 여기서 잠깐, wait, 기다려 달라는 말이에요."
+     },
+     {
+      "num": 2,
+      "en": "We wait in line.",
+      "ko": "우리는 줄을 서서 기다려요.",
+      "audio": "assets/reading/archive/2026-11-28/audio/wait-ex2.mp3",
+      "highlight": [
+       "wait"
+      ],
+      "koAudio": "assets/reading/archive/2026-11-28/audio/wait-ko-ex2.mp3",
+      "koScript": "두 번째 문장! 우리는 줄을 서서 기다려요, 라는 뜻이에요. We wait in line. 줄을 서서 wait 하면 되는 거예요."
+     },
+     {
+      "num": 3,
+      "en": "I can wait nicely.",
+      "ko": "나는 예쁘게 기다릴 수 있어요.",
+      "audio": "assets/reading/archive/2026-11-28/audio/wait-ex3.mp3",
+      "highlight": [
+       "wait"
+      ],
+      "koAudio": "assets/reading/archive/2026-11-28/audio/wait-ko-ex3.mp3",
+      "koScript": "세 번째 문장! 나는 예쁘게 기다릴 수 있어요, 라는 뜻이에요. I can wait nicely. 차례를 착하게 기다리는 멋진 말이에요."
+     }
+    ],
+    "tip": "차례를 기다리는 동안 마음이 조급해도 괜찮아요. 하나, 둘, 셋 세어 보면 금방 내 차례가 와요. 그게 바로 wait!",
+    "koIntroAudio": "assets/reading/archive/2026-11-28/audio/wait-ko-intro.mp3",
+    "koIntroText": "오늘의 영단어는 wait. 기다리다, 차례를 기다리다는 뜻이에요. 그림을 보면서 같이 연습해 볼까요?",
+    "koTipAudio": "assets/reading/archive/2026-11-28/audio/wait-ko-tip.mp3",
+    "koTipText": "기억 쏙 한마디! 차례를 기다리는 동안 마음이 조급해도 괜찮아요. 하나, 둘, 셋 세어 보면 금방 내 차례가 와요. 그게 바로 wait 예요."
+   },
+   "note": "거실 보드 '📖 오늘의 읽을거리' 전체화면 모달. proverb(속담 4컷) · word(터치 발음 영단어) 두 탭을 이 객체만 고쳐 바꿉니다. 이미지는 assets/reading/ 아래에 두고 audio 는 MP3 경로(없으면 Web Speech en-US 로 자동 대체)를 적습니다. proverb·word 가 모두 비면 안내 카드가 보입니다.",
+   "issueNo": 8
+  },
   {
    "date": "2026-11-27",
    "title": "시작이 반이다",
