@@ -486,6 +486,7 @@
         else if (k === "class") node.className = v;
         else if (k === "html") node.innerHTML = v;
         else if (k === "dataset") Object.keys(v).forEach(function (d) { node.dataset[d] = v[d]; });
+        else if (k.slice(0, 2) === "on" && typeof v === "function") node.addEventListener(k.slice(2).toLowerCase(), v);
         else node.setAttribute(k, v);
       });
     }
