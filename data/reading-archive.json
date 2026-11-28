@@ -1,7 +1,103 @@
 {
- "updatedAt": "2026-11-28",
+ "updatedAt": "2026-11-29",
  "note": "거실 보드 '📖 오늘의 읽을거리' 날짜별 보관함 — 최신 호가 맨 위. tools/reading_archive.py 가 갱신합니다.",
  "items": [
+  {
+   "date": "2026-11-29",
+   "title": "웃는 낯에 침 못 뱉는다",
+   "subtitle": "오늘의 속담 + 오늘의 영단어",
+   "proverb": {
+    "badge": "속담 · 9호",
+    "title": "웃는 낯에 침 못 뱉는다",
+    "subtitle": "먼저 웃으면 마음이 사르르!",
+    "summary": "웃으면서 다정하게 말하면, 아무리 화가 난 사람도 화를 내지 못해요.",
+    "audio": "assets/reading/archive/2026-11-29/audio/proverb-20261129-title.mp3",
+    "bgmAudio": "assets/reading/archive/2026-11-29/audio/bgm-gentle-story.mp3",
+    "bgmVolume": 0.16,
+    "panels": [
+     {
+      "num": 1,
+      "speech": "나 이 기차 먼저 잡았어!",
+      "caption": "다은이와 승민이가 블록 기차 하나를 동시에 잡았어요",
+      "image": "assets/reading/archive/2026-11-29/panel1-crop.png",
+      "audio": "assets/reading/archive/2026-11-29/audio/proverb-20261129-p1.mp3"
+     },
+     {
+      "num": 2,
+      "speech": "내 거야!",
+      "caption": "승민이는 볼이 빨개지고, 다은이는 입이 삐죽 나왔어요",
+      "image": "assets/reading/archive/2026-11-29/panel2-crop.png",
+      "audio": "assets/reading/archive/2026-11-29/audio/proverb-20261129-p2.mp3"
+     },
+     {
+      "num": 3,
+      "speech": "같이 타면 더 재밌을 거야!",
+      "caption": "다은이가 먼저 환하게 웃으며 손을 내밀었어요",
+      "image": "assets/reading/archive/2026-11-29/panel3-crop.png",
+      "audio": "assets/reading/archive/2026-11-29/audio/proverb-20261129-p3.mp3"
+     },
+     {
+      "num": 4,
+      "speech": "웃으니까 마음이 다 풀렸어!",
+      "caption": "미소를 보니 승민이도 빙그레, 마음이 사르르 풀렸어요",
+      "image": "assets/reading/archive/2026-11-29/panel4-crop.png",
+      "audio": "assets/reading/archive/2026-11-29/audio/proverb-20261129-p4.mp3"
+     }
+    ],
+    "meaning": "'웃는 낯에 침 못 뱉는다'는 웃는 얼굴을 하고 다정하게 대하면 아무리 화가 난 사람도 화를 내지 못한다는 뜻이에요. 그래서 기분이 안 좋을 때도 먼저 웃으면서 말해 보면, 싸우지 않고 마음을 풀 수 있답니다.",
+    "promise": "오늘은 장난감을 두고 다툴 뻔하면, 먼저 웃으면서 '같이 하자!' 하고 말해 보기!",
+    "meaningAudio": "assets/reading/archive/2026-11-29/audio/proverb-20261129-meaning.mp3"
+   },
+   "word": {
+    "badge": "영단어 · 9호",
+    "word": "kind",
+    "meaning": "친절한 · 다정한",
+    "audio": "assets/reading/archive/2026-11-29/audio/kind.mp3",
+    "bannerImage": "assets/reading/archive/2026-11-29/word-banner.png",
+    "examples": [
+     {
+      "num": 1,
+      "en": "Be kind to friends.",
+      "ko": "친구에게 다정하게 대어요.",
+      "audio": "assets/reading/archive/2026-11-29/audio/kind-ex1.mp3",
+      "highlight": [
+       "kind"
+      ],
+      "koAudio": "assets/reading/archive/2026-11-29/audio/kind-ko-ex1.mp3",
+      "koScript": "첫 번째 문장! 친구에게 다정하게 대어요, 라는 뜻이에요. Be kind to friends. 친구에게 다정하게, kind. 다정하게 대해 준다는 말이에요."
+     },
+     {
+      "num": 2,
+      "en": "She is very kind.",
+      "ko": "그녀는 정말 친절해요.",
+      "audio": "assets/reading/archive/2026-11-29/audio/kind-ex2.mp3",
+      "highlight": [
+       "kind"
+      ],
+      "koAudio": "assets/reading/archive/2026-11-29/audio/kind-ko-ex2.mp3",
+      "koScript": "두 번째 문장! 그녀는 정말 친절해요, 라는 뜻이에요. She is very kind. 아주아주 다정하고 친절한 사람이에요."
+     },
+     {
+      "num": 3,
+      "en": "Thank you, kind friend!",
+      "ko": "고마워, 다정한 친구야!",
+      "audio": "assets/reading/archive/2026-11-29/audio/kind-ex3.mp3",
+      "highlight": [
+       "kind"
+      ],
+      "koAudio": "assets/reading/archive/2026-11-29/audio/kind-ko-ex3.mp3",
+      "koScript": "세 번째 문장! 고마워, 다정한 친구야! 라는 뜻이에요. Thank you, kind friend. 고맙다고 하면서 친구를 다정하다고 불러 주는 말이에요."
+     }
+    ],
+    "tip": "친구에게 양보하거나, 친구가 슬플 때 안아 주는 것도 kind 예요. 오늘 한 번, 다정한 말을 해 볼까요?",
+    "koIntroAudio": "assets/reading/archive/2026-11-29/audio/kind-ko-intro.mp3",
+    "koIntroText": "오늘의 영단어는 kind. 친절한, 다정하다는 뜻이에요. 그림을 보면서 같이 연습해 볼까요?",
+    "koTipAudio": "assets/reading/archive/2026-11-29/audio/kind-ko-tip.mp3",
+    "koTipText": "기억 쏙 한마디! 친구에게 양보하거나, 친구가 슬플 때 안아 주는 것도 kind 예요. 오늘 한 번, 다정한 말을 해 볼까요?"
+   },
+   "note": "거실 보드 '📖 오늘의 읽을거리' 전체화면 모달. proverb(속담 4컷) · word(터치 발음 영단어) 두 탭을 이 객체만 고쳐 바꿉니다. 이미지는 assets/reading/ 아래에 두고 audio 는 MP3 경로(없으면 Web Speech en-US 로 자동 대체)를 적습니다. proverb·word 가 모두 비면 안내 카드가 보입니다.",
+   "issueNo": 9
+  },
   {
    "date": "2026-11-28",
    "title": "원숭이도 나무에서 떨어질 때가 있다",

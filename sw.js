@@ -14,7 +14,7 @@
 
 "use strict";
 
-const CACHE = "family-living-v25-20261128b";
+const CACHE = "family-living-v26-20261129";
 
 /* 설치할 때 미리 받아 둘 것 — 하나가 실패해도 설치 자체는 계속한다 */
 const PRECACHE = [
@@ -27,21 +27,21 @@ const PRECACHE = [
   "assets/icons/icon-192.png",
   "assets/icons/icon-512.png",
   "assets/icons/icon-maskable-512.png",
-  "assets/reading/audio/wait.mp3",
-  "assets/reading/audio/wait-ex1.mp3",
-  "assets/reading/audio/wait-ex2.mp3",
-  "assets/reading/audio/wait-ex3.mp3",
-  "assets/reading/audio/wait-ko-intro.mp3",
-  "assets/reading/audio/wait-ko-ex1.mp3",
-  "assets/reading/audio/wait-ko-ex2.mp3",
-  "assets/reading/audio/wait-ko-ex3.mp3",
-  "assets/reading/audio/wait-ko-tip.mp3",
-  "assets/reading/audio/proverb-20261128-title.mp3",
-  "assets/reading/audio/proverb-20261128-p1.mp3",
-  "assets/reading/audio/proverb-20261128-p2.mp3",
-  "assets/reading/audio/proverb-20261128-p3.mp3",
-  "assets/reading/audio/proverb-20261128-p4.mp3",
-  "assets/reading/audio/proverb-20261128-meaning.mp3",
+  "assets/reading/audio/kind.mp3",
+  "assets/reading/audio/kind-ex1.mp3",
+  "assets/reading/audio/kind-ex2.mp3",
+  "assets/reading/audio/kind-ex3.mp3",
+  "assets/reading/audio/kind-ko-intro.mp3",
+  "assets/reading/audio/kind-ko-ex1.mp3",
+  "assets/reading/audio/kind-ko-ex2.mp3",
+  "assets/reading/audio/kind-ko-ex3.mp3",
+  "assets/reading/audio/kind-ko-tip.mp3",
+  "assets/reading/audio/proverb-20261129-title.mp3",
+  "assets/reading/audio/proverb-20261129-p1.mp3",
+  "assets/reading/audio/proverb-20261129-p2.mp3",
+  "assets/reading/audio/proverb-20261129-p3.mp3",
+  "assets/reading/audio/proverb-20261129-p4.mp3",
+  "assets/reading/audio/proverb-20261129-meaning.mp3",
   "assets/reading/audio/bgm-gentle-story.mp3",
 ];
 
