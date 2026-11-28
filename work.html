@@ -429,7 +429,7 @@
     text-align: center;
   }
   .mstat b { display: block; font-size: 17px; font-weight: 800; color: var(--navy); line-height: 1.2; letter-spacing: -.02em; }
-  .mstat span { display: block; font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+  .mstat span { display: block; font-size: 10.5px; color: var(--muted); margin-top: 1px; word-break: keep-all; }
   .mstat.rate b { color: var(--green); }
   .mstat.rate.low b { color: var(--coral); }
   .mops { display: flex; flex-direction: column; gap: 5px; margin-top: 9px; }
@@ -946,7 +946,7 @@
   }
 
   function childCard(row, todayKst) {
-    var rateCls = function (rate) { return "mstat rate" + (rate !== null && rate < 70 ? " low" : ""); };
+    var rateCls = function (rate) { return "mstat rate" + (rate !== null && rate < 60 ? " low" : ""); };
     var card = el("article", { class: "mcard" }, [
       el("div", { class: "mcard-top" }, [
         el("div", { class: "mname" }, [row.name || row.child, el("small", { text: row.age || "" })]),
@@ -955,7 +955,7 @@
       el("div", { class: "mgrid" }, [
         el("div", { class: "mstat" }, [el("b", { text: String(row.all.solved) }), el("span", { text: "전체 풀이" })]),
         el("div", { class: rateCls(row.all.rate) }, [el("b", { text: pct(row.all.rate) }), el("span", { text: "전체 정답률" })]),
-        el("div", { class: "mstat" }, [el("b", { text: String(row.recent.solved) }), el("span", { text: "최근 7일 풀이" })]),
+        el("div", { class: "mstat" }, [el("b", { text: String(row.recent.solved) }), el("span", { text: "7일 풀이" })]),
         el("div", { class: rateCls(row.recent.rate) }, [el("b", { text: pct(row.recent.rate) }), el("span", { text: "7일 정답률" })])
       ])
     ]);
