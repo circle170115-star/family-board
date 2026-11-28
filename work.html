@@ -607,7 +607,8 @@
 
   function jumpTo(id) {
     var card = document.getElementById("p-" + id);
-    if (!card) {
+    // 다른 담당으로 걸러져 카드가 숨겨져 있으면 먼저 전체로 되돌린다
+    if (!card || card.hidden) {
       state.filter = "all";
       renderTabs(); applyFilter();
       card = document.getElementById("p-" + id);
