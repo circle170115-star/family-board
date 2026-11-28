@@ -878,7 +878,7 @@
      보기 4개 중 정답 고르기, 맞히면 1.1초·틀리면 1.9초 뒤 다음 문제.
      거실 태블릿에서 승민이가 직접 누를 수 있게 숫자·보기를 화면 크기에 맞춰 크게 띄웁니다.
      보드 데이터를 못 불러와도 놀이는 열리도록 데이터 요청 전에 먼저 연결합니다. */
-  const gp = { mode: "seungmin", open: false, answer: null, right: 0, total: 0, streak: 0, busy: false, timer: null, last: "" };
+  const gp = { mode: "seungmin", open: false, answer: null, q: null, right: 0, total: 0, streak: 0, busy: false, timer: null, last: "" };
   function gpSound(freqs, gap, dur, type, vol) {
     if (store && store.sound === false) return;   /* ⚙️ 효과음 꺼짐을 그대로 따릅니다 */
     if (!audio()) return;
@@ -901,6 +901,7 @@
     const q = eng.generateQuestion(gp.mode, gp.last);
     gp.last = q.key;
     gp.answer = q.answer;
+    gp.q = q;              /* 보기 하나를 누를 때 업무보드용 학습 기록으로 보낼 문제 */
     gp.busy = false;
     const a = q.a, b = q.b, op = q.op;
     const arr = q.options;
@@ -920,6 +921,35 @@
     body.querySelectorAll(".gopt").forEach((o) => o.addEventListener("click", () => gpAnswer(Number(o.dataset.v), o)));
     $("#gpNext").addEventListener("click", gpNew);
   }
+  /* ── 수놀이 학습 기록 전송 ────────────────────────────────
+     아이가 보기를 누를 때마다 업무보드(family-board/work.html)가 읽는
+     익명 기록 한 줄을 우편함 Worker(D1)로 보냅니다.
+       · 보내는 값 — 아이 구분(seungmin·daeun) · 보드(living) · 식(a·op·b) · 정답 · 고른 답 · 맞음 여부
+       · 개인정보(이름·주소·기기)는 보내지 않습니다. 날짜는 서버가 서울 기준으로 적습니다.
+       · 태블릿이 잠깐 끊겨도 놀이는 그대로 이어지도록, 응답을 기다리지 않고
+         실패는 조용히 넘깁니다(화면·소리·다음 문제 진행에 영향 없음). */
+  const MATH_LOG_URL = "https://pogeun-mailbox.daseung2024.workers.dev/api/math-log";
+  function gpLog(q, chosen) {
+    if (!q) return;
+    try {
+      fetch(MATH_LOG_URL, {
+        method: "POST",
+        mode: "cors",
+        keepalive: true,
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          child: q.mode,
+          board: "living",
+          op: q.op,
+          a: q.a,
+          b: q.b,
+          answer: q.answer,
+          chosen: chosen,
+          is_correct: chosen === q.answer ? 1 : 0
+        })
+      }).catch(() => {});
+    } catch (e) { /* 기록을 못 보내도 놀이는 계속 */ }
+  }
   function gpAnswer(v, btn) {
     if (gp.busy) return;
     gp.busy = true;
@@ -927,6 +957,7 @@
     document.querySelectorAll("#gpBody .gopt").forEach((b) => (b.disabled = true));
     gp.total++;
     const ok = v === gp.answer;
+    try { gpLog(gp.q, v); } catch (e) { /* 전송 실패는 채점·진행에 영향을 주지 않습니다 */ }
     if (ok) {
       btn.classList.add("correct");
       box.classList.add("pop");

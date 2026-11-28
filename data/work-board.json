@@ -2,7 +2,7 @@
   "meta": {
     "title": "포근맘 업무보드",
     "subtitle": "블로그 · 보드 · 비서실 · 가족 일정을 한 화면에",
-    "updatedAt": "2026-11-28T17:02:00+09:00",
+    "updatedAt": "2026-11-28T17:26:00+09:00",
     "updatedBy": "포근이",
     "note": "이 파일만 고치면 업무보드에 바로 반영됩니다. 항목은 완료 · 대기 · 링크로 나눠 적습니다."
   },
@@ -13,7 +13,7 @@
   },
   "summary": {
     "projects": 7,
-    "waiting": 5,
+    "waiting": 4,
     "blog": 28,
     "insta": 23,
     "drafts": 6
@@ -49,14 +49,6 @@
       "owner": "pogeun",
       "urgency": "내일",
       "action": { "label": "네이버 블로그 열기", "href": "https://blog.naver.com/dadada2024" }
-    },
-    {
-      "id": "w-math-step",
-      "title": "수학 놀이 Step 2 진도 선택",
-      "detail": "Step 1을 적용한 지 일주일이 지났어요. ① 일주일 더 유지 ② 승민이만 Step 2(10 만들기·10에서 빼기) ③ 다은이만 Step 2(받아올림·내림 기초) ④ 둘 다 올리기 중에서 골라 주시면 바로 반영합니다.",
-      "owner": "pogeun",
-      "urgency": "확인",
-      "action": { "label": "모아보드 열기", "href": "https://circle170115-star.github.io/family-board/" }
     },
     {
       "id": "w-library-today",
@@ -174,10 +166,11 @@
       "title": "우리 집 모아보드 · 거실 보드",
       "owners": ["pogeun"],
       "status": "가동 중",
-      "headline": "읽을거리 8호 자동 생성 · 수학 놀이 Step 2 점검 대기",
+      "headline": "수놀이 데이터 실시간 수집 시작 · 읽을거리 8호 자동 생성",
       "stats": [
         { "label": "모아보드", "value": "가동 중" },
         { "label": "읽을거리", "value": "8호" },
+        { "label": "수놀이 기록", "value": "수집 중" },
         { "label": "아침 갱신", "value": "06:00" }
       ],
       "entries": [
@@ -198,9 +191,12 @@
           ]
         },
         {
-          "badge": "wait",
-          "title": "수학 놀이 Step 2 진도 점검",
-          "meta": "Step 1 적용 일주일 경과 · 선택 카드 답 대기(위 확인 필요 2번)"
+          "badge": "done",
+          "title": "수놀이 학습 데이터 실시간 수집 시작 (Step 1은 1주일 더 유지)",
+          "meta": "11/28 17:2x · 거실 보드·모아보드에서 답을 누를 때마다 익명 기록을 우편함 D1에 저장 · 업무보드 '🔢 수놀이 학습 데이터' 카드에서 승민·다은 풀이 수·정답률·헷갈린 문제 실시간 확인 · 12/5(토)에 모아 분석",
+          "links": [
+            { "label": "업무보드 수놀이 카드", "href": "https://circle170115-star.github.io/family-board/work.html#math" }
+          ]
         }
       ],
       "note": "평일 등원 시간(07:30~출발+15분)에 모아보드를 열면 거실 보드로 자동 전환됩니다."

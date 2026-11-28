@@ -382,6 +382,112 @@
   .skeleton { height: 88px; border-radius: var(--radius); background: linear-gradient(90deg, #EFEBE3, #F7F5F0, #EFEBE3); background-size: 200% 100%; animation: sk 1.4s linear infinite; }
   @keyframes sk { to { background-position: -200% 0; } }
 
+  /* ── 🔢 수놀이 학습 데이터 ─────────────── */
+  .math {
+    margin-top: 12px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 14px 12px;
+    box-shadow: var(--shadow);
+  }
+  .math-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .math-head h2 {
+    margin: 0;
+    font-size: 15.5px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -.02em;
+    display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+  }
+  .math-head .win {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #35507A;
+    background: #EAF0F8;
+    border-radius: 999px;
+    padding: 1px 8px;
+  }
+  .math-updated { font-size: 11.5px; color: var(--muted); }
+  .math-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 11px; }
+  .mcard {
+    border: 1px solid var(--line-soft);
+    border-radius: 13px;
+    padding: 11px 12px 10px;
+    background: #FCFBF7;
+  }
+  .mcard-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .mname { font-size: 14px; font-weight: 800; color: var(--navy); }
+  .mname small { font-size: 11.5px; font-weight: 700; color: var(--muted); margin-left: 4px; }
+  .mlast { font-size: 11px; color: var(--muted); }
+  .mgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 9px; }
+  .mstat {
+    background: #fff;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    padding: 6px 7px;
+    text-align: center;
+  }
+  .mstat b { display: block; font-size: 17px; font-weight: 800; color: var(--navy); line-height: 1.2; letter-spacing: -.02em; }
+  .mstat span { display: block; font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+  .mstat.rate b { color: var(--green); }
+  .mstat.rate.low b { color: var(--coral); }
+  .mops { display: flex; flex-direction: column; gap: 5px; margin-top: 9px; }
+  .mop { display: grid; grid-template-columns: 52px 1fr 42px 46px; align-items: center; gap: 6px; font-size: 11.5px; color: #4B5563; }
+  .mop .bar { height: 8px; border-radius: 999px; background: #EDE9E0; overflow: hidden; }
+  .mop .bar i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #7FB08F, #2F7D4D); }
+  .mop .bar.none i { background: #D9D4C8; }
+  .mop .opv { text-align: right; font-weight: 800; color: var(--navy); }
+  .mop .opn { text-align: right; font-size: 10.5px; color: var(--muted); }
+  .mdays { display: flex; align-items: flex-end; gap: 5px; margin-top: 10px; height: 62px; }
+  .mday { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; height: 100%; }
+  .mday .col {
+    display: block;
+    width: 100%;
+    min-height: 3px;
+    border-radius: 4px 4px 2px 2px;
+    background: linear-gradient(180deg, #A9C8B4, #7FB08F);
+  }
+  .mday .col.empty { background: #E7E2D7; }
+  .mday .cnt { font-size: 10px; font-weight: 800; color: #4B5563; line-height: 1; }
+  .mday .cnt.zero { color: #B9B4A8; font-weight: 600; }
+  .mday .dow { font-size: 9.5px; color: #8A8F99; line-height: 1; }
+  .mday.today .dow { color: var(--navy); font-weight: 800; }
+  .mwrong { margin-top: 9px; font-size: 11.5px; color: #575E6B; }
+  .mwrong b { color: #B42318; font-weight: 800; }
+  .mwrong ul { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; }
+  .mwrong li {
+    background: #FEF3F2;
+    border: 1px solid #F5D3CF;
+    border-radius: 7px;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #9A3412;
+  }
+  .math-empty {
+    margin-top: 10px;
+    background: #F7FBF7;
+    border: 1px dashed #C9DDCE;
+    border-radius: 12px;
+    padding: 16px 14px;
+    text-align: center;
+    font-size: 13px;
+    color: #2F5E43;
+    line-height: 1.6;
+  }
+  .math-empty strong { display: block; font-size: 13.5px; color: #234D37; margin-bottom: 3px; }
+  .math-error {
+    margin-top: 10px;
+    background: #FFF6F5;
+    border: 1px solid #F3C7C1;
+    border-radius: 12px;
+    padding: 12px 13px;
+    font-size: 12.5px;
+    color: #7A2A20;
+  }
+  .math-foot { margin: 9px 0 0; font-size: 11px; color: #8A8F99; line-height: 1.6; }
+
   @media (min-width: 640px) {
     .page { padding: 18px 18px 56px; }
     .stats { grid-template-columns: repeat(4, 1fr); }
@@ -389,6 +495,13 @@
     .brand h1 { font-size: 22px; }
     .card { padding: 17px 19px 16px; }
     .entry-title { font-size: 14px; }
+    .math-grid { grid-template-columns: repeat(2, 1fr); }
+    .math { padding: 16px 18px 14px; }
+  }
+  @media (max-width: 360px) {
+    .mop { grid-template-columns: 44px 1fr 38px; }
+    .mop .opn { display: none; }
+    .mstat b { font-size: 15px; }
   }
   @media (max-width: 560px) {
     /* 좁은 화면에서는 마감·확인 배지를 제목 위에 따로 두어 제목이 자연스럽게 읽히게 한다 */
@@ -398,7 +511,7 @@
   @media print {
     body { background: #fff; }
     .tabs, .refresh, .jumps { display: none; }
-    .card, .top, .waiting { box-shadow: none; break-inside: avoid; }
+    .card, .top, .waiting, .math { box-shadow: none; break-inside: avoid; }
     .top { background: #fff; color: #111; border: 1px solid #ccc; }
     .brand p, .updated { color: #444; }
     .updated b { color: #111; }
@@ -452,6 +565,14 @@
     <section class="waiting" id="waiting" aria-labelledby="waitingTitle">
       <h2 id="waitingTitle">⏳ 확인 필요 <span class="count" id="waitCount">0</span></h2>
       <ul class="wait-list" id="waitList"></ul>
+    </section>
+    <section class="math" id="math" aria-labelledby="mathTitle">
+      <div class="math-head">
+        <h2 id="mathTitle">🔢 수놀이 학습 데이터 <span class="win">최근 7일</span></h2>
+        <span class="math-updated" id="mathUpdated">불러오는 중…</span>
+      </div>
+      <div id="mathBody" aria-live="polite"></div>
+      <p class="math-foot" id="mathFoot">거실 보드·모아보드에서 아이가 답을 누를 때마다 바로 쌓여요. 정답률은 아이가 마지막에 고른 답 기준입니다.</p>
     </section>
     <main id="projects" aria-label="업무별 진행 상황"></main>
   </div>
@@ -799,11 +920,143 @@
       });
   }
 
-  $("refreshBtn").addEventListener("click", function () { load(false); });
+  /* ───────────── 🔢 수놀이 학습 데이터 ─────────────
+     우편함 Worker(D1)가 모은 아이들 풀이 기록을 그때그때 받아 그립니다.
+       GET /api/math-stats?days=14 → children[ seungmin, daeun ]
+         all{ solved, correct, rate } · recent{ 최근 7일 } · by_op[ +, − ] · daily[7칸] · top_wrong[3] · last
+     아직 한 건도 없으면 "오늘부터 데이터 수집 시작" 안내만 보입니다.
+     새로고침 버튼과 3분 자동 갱신이 업무보드 데이터(load)와 함께 이 기록도 다시 받습니다. */
+  var MATH_STATS_URL = "https://pogeun-mailbox.daseung2024.workers.dev/api/math-stats?days=14";
+  var DOW = ["일", "월", "화", "수", "목", "금", "토"];
+  var mathState = { loaded: false };
+
+  function pct(rate) { return rate === null || rate === undefined ? "—" : rate + "%"; }
+
+  function dowOf(dateKst) {
+    var d = new Date(dateKst + "T00:00:00Z");
+    return isNaN(d.getTime()) ? 0 : d.getUTCDay();
+  }
+
+  function lastText(last, todayKst) {
+    if (!last || !last.at) return "아직 기록 없음";
+    var hm = String(last.kst || "").slice(11, 16);
+    if (last.date_kst === todayKst) return "오늘 " + hm + " 마지막";
+    var md = String(last.date_kst || "").slice(5).replace("-", "/");
+    return md + " " + hm + " 마지막";
+  }
+
+  function childCard(row, todayKst) {
+    var rateCls = function (rate) { return "mstat rate" + (rate !== null && rate < 70 ? " low" : ""); };
+    var card = el("article", { class: "mcard" }, [
+      el("div", { class: "mcard-top" }, [
+        el("div", { class: "mname" }, [row.name || row.child, el("small", { text: row.age || "" })]),
+        el("div", { class: "mlast", text: lastText(row.last, todayKst) })
+      ]),
+      el("div", { class: "mgrid" }, [
+        el("div", { class: "mstat" }, [el("b", { text: String(row.all.solved) }), el("span", { text: "전체 풀이" })]),
+        el("div", { class: rateCls(row.all.rate) }, [el("b", { text: pct(row.all.rate) }), el("span", { text: "전체 정답률" })]),
+        el("div", { class: "mstat" }, [el("b", { text: String(row.recent.solved) }), el("span", { text: "최근 7일 풀이" })]),
+        el("div", { class: rateCls(row.recent.rate) }, [el("b", { text: pct(row.recent.rate) }), el("span", { text: "7일 정답률" })])
+      ])
+    ]);
+
+    var ops = el("div", { class: "mops" });
+    (row.by_op || []).forEach(function (op) {
+      var rate = op.rate === null || op.rate === undefined ? 0 : op.rate;
+      ops.appendChild(el("div", { class: "mop" }, [
+        el("span", { text: op.op === "+" ? "＋ 덧셈" : "− 뺄셈" }),
+        el("div", { class: "bar" + (op.solved ? "" : " none") }, [el("i", { style: "width:" + rate + "%" })]),
+        el("span", { class: "opv", text: pct(op.rate) }),
+        el("span", { class: "opn", text: op.solved + "문제" })
+      ]));
+    });
+    card.appendChild(ops);
+
+    var daily = row.daily || [];
+    var max = 1;
+    daily.forEach(function (d) { if (d.solved > max) max = d.solved; });
+    var days = el("div", { class: "mdays", role: "img", "aria-label": "최근 7일 하루별 풀이 수 막대" });
+    daily.forEach(function (d) {
+      var height = d.solved ? Math.max(6, Math.round((d.solved / max) * 34)) : 3;
+      days.appendChild(el("div", {
+        class: "mday" + (d.date === todayKst ? " today" : ""),
+        title: d.date + " · " + d.solved + "문제 · 정답률 " + pct(d.rate)
+      }, [
+        el("span", { class: "cnt" + (d.solved ? "" : " zero"), text: String(d.solved) }),
+        el("i", { class: "col" + (d.solved ? "" : " empty"), style: "height:" + height + "px" }),
+        el("span", { class: "dow", text: DOW[dowOf(d.date)] })
+      ]));
+    });
+    card.appendChild(days);
+
+    var wrong = row.top_wrong || [];
+    if (wrong.length) {
+      var ul = el("ul");
+      wrong.forEach(function (w) {
+        ul.appendChild(el("li", { text: w.expr + " · " + w.wrong + "번 틀림", title: "시도 " + w.tries + "번" }));
+      });
+      card.appendChild(el("div", { class: "mwrong" }, [el("b", { text: "헷갈린 문제 " }), ul]));
+    } else if (row.all.solved) {
+      card.appendChild(el("div", { class: "mwrong", text: "헷갈린 문제는 최근 2주 기록에 없어요." }));
+    }
+    return card;
+  }
+
+  function renderMath(data) {
+    var box = $("mathBody");
+    var todayKst = String(data.generated_at_kst || "").slice(0, 10);
+    var children = data.children || [];
+    var total = children.reduce(function (sum, row) { return sum + (row.all ? row.all.solved : 0); }, 0);
+    var stamp = String(data.generated_at_kst || "").slice(11, 16);
+    box.innerHTML = "";
+    if (!total) {
+      box.appendChild(el("div", { class: "math-empty" }, [
+        el("strong", { text: "오늘부터 데이터 수집 시작" }),
+        el("span", { text: "아이들이 풀면 바로 집계돼요. 거실 보드나 모아보드에서 수놀이를 열고 답을 한 번 누르면 여기에 쌓입니다." })
+      ]));
+      $("mathUpdated").textContent = (stamp ? stamp + " 확인 · " : "") + "아직 0건";
+      return;
+    }
+    var grid = el("div", { class: "math-grid" });
+    children.forEach(function (row) { grid.appendChild(childCard(row, todayKst)); });
+    box.appendChild(grid);
+    $("mathUpdated").textContent = (stamp ? stamp + " 확인 · " : "") + "합계 " + total + "문제";
+  }
+
+  function loadMath(silent) {
+    var box = $("mathBody");
+    if (!box) return;
+    if (!mathState.loaded) {
+      box.innerHTML = "";
+      box.appendChild(el("div", { class: "skeleton" }));
+    }
+    if (!silent) $("mathUpdated").textContent = "불러오는 중…";
+    fetch(MATH_STATS_URL, { cache: "no-store" })
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        mathState.loaded = true;
+        renderMath(data);
+      })
+      .catch(function () {
+        $("mathUpdated").textContent = "불러오지 못했어요";
+        if (mathState.loaded) return; // 이미 보이는 숫자는 그대로 둔다
+        box.innerHTML = "";
+        box.appendChild(el("div", { class: "math-error" }, [
+          el("strong", { text: "수놀이 기록을 불러오지 못했어요. " }),
+          el("span", { text: "잠시 뒤 새로고침을 눌러 주세요. 계속 안 되면 포근이에게 알려 주세요." })
+        ]));
+      });
+  }
+
+  $("refreshBtn").addEventListener("click", function () { load(false); loadMath(false); });
 
   load(false);
+  loadMath(false);
   // 화면에 켜 두는 보드 — 3분마다 조용히 다시 받아 옵니다(내용이 바뀌면 그때만 다시 그립니다).
-  setInterval(function () { load(true); }, 180000);
+  setInterval(function () { load(true); loadMath(true); }, 180000);
 })();
 </script>
 </body>

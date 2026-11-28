@@ -788,13 +788,38 @@
      문제 출제 규칙은 거실 보드(living.html)와 **같은 엔진** assets/math-engine.js 한 곳에 있습니다.
      (승민 5세 → 덧셈구구 합 9까지 · 뺄셈구구 9 이내 / 다은 7세 → 받아올림·내림 없는 두 자리)
      여기서는 엔진이 만든 문제를 화면에 그리고 채점만 합니다. */
-  const math = { answer: null, lastKey: "", score: { right: 0, total: 0 } };
+  const math = { answer: null, q: null, lastKey: "", score: { right: 0, total: 0 } };
+  /* 수놀이 학습 기록 전송 — 거실 보드(living.js)와 같은 주소·같은 규칙입니다.
+     아이가 답을 누를 때마다 익명 기록 한 줄을 보내고(개인정보 없음), 실패는 놀이에 영향을 주지 않습니다. */
+  const MATH_LOG_URL = "https://pogeun-mailbox.daseung2024.workers.dev/api/math-log";
+  function mathLog(q, chosen) {
+    if (!q) return;
+    try {
+      fetch(MATH_LOG_URL, {
+        method: "POST",
+        mode: "cors",
+        keepalive: true,
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          child: q.mode,
+          board: "family",
+          op: q.op,
+          a: q.a,
+          b: q.b,
+          answer: q.answer,
+          chosen: chosen,
+          is_correct: chosen === q.answer ? 1 : 0
+        })
+      }).catch(() => {});
+    } catch (e) { /* 기록을 못 보내도 놀이는 계속 */ }
+  }
   function mathGen() {
     const eng = window.FamilyMathEngine;
     if (!eng) { console.error("수학 문제 엔진(assets/math-engine.js)을 불러오지 못했어요"); return; }
     const q = eng.generateQuestion(state.mathMode, math.lastKey);
     math.lastKey = q.key;
     math.answer = q.answer;
+    math.q = q;
     const a = q.a, b = q.b, op = q.op;
     const level = q.level;
     const arr = q.options;
@@ -810,10 +835,12 @@
     document.querySelectorAll(".opt").forEach((o) =>
       o.addEventListener("click", () => {
         const v = Number(o.dataset.v);
+        const q = math.q;
         const fb = $("qFb");
         const box = $("qBox");
         document.querySelectorAll(".opt").forEach((x) => (x.disabled = true));
         math.score.total++;
+        try { mathLog(q, v); } catch (e) { /* 전송 실패는 채점·진행에 영향을 주지 않습니다 */ }
         if (v === math.answer) {
           o.classList.add("correct");
           box.classList.add("pop");
