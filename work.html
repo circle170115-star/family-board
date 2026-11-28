@@ -390,6 +390,11 @@
     .card { padding: 17px 19px 16px; }
     .entry-title { font-size: 14px; }
   }
+  @media (max-width: 560px) {
+    /* 좁은 화면에서는 마감·확인 배지를 제목 위에 따로 두어 제목이 자연스럽게 읽히게 한다 */
+    .wait-head { flex-direction: column-reverse; align-items: flex-start; gap: 3px; }
+  }
+
   @media print {
     body { background: #fff; }
     .tabs, .refresh, .jumps { display: none; }
