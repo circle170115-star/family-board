@@ -448,7 +448,7 @@
     border-radius: 4px 4px 2px 2px;
     background: linear-gradient(180deg, #A9C8B4, #7FB08F);
   }
-  .mday .col.empty { background: #E7E2D7; }
+  .mday .col.none { background: #E7E2D7; }
   .mday .cnt { font-size: 10px; font-weight: 800; color: #4B5563; line-height: 1; }
   .mday .cnt.zero { color: #B9B4A8; font-weight: 600; }
   .mday .dow { font-size: 9.5px; color: #8A8F99; line-height: 1; }
@@ -983,7 +983,7 @@
         title: d.date + " · " + d.solved + "문제 · 정답률 " + pct(d.rate)
       }, [
         el("span", { class: "cnt" + (d.solved ? "" : " zero"), text: String(d.solved) }),
-        el("i", { class: "col" + (d.solved ? "" : " empty"), style: "height:" + height + "px" }),
+        el("i", { class: "col" + (d.solved ? "" : " none"), style: "height:" + height + "px" }),
         el("span", { class: "dow", text: DOW[dowOf(d.date)] })
       ]));
     });
